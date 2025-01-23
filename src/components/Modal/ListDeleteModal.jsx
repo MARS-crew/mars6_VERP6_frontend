@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import DeleteButton from '../Button/DeleteButton';
 
-const DocDeleteModal = ({ onDelete, onCancel }) => {
+const ListDeleteModal = ({ onDelete, onCancel }) => {
   const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget) {
       onCancel();
@@ -18,7 +18,7 @@ const DocDeleteModal = ({ onDelete, onCancel }) => {
         <div className = "mb-2 space-y-2">
           <div className = "space-y-2">
             <p id = "modal-title" className = "text-[20px] text-center">
-              서류를 삭제하면 관련 리스트도
+              리스트를 삭제하면 업데이트 히스토리도
             </p>
             <p className = "text-[20px] text-center">
               모두 삭제되며 복구할 수 없습니다.
@@ -29,7 +29,7 @@ const DocDeleteModal = ({ onDelete, onCancel }) => {
           </p>
         </div>
 
-        <div className = "flex gap-[122px] mt-8">
+        <div className = "flex gap-4 mt-8">
           <DeleteButton onClick = {onDelete} variant = "delete">
             Delete
           </DeleteButton>
@@ -42,4 +42,4 @@ const DocDeleteModal = ({ onDelete, onCancel }) => {
   );
 };
 
-export default DocDeleteModal; 
+export default ListDeleteModal; 

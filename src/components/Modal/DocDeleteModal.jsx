@@ -17,10 +17,10 @@ const DocDeleteModal = ({ onDelete, onCancel }) => {
         className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center justify-center">
         <div className = "mb-2 space-y-2">
           <div className = "space-y-2">
-            <p id = "modal-title" className = "text-[20px] text-center">
+            <p id = "modal-title" className = "text-[20px] font-normal text-center">
               서류를 삭제하면 관련 리스트도
             </p>
-            <p className = "text-[20px] text-center">
+            <p className = "text-[20px] font-normal text-center">
               모두 삭제되며 복구할 수 없습니다.
             </p>
           </div>

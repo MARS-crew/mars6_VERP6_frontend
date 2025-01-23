@@ -1,10 +1,12 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Test from "../pages/index";
+import MainPageView from "../pages/mainPage";
+import DetailPageView from "../pages/detailPage";
 
 const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<Test />} />
+    <Route path="/" element={<MainPageView />} />
+    <Route path="/detail-page" element={<DetailPageView />} />
   </Routes>
 );
 

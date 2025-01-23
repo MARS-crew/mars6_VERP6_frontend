@@ -1,7 +1,12 @@
 import React from "react";
+import Header from "../../components/header/Header";
 
 function DetailPage() {
-  return <div>디테일 페이지입니다</div>;
+  return (
+    <div>
+      <Header />
+    </div>
+  );
 }
 
 export default DetailPage;

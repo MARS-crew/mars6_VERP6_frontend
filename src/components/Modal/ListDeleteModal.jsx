@@ -14,17 +14,22 @@ const ListDeleteModal = ({ onDelete, onCancel }) => {
       onClick = {handleOverlayClick}
     >
       <div 
-        className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center justify-center">
+        className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center pt-[19px]">
+        <img 
+                  src = {warningIcon} 
+                  alt = "warning" 
+                  className = "w-[38px] h-[33px] mb-4"
+                />
         <div className = "mb-2 space-y-2">
           <div className = "space-y-2">
-            <p id = "modal-title" className = "text-[20px] font-normald text-center">
+            <p id = "modal-title" className = "text-[20px] font-normal text-center leading-[25px]">
               리스트를 삭제하면 업데이트 히스토리도
             </p>
-            <p className = "text-[20px] font-normal text-center">
+            <p className = "text-[20px] font-normal text-center leading-[25px]">
               모두 삭제되며 복구할 수 없습니다.
             </p>
           </div>
-          <p className = "text-[20px] font-bold text-center">
+          <p className = "text-[20px] font-bold text-center leading-[25px]">
             정말 삭제하시겠습니까?
           </p>
         </div>

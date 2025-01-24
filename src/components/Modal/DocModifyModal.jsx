@@ -49,14 +49,14 @@ const DocModifyModal = ({ onClose }) => {
         >
           <div className = "flex items-center">
             <ModifyButton 
-              isSelected = {selectedButton === '수정'}
+              selected = {selectedButton === '수정'}
               onClick = {() => handleButtonClick('수정')}
             >
               수정
             </ModifyButton>
-            <div className = "h-[50px] w-[1px] bg-[#8E98A8]"></div>
+            <div className = "h-[50px] w-[1px] bg-[#FF595C]"></div>
             <ModifyButton 
-              isSelected = {selectedButton === '삭제'}
+              selected = {selectedButton === '삭제'}
               onClick = {() => handleButtonClick('삭제')}
             >
               삭제

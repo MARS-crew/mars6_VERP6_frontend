@@ -11,21 +11,21 @@ function MainPage() {
   };
 
   return (
-    <div className="bg-[#F6F6F6] w-full min-h-screen">
+    <div className = "bg-[#F6F6F6] w-full min-h-screen">
       <Header />
-      <div className="flex justify-center">
-        <div className="w-[1194px] mt-[30px]">
+      <div className = "flex justify-center">
+        <div className = "w-[1194px] mt-[30px]">
           {documents.length > 0 ? (
             <>
-              <div className="space-y-[30px] mb-[30px]">
+              <div className = "space-y-[30px] mb-[30px]">
                 {documents.map(id => (
-                  <DocumentList key={id} />
+                  <DocumentList key = {id} />
                 ))}
               </div>
-              <AddDocument onClick={handleAddDocument} />
+              <AddDocument onClick = {handleAddDocument} />
             </>
           ) : (
-            <AddDocument onClick={handleAddDocument} />
+            <AddDocument onClick = {handleAddDocument} />
           )}
         </div>
       </div>

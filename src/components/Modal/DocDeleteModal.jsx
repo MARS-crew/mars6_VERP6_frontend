@@ -15,7 +15,7 @@ const DocDeleteModal = ({ onDelete, onCancel }) => {
       onClick = {handleOverlayClick}
     >
       <div 
-        className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center pt-[19px]">
+        className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center pt-[19px] shadow-[0_0_2px_2px_rgba(0,0,0,0.5)]">
         <img 
           src = {warningIcon} 
           alt = "warning" 

@@ -15,12 +15,12 @@ const ListDeleteModal = ({ onDelete, onCancel }) => {
       onClick = {handleOverlayClick}
     >
       <div 
-        className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center pt-[19px]">
+        className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center pt-[19px] shadow-[0_0_2px_2px_rgba(0,0,0,0.5)]">
         <img 
-                  src = {warningIcon} 
-                  alt = "warning" 
-                  className = "w-[38px] h-[33px] mb-4"
-                />
+          src = {warningIcon} 
+          alt = "warning" 
+          className = "w-[38px] h-[33px] mb-4"
+        />
         <div className = "mb-2 space-y-2">
           <div className = "space-y-2">
             <p id = "modal-title" className = "text-[20px] font-normal text-center leading-[25px]">

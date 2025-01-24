@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import DeleteButton from '../Button/DeleteButton';
+import warningIcon from '../../assets/warning-icon.svg';
 
 const ListDeleteModal = ({ onDelete, onCancel }) => {
   const handleOverlayClick = useCallback((e) => {
@@ -34,7 +35,7 @@ const ListDeleteModal = ({ onDelete, onCancel }) => {
           </p>
         </div>
 
-        <div className = "flex gap-4 mt-8">
+        <div className = "w-full px-[71px] pb-[29px] mt-auto flex justify-between">
           <DeleteButton onClick = {onDelete} variant = "delete">
             Delete
           </DeleteButton>

@@ -6,7 +6,7 @@ function MainPage() {
   return (
     <div className="bg-[#F6F6F6] w-full h-screen">
       <Header />
-        <div className = "flex justify-center mt-[35px]">
+        <div className = "flex justify-center mt-[30px]">
           <AddDocument />
         </div>
     </div>

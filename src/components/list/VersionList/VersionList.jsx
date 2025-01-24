@@ -1,7 +1,7 @@
 import React from "react";
-import DownloadIcon from "../../assets/svg/Download.svg";
-import ArrowDownIcon from "../../assets/svg/ArrowDown.svg";
-import ArrowUpIcon from "../../assets/svg/ArrowUp.svg";
+import DownloadIcon from "../../../assets/svg/Download.svg";
+import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
+import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 
 function VersionList({ no, ver, title, date, state }) {
   return (

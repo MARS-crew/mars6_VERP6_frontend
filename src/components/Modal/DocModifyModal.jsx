@@ -54,7 +54,7 @@ const DocModifyModal = ({ onClose }) => {
             >
               수정
             </ModifyButton>
-            <div className = "h-[50px] w-[1px] bg-[#FF595C]"></div>
+            <div className = "h-[50px] w-[1px] bg-[#8E98A8]"></div>
             <ModifyButton 
               selected = {selectedButton === '삭제'}
               onClick = {() => handleButtonClick('삭제')}

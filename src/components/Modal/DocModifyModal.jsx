@@ -10,7 +10,7 @@ const ModifyButton = ({ onClick, children }) => (
   </button>
 );
 
-const DocModifyModal = ({ onClose, onDelete }) => {
+const DocModifyModal = ({ onClose, onDelete, onModify }) => {
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -24,6 +24,8 @@ const DocModifyModal = ({ onClose, onDelete }) => {
     setSelectedButton(buttonType);
     if (buttonType === '삭제') {
       setShowDeleteModal(true);
+    } else if (buttonType === '수정') {
+      onModify();
     }
   };
 

@@ -18,7 +18,7 @@ function MainPage() {
     <div className = "bg-[#F6F6F6] w-full min-h-screen">
       <Header />
       <div className = "flex justify-center">
-        <div className = "w-[1194px] h-[52px]">
+        <div className = "w-[1194px]">
           <div className = "space-y-[30px] mt-[30px] mb-[30px]">
             {documents.map(id => (
               <DocumentList

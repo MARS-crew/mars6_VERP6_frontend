@@ -39,13 +39,11 @@ const DocModifyModal = ({ onClose }) => {
   };
 
   return (
-    <div 
-      className = "fixed inset-0 flex items-center justify-center z-50"
-      onClick = {handleOverlayClick}
-    >
+    <>
       {!showDeleteModal ? (
         <div 
-          className = "bg-white w-[144px] h-[68px] rounded-[5px] flex items-center justify-center shadow-[0_0_2px_2px_rgba(0,0,0,0.5)]"
+          onClick = {handleOverlayClick}
+          className = "bg-white w-[144px] h-[68px] rounded-[5px] shadow-[0_0_2px_2px_rgba(0,0,0,0.5)]"
         >
           <div className = "flex items-center">
             <ModifyButton 
@@ -69,7 +67,7 @@ const DocModifyModal = ({ onClose }) => {
           onCancel = {handleCancel}
         />
       )}
-    </div>
+    </>
   );
 };
 

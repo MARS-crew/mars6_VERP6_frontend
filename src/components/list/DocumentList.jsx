@@ -9,6 +9,7 @@ const DocumentList = ({ id, onRemove }) => {
   const [documentType, setDocumentType] = useState('');
   const [isEditing, setIsEditing] = useState(true);
   const [showValidator, setShowValidator] = useState(false);
+  const [addListCount, setAddListCount] = useState(1);
 
   const handleMoreClick = () => {
     setShowModifyModal(prev => !prev);
@@ -50,8 +51,12 @@ const DocumentList = ({ id, onRemove }) => {
     }
   };
 
+  const handleAddList = () => {
+    setAddListCount(prev => prev + 1);
+  };
+
   return (
-    <div className = "w-[1194px] h-[189px] bg-white rounded-[8px] shadow-[0_0_2px_2px_rgba(0,0,0,0.10)] relative">
+    <div style={{ height: `${189 + (addListCount - 1) * 188}px`, transition: 'height 0.3s ease-in-out' }} className = "w-[1194px] bg-white rounded-[8px] shadow-[0_0_2px_2px_rgba(0,0,0,0.10)] relative">
       <div className = "absolute top-[32px] right-[6px]">
         <img 
           src = {moreIcon} 
@@ -69,28 +74,35 @@ const DocumentList = ({ id, onRemove }) => {
           </div>
         )}
       </div>
-      {isEditing ? (
-        <>
-          <DocumentTypeInput
-            value = {documentType}
-            onChange = {handleChange}
-            onBlur = {handleSave}
-            onKeyDown = {handleKeyDown}
-          />
-          {showValidator && (
-            <div className = "pl-[33px]">
-              <DocValidator />
-            </div>
-          )}
-        </>
-      ) : (
-        <>
-          <div className = "text-[28px] pl-[20px] pt-[14px]">{documentType}</div>
-          <div className = "absolute bottom-[18px] w-full flex justify-center">
-            <span className = "text-[30px] text-[#8E98A8] leading-[30px] cursor-pointer">+</span>
+      <div className = "h-full">
+        {isEditing ? (
+          <div className = "h-full">
+            <DocumentTypeInput
+              value = {documentType}
+              onChange = {handleChange}
+              onBlur = {handleSave}
+              onKeyDown = {handleKeyDown}
+            />
+            {showValidator && (
+              <div className = "pl-[33px]">
+                <DocValidator />
+              </div>
+            )}
           </div>
-        </>
-      )}
+        ) : (
+          <div className = "h-full">
+            <div className = "text-[28px] pl-[20px] pt-[14px]">{documentType}</div>
+            <div className = "absolute bottom-[18px] w-full flex justify-center">
+              <span 
+                className = "text-[30px] text-[#8E98A8] leading-[30px] cursor-pointer"
+                onClick = {handleAddList}
+              >
+                +
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moreIcon from '../../assets/images/more-icon.png';
 import DocModifyModal from '../Modal/DocModifyModal';
 
-const DocumentList = () => {
+const DocumentList = ({ id, onRemove }) => {
   const [showModifyModal, setShowModifyModal] = useState(false);
 
   const handleMoreClick = () => {
@@ -10,6 +10,11 @@ const DocumentList = () => {
   };
 
   const handleCloseModal = () => {
+    setShowModifyModal(false);
+  };
+
+  const handleDelete = () => {
+    onRemove(id);
     setShowModifyModal(false);
   };
 
@@ -23,8 +28,11 @@ const DocumentList = () => {
           onClick = {handleMoreClick}
         />
         {showModifyModal && (
-          <div className = "absolute top-[40px] right-[20px]">
-            <DocModifyModal onClose = {handleCloseModal} />
+          <div className = "absolute top-[40px] right-[20px] z-[100]">
+            <DocModifyModal 
+              onClose = {handleCloseModal}
+              onDelete = {handleDelete}
+            />
           </div>
         )}
       </div>

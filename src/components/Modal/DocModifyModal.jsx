@@ -10,7 +10,7 @@ const ModifyButton = ({ onClick, children }) => (
   </button>
 );
 
-const DocModifyModal = ({ onClose }) => {
+const DocModifyModal = ({ onClose, onDelete }) => {
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -28,13 +28,12 @@ const DocModifyModal = ({ onClose }) => {
   };
 
   const handleDelete = () => {
-    console.log("Delete clicked");
+    onDelete();
     setShowDeleteModal(false);
     onClose();
   };
 
   const handleCancel = () => {
-    console.log("Cancel clicked");
     setShowDeleteModal(false);
   };
 

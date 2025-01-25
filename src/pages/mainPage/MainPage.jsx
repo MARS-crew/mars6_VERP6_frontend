@@ -11,7 +11,7 @@ function MainPage() {
   };
 
   const handleRemoveDocument = (id) => {
-    setDocuments(prev => prev.filter(doc => doc.id !== id));
+    setDocuments(prev => prev.filter(docId => docId !== id));
   };
 
   return (
@@ -23,6 +23,8 @@ function MainPage() {
             {documents.map(id => (
               <DocumentList
                 key = {id}
+                id = {id}
+                onRemove = {handleRemoveDocument}
               />
             ))}
           </div>

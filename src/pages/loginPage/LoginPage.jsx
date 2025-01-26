@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import LoginButton from '../../components/Button/LoginButton';
+import LoginInput from '../../components/Input/LoginInput';
 
 const LoginPage = () => {
   const [loginForm, setLoginForm] = useState({
@@ -26,45 +27,22 @@ const LoginPage = () => {
         <h2 className = "text-[30px] font-bold text-center mb-[50px]">
           로그인
         </h2>
-        <form className = "space-y-6" onSubmit = {handleLogin}>
-          <div className = "space-y-[25px]">
-            <div>
-              <label 
-                htmlFor = "id" 
-                className = "block text-[13px] text-[#7C838A] mb-[16px] font-medium"
-              >
-                아이디
-              </label>
-              <input
-                id = "id"
-                name = "id"
-                type = "text"
-                required
-                className = "w-full pb-[6px] pl-[7px] border-b border-[#D9D9D9] text-[12px] focus:outline-none placeholder-[#B2B2B2] font-normal"
-                placeholder = "아이디를 입력해주세요"
-                value = {loginForm.id}
-                onChange = {handleInputChange}
-              />
-            </div>
-            <div>
-              <label 
-                htmlFor = "password" 
-                className = "block text-[13px] text-[#7C838A] mb-[16px] font-medium"
-              >
-                비밀번호
-              </label>
-              <input
-                id = "password"
-                name = "password"
-                type = "password"
-                required
-                className = "w-full pl-[7px] pb-[6px] border-b border-[#D9D9D9] text-[12px] focus:outline-none placeholder-[#B2B2B2] font-normal"
-                placeholder = "비밀번호를 입력해주세요"
-                value = {loginForm.password}
-                onChange = {handleInputChange}
-              />
-            </div>
-          </div>
+        <form className = "space-y-[25px]" onSubmit = {handleLogin}>
+          <LoginInput
+            label = "아이디"
+            name = "id"
+            placeholder = "아이디를 입력해주세요"
+            value = {loginForm.id}
+            onChange = {handleInputChange}
+          />
+          <LoginInput
+            label = "비밀번호"
+            name = "password"
+            type = "password"
+            placeholder = "비밀번호를 입력해주세요"
+            value = {loginForm.password}
+            onChange = {handleInputChange}
+          />
 
           <div className = "mt-[25px] font-semibold">
             <LoginButton type = "submit">

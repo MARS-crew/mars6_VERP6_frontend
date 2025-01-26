@@ -3,7 +3,7 @@ const LoginInput = ({ label, type = "text", placeholder, value, onChange, name }
     <div>
       <label 
         htmlFor = {name}
-        className = "block text-[13px] text-[#7C833A] mb-[16px]"
+        className = "block text-[13px] text-[#7C838A] mb-[16px]"
       >
         {label}
       </label>

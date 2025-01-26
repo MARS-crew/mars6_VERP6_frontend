@@ -1,18 +1,14 @@
 // src/components/ItemRow.js
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import MoreIcon from "../../../assets/images/more-icon.png"
 import PencilIcon from "../../../assets/images/icon-pencil.png"
 import DeletIcon from "../../../assets/images/icon-delete.png"
 import { useNavigate } from "react-router-dom";
+import AlertIcon from "../../../assets/images/icon-alert.png"
 
 function ItemRow({ item, isLast }) {
   // item = { name, fileLink, progressPercent, updated }
   // isLast = boolean(마지막 요소인지 여부) -> border 처리를 위해 사용
-  const navigate = useNavigate();
-
-  const updatepaper = () => {
-    navigate('/ut')
-  }
   
   return (
     <div
@@ -20,10 +16,9 @@ function ItemRow({ item, isLast }) {
     >
       {/* 아이템 상단(이름, 우측 ⋮ 메뉴 아이콘 등) */}
       <div className="flex items-center justify-between mb-2">
-        <div className="font-medium text-gray-700">{item.name}</div>
-        <button className="text-gray-600 hover:text-gray-800">
-          <span> <img className="h-[32px]" src={MoreIcon} /></span>
-        </button>
+        <div className="font-medium text-gray-700 flex">{item.name}
+          {<img className="ml-[10px] h-[20px]" src={AlertIcon} />}
+        </div>
       </div>
 
       {/* 진행도 바 */}{/* 파일/링크, 날짜, 수정/삭제 아이콘 영역 */}
@@ -41,7 +36,7 @@ function ItemRow({ item, isLast }) {
         <div className="flex items-center gap-10 mr-[50px]">
           <span>{item.updated}</span>
           {/* 수정 아이콘 */}
-          <button className="hover:text-gray-700" onClick={updatepaper}>
+          <button className="hover:text-gray-700">
           <span> <img className="h-[16px]" src={PencilIcon} /></span>
           </button>
           {/* 삭제 아이콘 */}

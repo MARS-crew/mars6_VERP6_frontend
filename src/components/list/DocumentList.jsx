@@ -30,7 +30,7 @@ const DocumentList = ({ id, onRemove }) => {
     },
     {
       name: "Todo list 웹 기획서",
-      fileLink: "V0.2 todo 기획서.ppt",
+      fileLink: "영일이삼사오육칠팔구영일이삼사오육칠팔구",
       progressPercent: 70,
       waitPercent:20,
       updated: "1일전",
@@ -118,7 +118,7 @@ const DocumentList = ({ id, onRemove }) => {
   return (
     <div 
       style={{ /*height: `${189 + (addListCount - 1) * 188}px`*/
-      height: `${100*(addListCount) + items.length * 105}px`, 
+      height: `${110*(addListCount) + items.length * 120}px`, 
       transition: 'height 0.3s ease-in-out' }} 
       className = "w-[1194px] bg-white rounded-[8px] shadow-[0_0_2px_2px_rgba(0,0,0,0.10)] relative"
       >

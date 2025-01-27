@@ -2,53 +2,61 @@
 import React, { useEffect, useRef } from "react";
 import MoreIcon from "../../../assets/images/more-icon.png"
 import PencilIcon from "../../../assets/images/icon-pencil.png"
-import DeletIcon from "../../../assets/images/icon-delete.png"
 import { useNavigate } from "react-router-dom";
 import AlertIcon from "../../../assets/images/icon-alert.png"
+import UpdateIcon from "../../../assets/svg/UpdateIcon.svg"
+import DeletIcon from "../../../assets/svg/DeletIcon.svg"
 
 function ItemRow({ item, isLast }) {
-  // item = { name, fileLink, progressPercent, updated }
-  // isLast = boolean(마지막 요소인지 여부) -> border 처리를 위해 사용
   const isempty = item.state
+  const waittotal = item.waitPercent+item.progressPercent
+
+  const shortenedFileLink =
+    item.fileLink.length > 10
+      ? `${item.fileLink.slice(0, 10)}...`
+      : item.fileLink;
+
   return (
     <div
       className={`mb-6 pb-6 ${!isLast && "border-b border-gray-200"} last:mb-0`}
     >
-      {/* 아이템 상단(이름, 우측 ⋮ 메뉴 아이콘 등) */}
       <div className="flex items-center justify-between mb-2">
-        <div className="font-medium text-gray-700 flex">{item.namelist}
-          { isempty ? <img className="ml-[10px] h-[20px]" src={AlertIcon} />:null}
+        <div className="font-medium text-gray-700 flex text-[17px]">{item.namelist}
+          { isempty ? <img className="ml-[10px] mt-[5px] h-[16px]" src={AlertIcon} />:null}
         </div>
       </div>
 
-      {/* 진행도 바 */}{/* 파일/링크, 날짜, 수정/삭제 아이콘 영역 */}
       <div className="flex items-center justify-between text-sm text-gray-500">
-        <div className="w-[40rem] bg-[#9CA2B3] rounded-full h-4 mb-2 flex">
+        <div className="w-[40rem] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative">
           <div
-            className="bg-[#14AE5C] h-4 rounded-s-full"
+            className="bg-[#14AE5C] h-[36px] rounded-full absolute"
             style={{ 
               width: `${item.progressPercent}%` 
             }}
             />
-            <div className="bg-[#5A5A5A] h-4 rounded-e-full" 
+            <div className="bg-[#5A5A5A] h-[36px] rounded-full" 
              style={{ 
-              width: `${item.waitPercent}%` 
+              width: `${waittotal}%` 
             }}
             />
         </div>
 
-        <div className="flex items-center">
+        <div 
+          className="flex items-center text-black text-[20px] font-medium truncate"
+          style={{ maxWidth: "200px" }}
+          title={item.fileLink}
+        >
           <span>{item.fileLink}</span>
         </div>
-        <div className="flex items-center gap-10 mr-[50px]">
+        <div className="flex items-center gap-10 mr-[50px] text-[20px]">
           <span>{item.updated}</span>
-          {/* 수정 아이콘 */}
           <button className="hover:text-gray-700">
-          <span> <img className="h-[16px]" src={PencilIcon} /></span>
+          <span> 
+            <img className="h-[20px] w-[20px]" src={UpdateIcon}
+          /></span>
           </button>
-          {/* 삭제 아이콘 */}
           <button className="hover:text-gray-700">
-          <span> <img className="h-[16px]" src={DeletIcon} /></span>
+          <span> <img className="h-[20px] w-[20px]" src={DeletIcon} /></span>
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
 
 import StateButton from "../../stateButton/StateButton";
+import StateSelectModal from "../../stateButton/StateSelectModal";
 
 function RequestList({ no, title, state, date, writer, open }) {
   const [modalState, setModalState] = useState(false);
@@ -17,6 +18,7 @@ function RequestList({ no, title, state, date, writer, open }) {
         <div className="w-[5%] text-[#8E98A8] font-medium">{no}1</div>
         <div className="text-center">{title}asdkjsakjas.ppt</div>
         <StateButton state="wait" />
+        {/* <StateSelectModal /> */}
         <div>정우준</div>
         <div className="text-center">{date}2025.01.01</div>
         <img src={DownloadIcon} />

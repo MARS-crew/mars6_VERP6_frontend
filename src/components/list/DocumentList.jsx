@@ -156,7 +156,7 @@ const DocumentList = ({ id, onRemove }) => {
           </div>
         ) : (
           <div className = "h-full">
-            <div className = "text-[28px] pl-[20px] pt-[14px]">{documentType}</div>
+            <div className = "text-[28px] pl-[20px] pt-[14px] ml-[20px]">{documentType}</div>
             <div className="pl-[20px]">
               {isListEditing?(
                 <div className = "h-full">

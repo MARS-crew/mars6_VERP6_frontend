@@ -18,7 +18,7 @@ function ItemRow({ item, isLast }) {
 
   return (
     <div
-      className={`mb-6 pb-6 ${!isLast && "border-b border-gray-200"} last:mb-0 mr-[20px]`}
+      className={`mb-6 mt-[19px] pb-6 ${!isLast && "border-b border-[#B4B4B4]"} last:mb-0 mr-[20px]`}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="font-medium text-gray-700 flex text-[17px]">{item.namelist}
@@ -27,7 +27,7 @@ function ItemRow({ item, isLast }) {
       </div>
 
       <div className="flex items-center justify-between text-sm text-gray-500">
-        <div className="w-[40rem] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative">
+        <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative">
           <div
             className="bg-[#14AE5C] h-[36px] rounded-full absolute"
             style={{ 
@@ -48,7 +48,7 @@ function ItemRow({ item, isLast }) {
         >
           <span>{item.fileLink}</span>
         </div>
-        <div className="flex items-center gap-10 mr-[50px] text-[20px]">
+        <div className="flex items-center gap-10 mr-[70px] text-[20px]">
           <span>{item.updated}</span>
           <button className="hover:text-gray-700">
           <span> 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DocumentListInput = ({ value, onChange, onBlur, onKeyDown }) => {
+function DocumentListInput({ value, onChange, onBlur, onKeyDown }) {
   return (
     <div className = "w-[333px] relative pl-[20px] pt-[19px]">
       <input
@@ -16,6 +16,6 @@ const DocumentListInput = ({ value, onChange, onBlur, onKeyDown }) => {
       <div className = "absolute left-[13px] right-0 bottom-0 border-b border-[#D9D9D9]" />
     </div>
   );
-};
+}
 
 export default DocumentListInput; 

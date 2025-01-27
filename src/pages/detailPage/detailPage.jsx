@@ -39,9 +39,9 @@ function DetailPage() {
               </div>
             ) : null}
           </div>
-          <VersionListHeader />
+          <VersionListHeader position={position} />
           {addModal ? <AddVersion /> : null}
-          <VersionList />
+          <VersionList position={position} />
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">

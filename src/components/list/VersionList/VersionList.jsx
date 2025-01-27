@@ -4,7 +4,7 @@ import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
 
-function VersionList({ no, ver, title, date }) {
+function VersionList({ no, ver, title, date, position }) {
   const [modalState, setModalState] = useState(false);
 
   const handleModal = () => {
@@ -13,7 +13,24 @@ function VersionList({ no, ver, title, date }) {
   return (
     <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg">
       <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px] ">
-        <div className="w-[5%] text-[#8E98A8] font-medium">{no}1</div>
+        <div className="flex w-[5%] items-center">
+          {position == "leader" ? (
+            <>
+              <input
+                type="checkbox"
+                id={`check_btn_${no}`}
+                className="hidden peer"
+              />
+              <label
+                htmlFor={`check_btn_${no}`}
+                className="text-white w-[17px] h-[17px] border-2 border-[#8E98A8] rounded flex items-center justify-center peer-checked:bg-[#8E98A8] peer-checked:text-white cursor-pointer"
+              >
+                ✓
+              </label>
+            </>
+          ) : null}
+          <div className=" text-[#8E98A8] font-medium ml-[9px]">{no}1</div>
+        </div>
         <div className="w-[10%] text-center font-medium">V{ver}0.1</div>
         <div className="w-[30%] text-center">{title}asdkjsakjas.ppt</div>
         <div className="text-center">{date}2025.01.01</div>

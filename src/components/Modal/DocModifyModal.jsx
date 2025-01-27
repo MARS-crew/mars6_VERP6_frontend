@@ -12,11 +12,7 @@ function ModifyButton({ onClick, children }) {
   );
 }
 
-<<<<<<< HEAD
-const DocModifyModal = ({ onClose }) => {
-=======
 function DocModifyModal({ onClose, onDelete, onModify }) {
->>>>>>> 566ae9ddf46aa62c6fde61e4569573cfb504d5e7
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 

@@ -6,7 +6,7 @@ function AddVersion() {
       <div className="text-xl font-semibold">버전 업그레이드</div>
       <div className="flex mt-[18px]">
         <div className="text-sm font-semibold text-center">버전</div>
-        <input className="h-[21px]" placeholder="버전 입력" />
+        <input className="h-[21px] " placeholder="버전 입력" />
       </div>
       <div className="mt-[18px]">
         <div className="text-sm font-semibold">업로드할 서류 양식</div>

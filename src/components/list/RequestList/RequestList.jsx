@@ -9,16 +9,25 @@ import StateSelectModal from "../../stateButton/StateSelectModal";
 
 function RequestList({ no, title, state, date, writer, open }) {
   const [modalState, setModalState] = useState(false);
+  const [selectModal, setSelectModal] = useState(false);
+
   const handleModal = () => {
     setModalState(!modalState);
+  };
+
+  const handleSelectStateModal = () => {
+    setSelectModal(!selectModal);
   };
   return (
     <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg">
       <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px] ">
         <div className="w-[5%] text-[#8E98A8] font-medium">{no}1</div>
         <div className="text-center">{title}asdkjsakjas.ppt</div>
-        <StateButton state="wait" />
-        {/* <StateSelectModal /> */}
+        <div>
+          <StateButton onClick={handleSelectStateModal} state="wait" />
+          {selectModal ? <StateSelectModal /> : null}
+        </div>
+
         <div>정우준</div>
         <div className="text-center">{date}2025.01.01</div>
         <img src={DownloadIcon} />

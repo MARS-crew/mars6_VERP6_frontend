@@ -2,7 +2,7 @@ import { useState } from 'react';
 import LoginButton from '../../components/Button/LoginButton';
 import LoginInput from '../../components/Input/LoginInput';
 
-const LoginPage = () => {
+function LoginPage() {
   const [loginForm, setLoginForm] = useState({
     id: '',
     password: ''
@@ -61,6 +61,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LoginPage; 

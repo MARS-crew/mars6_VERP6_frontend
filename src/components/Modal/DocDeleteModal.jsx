@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import DeleteButton from '../Button/DeleteButton';
 import warningIcon from '../../assets/warning-icon.svg';
 
-const DocDeleteModal = ({ onDelete, onCancel }) => {
+function DocDeleteModal({ onDelete, onCancel }) {
   const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget) {
       onCancel();
@@ -46,6 +46,6 @@ const DocDeleteModal = ({ onDelete, onCancel }) => {
       </div>
     </div>
   );
-};
+}
 
 export default DocDeleteModal; 

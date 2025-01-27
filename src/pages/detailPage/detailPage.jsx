@@ -31,7 +31,10 @@ function DetailPage() {
             <p className="font-bold text-xl">Todo list 앱 기획서</p>
             {position == "leader" ? (
               <div className="flex">
-                <p onClick={addModalState} className="text-center">
+                <p
+                  onClick={addModalState}
+                  className="text-center text-[#7C838A]"
+                >
                   +
                 </p>
                 <img className="w-6 ml-[15px]" src={editIcon} />

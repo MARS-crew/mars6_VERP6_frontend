@@ -9,7 +9,7 @@ const DocumentListInput = ({ value, onChange, onBlur, onKeyDown }) => {
         onChange = {onChange}
         onBlur = {onBlur}
         onKeyDown = {onKeyDown}
-        placeholder = "*서류명을 1~20자 사이로 입력해주세요."
+        placeholder = "서류 종류를 입력해주세요."
         className = "w-[333px] h-[32px] text-[17px] focus:outline-none placeholder-[#B2B2B2]"
         autoFocus
       />

@@ -27,7 +27,7 @@ function ItemRow({ item, isLast }) {
       </div>
 
       <div className="flex items-center justify-between text-sm text-gray-500">
-        <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative">
+        <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative mt-[9px]">
           <div
             className="bg-[#14AE5C] h-[36px] rounded-full absolute"
             style={{ 

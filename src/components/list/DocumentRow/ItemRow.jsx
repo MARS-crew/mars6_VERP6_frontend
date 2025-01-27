@@ -18,7 +18,7 @@ function ItemRow({ item, isLast }) {
 
   return (
     <div
-      className={`mb-6 pb-6 ${!isLast && "border-b border-gray-200"} last:mb-0`}
+      className={`mb-6 pb-6 ${!isLast && "border-b border-gray-200"} last:mb-0 mr-[20px]`}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="font-medium text-gray-700 flex text-[17px]">{item.namelist}

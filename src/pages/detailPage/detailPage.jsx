@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../components/header/Header";
 import VersionList from "../../components/list/VersionList/VersionList";
 import VersionListHeader from "../../components/list/VersionList/VersionListHeader";
@@ -6,9 +6,16 @@ import RequestListHeader from "../../components/list/RequestList/RequestListHead
 import RequestList from "../../components/list/RequestList/RequestList";
 import trashIcon from "../../assets/svg/Trash.svg";
 import editIcon from "../../assets/svg/Edit.svg";
+import AddVersion from "../../components/list/AddList/AddVersion";
 
 function DetailPage() {
   const position = "leader";
+  const [addModal, setAddModal] = useState(false);
+
+  const addModalState = () => {
+    setAddModal(!addModal);
+  };
+
   return (
     <div className="bg-[#F6F6F6] w-full h-screen">
       <Header />
@@ -18,13 +25,16 @@ function DetailPage() {
             <p className="font-bold text-xl">Todo list 앱 기획서</p>
             {position == "leader" ? (
               <div className="flex">
-                <p className="text-center">+</p>
+                <p onClick={addModalState} className="text-center">
+                  +
+                </p>
                 <img className="w-6 ml-[15px]" src={editIcon} />
                 <img className="w-6 ml-[11px]" src={trashIcon} />
               </div>
             ) : null}
           </div>
           <VersionListHeader />
+          {addModal ? <AddVersion /> : null}
           <VersionList />
         </div>
         <div className="mt-[30px]">

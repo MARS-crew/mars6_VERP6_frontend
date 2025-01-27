@@ -1,4 +1,4 @@
-const LoginInput = ({ label, type = "text", placeholder, value, onChange, name }) => {
+function LoginInput({ label, type = "text", placeholder, value, onChange, name }) {
   return (
     <div>
       <label 
@@ -18,6 +18,6 @@ const LoginInput = ({ label, type = "text", placeholder, value, onChange, name }
       />
     </div>
   );
-};
+}
 
 export default LoginInput;

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import AlertIcon from "../../../assets/images/icon-alert.png"
 import UpdateIcon from "../../../assets/svg/UpdateIcon.svg"
 import DeletIcon from "../../../assets/svg/DeletIcon.svg"
+import BellIcon from "../../../assets/images/bell-icon.png"
 
 function ItemRow({ item, isLast }) {
   const isempty = item.state
@@ -22,7 +23,7 @@ function ItemRow({ item, isLast }) {
     >
       <div className="flex items-center justify-between mb-2">
         <div className="font-medium text-gray-700 flex text-[17px]">{item.namelist}
-          { isempty ? <img className="ml-[10px] mt-[5px] h-[16px]" src={AlertIcon} />:null}
+          { isempty ? <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />:null}
         </div>
       </div>
 

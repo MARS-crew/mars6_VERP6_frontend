@@ -1,4 +1,4 @@
-const AddDocument = ({ onClick }) => {
+function AddDocument({ onClick }) {
   return (
     <button
       onClick = {onClick}
@@ -7,6 +7,6 @@ const AddDocument = ({ onClick }) => {
       <span className = "text-[30px] text-[#8E98A8] leading-[30px] flex items-center justify-center">+</span>
     </button>
   );
-};
+}
 
 export default AddDocument;

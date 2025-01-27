@@ -4,7 +4,7 @@ import DocModifyModal from '../Modal/DocModifyModal';
 import DocumentTypeInput from '../Input/DocumentTypeInput';
 import DocValidator from '../Validator/DocValidator';
 
-const DocumentList = ({ id, onRemove }) => {
+function DocumentList({ id, onRemove }) {
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [documentType, setDocumentType] = useState('');
   const [isEditing, setIsEditing] = useState(true);
@@ -105,6 +105,6 @@ const DocumentList = ({ id, onRemove }) => {
       </div>
     </div>
   );
-};
+}
 
 export default DocumentList;

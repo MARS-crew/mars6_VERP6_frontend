@@ -1,16 +1,18 @@
 import { useCallback, useState } from 'react';
 import DocDeleteModal from './DocDeleteModal';
 
-const ModifyButton = ({ onClick, children }) => (
-  <button
-    onClick = {onClick}
-    className = "w-[72px] h-[68px] text-[20px] font-medium text-black"
-  >
-    {children}
-  </button>
-);
+function ModifyButton({ onClick, children }) {
+  return (
+    <button
+      onClick = {onClick}
+      className = "w-[72px] h-[68px] text-[20px] font-medium text-black"
+    >
+      {children}
+    </button>
+  );
+}
 
-const DocModifyModal = ({ onClose, onDelete, onModify }) => {
+function DocModifyModal({ onClose, onDelete, onModify }) {
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -70,7 +72,7 @@ const DocModifyModal = ({ onClose, onDelete, onModify }) => {
       )}
     </>
   );
-};
+}
 
 export default DocModifyModal;
 

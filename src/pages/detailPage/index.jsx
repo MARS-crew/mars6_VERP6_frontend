@@ -1,5 +1,5 @@
 import React from "react";
-import DetailPage from "./detailPage";
+import DetailPage from "./DetailPage";
 
 function DetailPageView() {
   return <DetailPage />;

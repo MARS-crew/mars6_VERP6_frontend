@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import MoreIcon from "../../../assets/images/more-icon.png"
 import PencilIcon from "../../../assets/images/icon-pencil.png"
 import { useNavigate } from "react-router-dom";
-import AlertIcon from "../../../assets/images/icon-alert.png"
+import AlertIcon from "../../../assets/svg/AlertIcon.svg"
 import UpdateIcon from "../../../assets/svg/UpdateIcon.svg"
 import DeletIcon from "../../../assets/svg/DeletIcon.svg"
 

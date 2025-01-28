@@ -1,6 +1,6 @@
 import React from "react";
 
-function StateButton({ state }) {
+function StateButton({ state, onClick }) {
   const config = {
     wait: { text: "대기", bgColor: "bg-[#B3B3B3]" },
     examine: { text: "검토", bgColor: "bg-[#5A5A5A]" },
@@ -14,7 +14,7 @@ function StateButton({ state }) {
   };
 
   return (
-    <div className={`w-[72px] h-6 rounded-[5px] ${bgColor}`}>
+    <div onClick={onClick} className={`w-[72px] h-6 rounded-[5px] ${bgColor}`}>
       <p className="text-[15px] font-bold text-white text-center">{text}</p>
     </div>
   );

@@ -156,10 +156,10 @@ function DocumentList({ id, onRemove }) {
           </div>
         ) : (
           <div className = "h-full">
-            <div className = "text-[28px] pl-[20px] pt-[14px] ml-[20px]">{documentType}</div>
-            <div className="pl-[20px]">
+            <div className = "text-[28px] pl-[20px] pt-[14px]">{documentType}</div>
+            <div>
               {isListEditing?(
-                <div className = "h-full">
+                <div className = "h-full pl-[20px]">
                   <DocumentListInput
                     value={documentList}
                     onChange={handleListInputChange}
@@ -170,10 +170,10 @@ function DocumentList({ id, onRemove }) {
                     <div className="pl-[20px]">
                       <DocTypeValidator />
                     </div>
-              )}
+                  )}
                 </div>
               ):(
-                <div className = "h-full">{items?(<div className = "h-full"></div>):(<div className = "h-full"></div>)}
+                <div className = "h-full">
                     <div className="pl-[20px]">
                     {items.map((item, idx) => (
                       <ItemRow key={idx} item={item} isLast={idx === items.length - 1}/>

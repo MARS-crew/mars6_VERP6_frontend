@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import LoginButton from '../../components/Button/LoginButton';
+import LoginInput from '../../components/Input/LoginInput';
 
 function LoginPage() {
   const [loginForm, setLoginForm] = useState({

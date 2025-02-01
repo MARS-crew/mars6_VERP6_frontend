@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { authState } from '../recoil/auth/auth';
 
-export const useAuth = () => {
+function useAuth() {
   const setAuth = useSetRecoilState(authState);
   const navigate = useNavigate();
 
@@ -37,4 +37,6 @@ export const useAuth = () => {
     isLoading: loginMutation.isPending,
     error: loginMutation.error
   };
-}; 
+}
+
+export default useAuth; 

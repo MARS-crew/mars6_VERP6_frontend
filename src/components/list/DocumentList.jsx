@@ -27,7 +27,7 @@ const INITIAL_ITEMS = [
 ];
 
 function DocumentList({ id, onRemove }) {
-  const { document } = useDocument(id);
+  const { document, documents, isLoading } = useDocument(id);
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [addListCount, setAddListCount] = useState(1);
   const [isListEditing, setListIsEditing] = useState(true);
@@ -73,6 +73,10 @@ function DocumentList({ id, onRemove }) {
 
   const containerHeight = `${110 * addListCount + items.length * 120}px`;
 
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
   return (
     <div 
       style={{ 
@@ -109,6 +113,7 @@ function DocumentList({ id, onRemove }) {
                   onChange={handleListInputChange}
                   onBlur={handlelistSave}
                   onKeyDown={handlelistKeyDown}
+                  docTypeId={document.id}
                 />
               )}
               {showTypeValidator && (

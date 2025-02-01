@@ -3,7 +3,7 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 import axios from 'axios';
 import { documentState } from '../recoil/document';
 
-const useDocument = (documentId) => {
+function useDocument(documentId) {
   const setDocument = useSetRecoilState(documentState(documentId));
   const document = useRecoilValue(documentState(documentId));
 
@@ -19,7 +19,7 @@ const useDocument = (documentId) => {
     mutationFn: async (title) => {
       try {
         const response = await axios.post('/api/doc-types', {
-          title: title
+          title
         }, {
           headers: {
             'Content-Type': 'application/json',
@@ -38,6 +38,7 @@ const useDocument = (documentId) => {
     onSuccess: (response) => {
       setDocument(prev => ({
         ...prev,
+        id: response.data.result?.id || documentId,
         title: response.title,
         isEditing: false,
         showValidator: false
@@ -74,6 +75,6 @@ const useDocument = (documentId) => {
     error: createDocumentMutation.error,
     document
   };
-};
+}
 
 export default useDocument; 

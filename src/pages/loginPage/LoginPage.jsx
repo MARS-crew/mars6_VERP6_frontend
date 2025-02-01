@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import LoginButton from '../../components/Button/LoginButton';
 import LoginInput from '../../components/Input/LoginInput';
-import { useAuth } from '../../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 
 function LoginPage() {
   const { login, isLoading, error } = useAuth();

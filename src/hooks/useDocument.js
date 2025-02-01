@@ -45,7 +45,7 @@ function useDocument(documentId) {
       }));
     },
     onError: (error, title) => {
-      console.error('문서 생성 에러:', error);
+      console.error('문서 타입 생성 에러:', error);
       setDocument(prev => ({
         ...prev,
         title: title,
@@ -83,7 +83,7 @@ function useDocument(documentId) {
       }));
     },
     onError: (error) => {
-      console.error('문서 수정 에러:', error);
+      console.error('문서 타입 수정 에러:', error);
     }
   });
 

@@ -3,7 +3,7 @@ import useDocument from '../../hooks/useDocument';
 import DocValidator from '../Validator/DocValidator';
 
 function DocumentTypeInput({ documentId }) {
-  const { createDocument, resetDocument, isLoading, error, document } = useDocument(documentId);
+  const { createDocument, updateDocument, resetDocument, isLoading, error, document } = useDocument(documentId);
   const [title, setTitle] = useState('');
 
   useEffect(() => {
@@ -16,7 +16,11 @@ function DocumentTypeInput({ documentId }) {
   };
 
   const handleBlur = () => {
-    createDocument(title);
+    if (document.id) {
+      updateDocument(title);
+    } else {
+      createDocument(title);
+    }
   };
 
   const handleKeyDown = (e) => {

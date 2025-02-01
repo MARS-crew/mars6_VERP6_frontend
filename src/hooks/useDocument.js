@@ -55,6 +55,38 @@ function useDocument(documentId) {
     }
   });
 
+  const updateDocumentMutation = useMutation({
+    mutationFn: async ({ id, title }) => {
+      try {
+        const response = await axios.put(`/api/doc-types/${id}`, {
+          title
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        return { data: response.data, title };
+      } catch (error) {
+        if (error.response?.status === 400) {
+          return { title };
+        }
+        throw error;
+      }
+    },
+    onSuccess: (response) => {
+      setDocument(prev => ({
+        ...prev,
+        title: response.title,
+        isEditing: false,
+        showValidator: false
+      }));
+    },
+    onError: (error) => {
+      console.error('문서 수정 에러:', error);
+    }
+  });
+
   const handleSave = (title) => {
     if (title.trim()) {
       if (title.length > 8) {
@@ -68,11 +100,34 @@ function useDocument(documentId) {
     }
   };
 
+  const handleUpdate = (title) => {
+    if (title.trim()) {
+      if (title.length > 8) {
+        setDocument(prev => ({
+          ...prev,
+          showValidator: true
+        }));
+      } else {
+        updateDocumentMutation.mutate({ id: document.id, title });
+      }
+    }
+  };
+
+  const startEditing = () => {
+    setDocument(prev => ({
+      ...prev,
+      isEditing: true,
+      showValidator: false
+    }));
+  };
+
   return {
     createDocument: handleSave,
+    updateDocument: handleUpdate,
+    startEditing,
     resetDocument,
-    isLoading: createDocumentMutation.isPending,
-    error: createDocumentMutation.error,
+    isLoading: createDocumentMutation.isPending || updateDocumentMutation.isPending,
+    error: createDocumentMutation.error || updateDocumentMutation.error,
     document
   };
 }

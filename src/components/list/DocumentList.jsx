@@ -27,7 +27,7 @@ const INITIAL_ITEMS = [
 ];
 
 function DocumentList({ id, onRemove }) {
-  const { document, documents, isLoading } = useDocument(id);
+  const { document, documents, isLoading, startEditing } = useDocument(id);
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [addListCount, setAddListCount] = useState(1);
   const [isListEditing, setListIsEditing] = useState(true);
@@ -41,7 +41,9 @@ function DocumentList({ id, onRemove }) {
     onRemove(id);
     handleCloseModal();
   };
-  const handleModify = () => handleCloseModal();
+  const handleModify = () => {
+    startEditing();
+  };
   const handleAddList = () => setAddListCount(prev => prev + 1);
 
   const handleListInputChange = (e) => setDocumentList(e.target.value);

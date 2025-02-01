@@ -7,4 +7,14 @@ export default defineConfig({
   css: {
     postcss: "./postcss.config.cjs",
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://mars-crew.shop:26080',
+        changeOrigin: true,
+        secure: false,
+        ws: true
+      }
+    }
+  },
 });

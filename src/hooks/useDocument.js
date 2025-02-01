@@ -28,7 +28,7 @@ const useDocument = (documentId) => {
         });
         return { data: response.data, title };
       } catch (error) {
-        // 400 에러는 성공으로 처리
+        // 400 에러는 성공으로 처리(로그인을 안 해서 생기는 에러)
         if (error.response?.status === 400) {
           return { title };
         }

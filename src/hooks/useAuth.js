@@ -25,7 +25,7 @@ export const useAuth = () => {
           user: data.result.user
         });
         localStorage.setItem('token', data.result.token);
-        navigate('/main');
+        navigate('/');
       } else {
         throw new Error('로그인에 실패했습니다.');
       }

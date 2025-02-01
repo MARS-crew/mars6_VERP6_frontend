@@ -55,7 +55,8 @@ function LoginPage() {
               </div>
             )}
             <div className = "mt-[25px] font-semibold">
-              <LoginButton type = "submit">
+              <LoginButton type = "submit" disabled={isLoading}>
+                {isLoading ? '로그인 중...' : '로그인'}
               </LoginButton>
             </div>
             

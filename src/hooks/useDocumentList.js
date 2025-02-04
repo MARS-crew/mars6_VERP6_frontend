@@ -1,7 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import axiosInstance from '../api/axios';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { documentListState } from '../recoil/document';
 
 function useDocumentList(docTypeId) {
+  const setDocumentList = useSetRecoilState(documentListState(docTypeId));
+  const documentList = useRecoilValue(documentListState(docTypeId));
+
   const createDocumentMutation = useMutation({
     mutationFn: async (title) => {
       try {
@@ -11,7 +16,7 @@ function useDocumentList(docTypeId) {
         }
 
         console.log('[문서 생성 요청]', { title, docTypeId });
-        const response = await axiosInstance.post('/docs', {
+        const response = await axios.post('/api/docs', {
           title,
           docTypeId: Number(docTypeId)
         }, {
@@ -33,6 +38,10 @@ function useDocumentList(docTypeId) {
     },
     onSuccess: (data) => {
       console.log('[문서 생성 성공]', data);
+      setDocumentList(prev => ({
+        ...prev,
+        documents: [...prev.documents, data]
+      }));
     },
     onError: (error) => {
       console.error('[문서 생성 실패]', error);
@@ -42,7 +51,8 @@ function useDocumentList(docTypeId) {
   return {
     createDocument: createDocumentMutation.mutate,
     isLoading: createDocumentMutation.isPending,
-    error: createDocumentMutation.error
+    error: createDocumentMutation.error,
+    documents: documentList.documents
   };
 }
 

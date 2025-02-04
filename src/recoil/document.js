@@ -7,4 +7,13 @@ export const documentState = atomFamily({
     isEditing: true,
     showValidator: false
   }
+});
+
+export const documentListState = atomFamily({
+  key: 'documentListState',
+  default: {
+    documents: [],
+    isLoading: false,
+    error: null
+  }
 }); 

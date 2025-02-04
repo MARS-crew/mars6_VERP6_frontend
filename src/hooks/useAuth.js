@@ -10,7 +10,7 @@ function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
-      const response = await axios.post('/api/loginAction', credentials, {
+      const response = await axios.post('/api/login', credentials, {
         headers: {
           'Content-Type': 'application/json'
         }

@@ -18,6 +18,7 @@ function useDocument(documentId) {
   const createDocumentMutation = useMutation({
     mutationFn: async (title) => {
       try {
+        console.log('[문서 타입 생성 요청]', { title });
         const response = await axios.post('/api/doc-types', {
           title
         }, {
@@ -26,9 +27,10 @@ function useDocument(documentId) {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
+        console.log('[문서 타입 생성 응답]', response.data);
         return { data: response.data, title };
       } catch (error) {
-        // 400 에러는 성공으로 처리(로그인을 안 해서 생기는 에러)
+        console.error('[문서 타입 생성 에러]', error.response || error);
         if (error.response?.status === 400) {
           return { title };
         }
@@ -36,6 +38,7 @@ function useDocument(documentId) {
       }
     },
     onSuccess: (response) => {
+      console.log('[문서 타입 생성 성공]', response);
       setDocument(prev => ({
         ...prev,
         id: response.data.result?.id || documentId,
@@ -45,7 +48,7 @@ function useDocument(documentId) {
       }));
     },
     onError: (error, title) => {
-      console.error('문서 타입 생성 에러:', error);
+      console.error('[문서 타입 생성 실패]', error);
       setDocument(prev => ({
         ...prev,
         title: title,
@@ -58,6 +61,7 @@ function useDocument(documentId) {
   const updateDocumentMutation = useMutation({
     mutationFn: async ({ id, title }) => {
       try {
+        console.log('[문서 타입 수정 요청]', { id, title });
         const response = await axios.put(`/api/doc-types/${id}`, {
           title
         }, {
@@ -66,8 +70,10 @@ function useDocument(documentId) {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
+        console.log('[문서 타입 수정 응답]', response.data);
         return { data: response.data, title };
       } catch (error) {
+        console.error('[문서 타입 수정 에러]', error.response || error);
         if (error.response?.status === 400) {
           return { title };
         }
@@ -75,6 +81,7 @@ function useDocument(documentId) {
       }
     },
     onSuccess: (response) => {
+      console.log('[문서 타입 수정 성공]', response);
       setDocument(prev => ({
         ...prev,
         title: response.title,
@@ -83,7 +90,7 @@ function useDocument(documentId) {
       }));
     },
     onError: (error) => {
-      console.error('문서 타입 수정 에러:', error);
+      console.error('[문서 타입 수정 실패]', error);
     }
   });
 

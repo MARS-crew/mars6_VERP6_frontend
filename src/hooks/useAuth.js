@@ -10,14 +10,17 @@ function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
+      console.log('[로그인 API 요청]', credentials);
       const response = await axios.post('/api/login', credentials, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
+      console.log('[로그인 API 응답]', response.data);
       return response.data;
     },
     onSuccess: (data) => {
+      console.log('[로그인 성공]', data);
       if (data.isSuccess && data.code === "2000") {
         setAuth({
           isAuthenticated: true,
@@ -29,6 +32,9 @@ function useAuth() {
       } else {
         throw new Error('로그인에 실패했습니다.');
       }
+    },
+    onError: (error) => {
+      console.error('[로그인 실패]', error);
     }
   });
 

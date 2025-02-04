@@ -1,29 +1,41 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axiosInstance from '../api/axios';
 
 function useDocumentList(docTypeId) {
   const createDocumentMutation = useMutation({
     mutationFn: async (title) => {
       try {
-        const response = await axios.post('/api/docs', {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('인증 토큰이 없습니다.');
+        }
+
+        console.log('[문서 생성 요청]', { title, docTypeId });
+        const response = await axiosInstance.post('/docs', {
           title,
           docTypeId: Number(docTypeId)
         }, {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
-        console.log('문서 생성 요청:', { title, docTypeId });
-        console.log('서버 응답:', response.data);
+        console.log('[문서 생성 응답]', response.data);
         return response.data;
       } catch (error) {
-        console.error('에러 상세:', error.response || error);
-        // if (error.response?.status === 401 || error.response?.status === 403) {
-        //   throw new Error('로그인이 필요한 서비스입니다.');
-        // }
-        // throw error;
+        console.error('[문서 생성 에러]', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          message: error.message
+        });
+        throw error;
       }
+    },
+    onSuccess: (data) => {
+      console.log('[문서 생성 성공]', data);
+    },
+    onError: (error) => {
+      console.error('[문서 생성 실패]', error);
     }
   });
 

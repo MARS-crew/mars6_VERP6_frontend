@@ -15,7 +15,12 @@ function useDocumentList(docTypeId) {
           throw new Error('인증 토큰이 없습니다.');
         }
 
-        console.log('[문서 생성 요청]', { title, docTypeId });
+        console.log('[문서 생성 요청]', { 
+          title, 
+          docTypeId,
+          requestUrl: '/docs'
+        });
+
         const response = await axiosInstance.post('/docs', {
           title,
           docTypeId: Number(docTypeId)

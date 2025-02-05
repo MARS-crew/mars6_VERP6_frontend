@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "node -e \"const fs=require('fs'); if(!fs.existsSync('.env') && fs.existsSync('.env.example')) fs.copyFileSync('.env.example', '.env');\""
   },
   "dependencies": {
     "@tanstack/react-query": "^5.64.2",
@@ -37,6 +38,5 @@
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
   "main": "eslint.config.js",
   "author": "hyerim",
-  "license": "ISC",
-  "proxy": "http://mars-crew.shop:26080"
+  "license": "ISC"
 }

@@ -1,14 +1,18 @@
 import React from 'react';
 import useDocumentList from '../../hooks/useDocumentList';
 
-function DocumentListInput({ value, onChange, onBlur, onKeyDown, docTypeId }) {
+function DocumentListInput({ value, onChange, onBlur, onKeyDown, docTypeId, onDocumentCreated }) {
   const { createDocument, isLoading, error } = useDocumentList(docTypeId);
 
   const handleBlur = async (e) => {
     const trimmedValue = e.target.value.trim();
     if (trimmedValue) {
       try {
-        await createDocument(trimmedValue);
+        const response = await createDocument(trimmedValue);
+        console.log('Document created:', response);
+        if (onDocumentCreated) {
+          onDocumentCreated(response);
+        }
         if (onBlur) onBlur(e);
       } catch (error) {
         console.error('문서 생성 실패:', error);
@@ -25,7 +29,7 @@ function DocumentListInput({ value, onChange, onBlur, onKeyDown, docTypeId }) {
   };
 
   return (
-    <div className = "w-[333px] relative pt-[19px]">
+    <div className = "w-[333px] relative">
       <input
         type = "text"
         value = {value}

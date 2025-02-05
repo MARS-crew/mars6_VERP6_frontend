@@ -29,8 +29,14 @@ function useDocumentList(docTypeId) {
             'Authorization': `Bearer ${token}`
           }
         });
+        
         console.log('[문서 생성 응답]', response.data);
-        return response.data;
+        
+        return {
+          isSuccess: true,
+          data: response.data,
+          title: title
+        };
       } catch (error) {
         console.error('[문서 생성 에러]', {
           status: error.response?.status,
@@ -47,12 +53,13 @@ function useDocumentList(docTypeId) {
         throw error;
       }
     },
-    onSuccess: (data) => {
-      console.log('[문서 생성 성공]', data);
+    onSuccess: (response) => {
+      console.log('[문서 생성 성공]', response);
       setDocumentList(prev => ({
         ...prev,
-        documents: [...prev.documents, data]
+        documents: [...prev.documents, response.data]
       }));
+      return response;
     },
     onError: (error) => {
       console.error('[문서 생성 실패]', error);
@@ -60,7 +67,7 @@ function useDocumentList(docTypeId) {
   });
 
   return {
-    createDocument: createDocumentMutation.mutate,
+    createDocument: (title) => createDocumentMutation.mutateAsync(title),
     isLoading: createDocumentMutation.isPending,
     error: createDocumentMutation.error,
     documents: documentList.documents

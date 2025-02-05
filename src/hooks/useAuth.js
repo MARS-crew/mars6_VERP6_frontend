@@ -23,7 +23,6 @@ function useAuth() {
           token: data.result.token,
           user: data.result.user
         });
-        localStorage.setItem('token', data.result.token);
         navigate('/main');
       } else {
         throw new Error('로그인에 실패했습니다.');
@@ -31,6 +30,11 @@ function useAuth() {
     },
     onError: (error) => {
       console.error('[로그인 실패]', error);
+      setAuth({
+        isAuthenticated: false,
+        token: null,
+        user: null
+      });
     }
   });
 

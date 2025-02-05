@@ -24,7 +24,7 @@ function RequestList({ no, title, state, date, writer, open }) {
         <div className="w-[5%] text-[#8E98A8] font-medium">{no}1</div>
         <div className="text-center">{title}asdkjsakjas.ppt</div>
         <div>
-          <StateButton onClick={handleSelectStateModal} state="wait" />
+          <StateButton onClick={handleSelectStateModal} state="REQUESTED"/>
           {selectModal ? <StateSelectModal /> : null}
         </div>
 

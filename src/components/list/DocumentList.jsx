@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import moreIcon from '../../assets/images/more-icon.png';
 import DocModifyModal from '../Modal/DocModifyModal';
 import DocumentTypeInput from '../Input/DocumentTypeInput';
@@ -25,14 +25,6 @@ function DocumentList({ id, onRemove }) {
     showValidator: false
   });
   const [showInput, setShowInput] = useState(false);
-  const [isFirstCreation, setIsFirstCreation] = useState(true);
-
-  useEffect(() => {
-    if (document?.title && !document?.isEditing && isFirstCreation && items.length === 0) {
-      setShowInput(true);
-      setIsFirstCreation(false);
-    }
-  }, [document?.title, document?.isEditing, isFirstCreation, items.length]);
 
   const handleMoreClick = () => setShowModifyModal(prev => !prev);
   const handleCloseModal = () => setShowModifyModal(false);

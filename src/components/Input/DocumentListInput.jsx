@@ -29,7 +29,7 @@ function DocumentListInput({ value, onChange, onBlur, onKeyDown, docTypeId, onDo
   };
 
   return (
-    <div className = "w-[333px] relative pt-[19px]">
+    <div className = "w-[333px] relative">
       <input
         type = "text"
         value = {value}

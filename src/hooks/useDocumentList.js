@@ -16,7 +16,7 @@ function useDocumentList(docTypeId) {
         }
 
         console.log('[문서 생성 요청]', { title, docTypeId });
-        const response = await axios.post('/api/docs', {
+        const response = await axiosInstance.post('/docs', {
           title,
           docTypeId: Number(docTypeId)
         }, {
@@ -31,7 +31,13 @@ function useDocumentList(docTypeId) {
           status: error.response?.status,
           statusText: error.response?.statusText,
           data: error.response?.data,
-          message: error.message
+          message: error.message,
+          config: {
+            url: error.config?.url,
+            method: error.config?.method,
+            headers: error.config?.headers,
+            data: error.config?.data
+          }
         });
         throw error;
       }

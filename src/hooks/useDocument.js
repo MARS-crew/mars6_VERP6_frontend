@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import axios from 'axios';
+import axiosInstance from '../api/axios';
 import { documentState } from '../recoil/document';
 
 function useDocument(documentId) {
@@ -19,11 +19,10 @@ function useDocument(documentId) {
     mutationFn: async (title) => {
       try {
         console.log('[문서 타입 생성 요청]', { title });
-        const response = await axios.post('/api/doc-types', {
+        const response = await axiosInstance.post('/doc-types', {
           title
         }, {
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
@@ -62,11 +61,10 @@ function useDocument(documentId) {
     mutationFn: async ({ id, title }) => {
       try {
         console.log('[문서 타입 수정 요청]', { id, title });
-        const response = await axios.put(`/api/doc-types/${id}`, {
+        const response = await axiosInstance.put(`/doc-types/${id}`, {
           title
         }, {
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });

@@ -1,13 +1,12 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://mars-crew.shop:26080',
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
-    'accept': '*/*',
-    'Access-Control-Allow-Origin': '*'
+    'accept': '*/*'
   },
-  withCredentials: false
+  withCredentials: true
 });
 
-export default instance; 
+export default instance;

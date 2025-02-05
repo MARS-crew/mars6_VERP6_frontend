@@ -25,6 +25,14 @@ function DocumentList({ id, onRemove }) {
     showValidator: false
   });
   const [showInput, setShowInput] = useState(false);
+  const [isFirstCreation, setIsFirstCreation] = useState(true);
+
+  useEffect(() => {
+    if (document?.title && !document?.isEditing && isFirstCreation && items.length === 0) {
+      setShowInput(true);
+      setIsFirstCreation(false);
+    }
+  }, [document?.title, document?.isEditing, isFirstCreation, items.length]);
 
   const handleMoreClick = () => setShowModifyModal(prev => !prev);
   const handleCloseModal = () => setShowModifyModal(false);
@@ -63,12 +71,6 @@ function DocumentList({ id, onRemove }) {
       e.target.blur();
     }
   };
-
-  useEffect(() => {
-    if (document?.title && !document?.isEditing) {
-      setShowInput(true);
-    }
-  }, [document?.title, document?.isEditing]);
 
   if (isLoading) {
     return <div>로딩 중...</div>;

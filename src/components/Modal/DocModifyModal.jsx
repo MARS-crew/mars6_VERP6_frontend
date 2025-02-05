@@ -28,6 +28,7 @@ function DocModifyModal({ onClose, onDelete, onModify }) {
       setShowDeleteModal(true);
     } else if (buttonType === '수정') {
       onModify();
+      onClose();
     }
   };
 

@@ -6,9 +6,9 @@ import LoginPageView from "../pages/loginPage";
 
 const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<MainPageView />} />
+    <Route path="/" element={<LoginPageView />} />
     <Route path="/detail-page" element={<DetailPageView />} />
-    <Route path = "/login-page" element = {<LoginPageView />} />
+    <Route path = "/main" element = {<MainPageView />} />
   </Routes>
 );
 

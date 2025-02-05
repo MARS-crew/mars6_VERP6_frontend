@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import LoginButton from '../../components/Button/LoginButton';
 import LoginInput from '../../components/Input/LoginInput';
+import useAuth from '../../hooks/useAuth';
 
 function LoginPage() {
+  const { login, isLoading, error } = useAuth();
   const [loginForm, setLoginForm] = useState({
     id: '',
     password: ''
@@ -16,9 +18,12 @@ function LoginPage() {
     }));
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('로그인 시도:', loginForm);
+    login({
+      username: loginForm.id,
+      password: loginForm.password
+    });
   };
 
   return (
@@ -44,10 +49,14 @@ function LoginPage() {
               value = {loginForm.password}
               onChange = {handleInputChange}
             />
-
+            {error && (
+              <div className = "text-[#FF595C] text-sm text-center">
+                {error.message}
+              </div>
+            )}
             <div className = "mt-[25px] font-semibold">
-              <LoginButton type = "submit">
-                로그인
+              <LoginButton type = "submit" disabled={isLoading}>
+                {isLoading ? '로그인 중...' : '로그인'}
               </LoginButton>
             </div>
             

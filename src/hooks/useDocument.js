@@ -2,10 +2,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import axiosInstance from '../api/axios';
 import { documentState } from '../recoil/document';
+import { authState } from '../recoil/auth/auth';
 
 function useDocument(documentId) {
   const setDocument = useSetRecoilState(documentState(documentId));
   const document = useRecoilValue(documentState(documentId));
+  const auth = useRecoilValue(authState);
 
   const resetDocument = () => {
     setDocument({
@@ -23,7 +25,7 @@ function useDocument(documentId) {
           title
         }, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${auth.token}`
           }
         });
         console.log('[문서 타입 생성 응답]', response.data);
@@ -65,7 +67,7 @@ function useDocument(documentId) {
           title
         }, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${auth.token}`
           }
         });
         console.log('[문서 타입 수정 응답]', response.data);

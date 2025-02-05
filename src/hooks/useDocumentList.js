@@ -2,16 +2,17 @@ import { useMutation } from '@tanstack/react-query';
 import axiosInstance from '../api/axios';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { documentListState } from '../recoil/document';
+import { authState } from '../recoil/auth/auth';
 
 function useDocumentList(docTypeId) {
   const setDocumentList = useSetRecoilState(documentListState(docTypeId));
   const documentList = useRecoilValue(documentListState(docTypeId));
+  const auth = useRecoilValue(authState);
 
   const createDocumentMutation = useMutation({
     mutationFn: async (title) => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
+        if (!auth.token) {
           throw new Error('인증 토큰이 없습니다.');
         }
 
@@ -21,48 +22,45 @@ function useDocumentList(docTypeId) {
           requestUrl: '/docs'
         });
 
-        const response = await axiosInstance.post('/docs', {
-          title,
+        const requestData = {
+          title: title,
           docTypeId: Number(docTypeId)
-        }, {
+        };
+
+        console.log('[요청 데이터]', requestData);
+
+        const response = await axiosInstance.post('/docs', requestData, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${auth.token}`,
+            'Content-Type': 'application/json'
           }
         });
         
         console.log('[문서 생성 응답]', response.data);
         
-        return {
-          isSuccess: true,
-          data: response.data,
-          title: title
-        };
+        if (!response.data.isSuccess) {
+          throw new Error(response.data.message || '문서 생성에 실패했습니다.');
+        }
+
+        return response.data;
       } catch (error) {
-        console.error('[문서 생성 에러]', {
-          status: error.response?.status,
-          statusText: error.response?.statusText,
-          data: error.response?.data,
-          message: error.message,
-          config: {
-            url: error.config?.url,
-            method: error.config?.method,
-            headers: error.config?.headers,
-            data: error.config?.data
-          }
-        });
+        console.error('[문서 생성 에러]', error);
         throw error;
       }
     },
-    onSuccess: (response) => {
-      console.log('[문서 생성 성공]', response);
-      setDocumentList(prev => ({
-        ...prev,
-        documents: [...prev.documents, response.data]
-      }));
-      return response;
+    onSuccess: (data) => {
+      console.log('[문서 생성 성공]', data);
+      if (data.result) {
+        setDocumentList(prev => ({
+          ...prev,
+          documents: [...prev.documents, data.result]
+        }));
+      }
+      return data;
     },
     onError: (error) => {
       console.error('[문서 생성 실패]', error);
+      throw error;
     }
   });
 

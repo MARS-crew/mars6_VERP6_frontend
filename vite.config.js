@@ -11,7 +11,8 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: env.VITE_API_URL,
+          // target: env.VITE_API_URL,
+          target: 'http://mars-crew.shop:26080',
           changeOrigin: true,
           secure: false,
           ws: true,

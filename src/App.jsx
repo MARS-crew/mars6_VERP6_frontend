@@ -1,14 +1,23 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { RecoilRoot } from 'recoil';
 import "./App.css";
 import "./index.css";
-import Test from "./pages";
 import AppRoutes from "./routes/appRoutes";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+        <ReactQueryDevtools />
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 }
 

@@ -51,7 +51,16 @@ function DocumentList({ id, onRemove }) {
   const handleDocumentCreated = (createdDoc) => {
     if (!currentInput.value.trim()) return;
     
-    const newItem = INITIAL_ITEMS(currentInput.value);
+    console.log('[생성된 문서 정보]', createdDoc);
+    
+    const newItem = {
+      ...INITIAL_ITEMS(currentInput.value),
+      docId: createdDoc.result.docId,
+      name: currentInput.value
+    };
+
+    console.log('[새로 생성된 아이템]', newItem);
+    
     setItems(prev => [...prev, newItem]);
     setCurrentInput({ value: '', showValidator: false });
     setShowInput(false);
@@ -98,6 +107,7 @@ function DocumentList({ id, onRemove }) {
                     key={idx}
                     item={item} 
                     isLast={idx === items.length - 1}
+                    docTypeId={document.id}
                   />
                 ))}
               </div>

@@ -14,6 +14,7 @@ const INITIAL_ITEMS = (inputValue) => ({
   waitPercent: 33,
   updated: "1일전",
   state: true,
+  docId: null
 });
 
 function DocumentList({ id, onRemove }) {
@@ -49,22 +50,39 @@ function DocumentList({ id, onRemove }) {
   };
 
   const handleDocumentCreated = (createdDoc) => {
-    if (!currentInput.value.trim()) return; 
-    
+    if (!currentInput.value.trim()) return;
+
     console.log('[생성된 문서 정보]', createdDoc);
-    
-    const newItem = {
-      ...INITIAL_ITEMS(currentInput.value),
-      docId: createdDoc.result.docId,
-      name: currentInput.value
-    };
 
-    console.log('[새로 생성된 아이템]', newItem);
-    
-    setItems(prev => [...prev, newItem]);
-    setCurrentInput({ value: '', showValidator: false });
+    if (createdDoc.result && createdDoc.result.docId) {
+      const newItem = {
+        ...INITIAL_ITEMS(currentInput.value),
+        docId: createdDoc.result.docId,
+        name: currentInput.value
+      };
 
-    setShowInput(false);
+      console.log('[새로 생성된 아이템]', newItem);
+      setItems(prev => [...prev, newItem]);
+      setCurrentInput({ value: '', showValidator: false });
+      setShowInput(false);
+    } else {
+      console.error('문서 생성 응답에 docId가 없습니다:', createdDoc);
+    }
+  };
+
+  const handleDocumentDelete = (docId) => {
+    if (!docId) {
+      console.error('삭제할 문서의 ID가 없습니다.');
+      return;
+    }
+
+    console.log('[문서 삭제 처리]', { docId });
+    
+    setItems(prev => {
+      const filtered = prev.filter(item => item.docId !== docId);
+      console.log('[삭제 후 남은 아이템]', filtered);
+      return filtered;
+    });
   };
 
   const handlelistKeyDown = (e) => {
@@ -109,6 +127,7 @@ function DocumentList({ id, onRemove }) {
                     item={item}
                     isLast={idx === items.length - 1}
                     docTypeId={document.id}
+                    onRemove={handleDocumentDelete}
                   />
                 ))}
               </div>

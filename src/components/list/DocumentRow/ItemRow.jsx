@@ -8,12 +8,16 @@ import UpdateIcon from "../../../assets/svg/UpdateIcon.svg"
 import DeletIcon from "../../../assets/svg/DeletIcon.svg"
 import BellIcon from "../../../assets/images/bell-icon.png"
 import useDocumentUpdate from "../../../hooks/useDocumentUpdate";
+import useDocumentDelete from "../../../hooks/useDocumentDelete";
+import ListDeleteModal from "../../Modal/ListDeleteModal";
 import DocumentListInput from "../../Input/DocumentListInput";
 
-function ItemRow({ item, isLast, docTypeId }) {
+function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(item.name);
-  const { updateDocument, isLoading } = useDocumentUpdate();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { updateDocument, isLoading: isUpdating } = useDocumentUpdate();
+  const { deleteDocument, isLoading: isDeleting } = useDocumentDelete();
   const isempty = item.state;
   const waittotal = item.waitPercent + item.progressPercent;
 
@@ -23,6 +27,47 @@ function ItemRow({ item, isLast, docTypeId }) {
 
   const handleChange = (e) => {
     setEditValue(e.target.value);
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      if (!item.docId) {
+        console.error('삭제할 문서의 ID가 없습니다:', item);
+        alert('삭제할 문서가 존재하지 않습니다.');
+        return;
+      }
+
+      console.log('[문서 삭제 시도]', {
+        documentId: item.docId,
+        documentName: item.name
+      });
+
+      await deleteDocument(item.docId);
+      
+      console.log('[문서 삭제 UI 업데이트]', item.docId);
+      onRemove(item.docId);
+      setShowDeleteModal(false);
+      
+    } catch (error) {
+      console.error('[문서 삭제 에러]', error);
+      
+      if (error.response?.status === 404) {
+        alert('문서를 찾을 수 없습니다.');
+        onRemove(item.docId);
+      } else {
+        alert('문서 삭제 중 오류가 발생했습니다.');
+      }
+      
+      setShowDeleteModal(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
   };
 
   const handleBlur = async () => {
@@ -36,9 +81,9 @@ function ItemRow({ item, isLast, docTypeId }) {
         });
 
         const result = await updateDocument(
-          item.docId,  // 문서 ID
-          editValue,   // 새 제목
-          docTypeId    // 문서 타입 ID
+          item.docId,
+          editValue,
+          docTypeId
         );
 
         if (result.isSuccess) {
@@ -74,84 +119,97 @@ function ItemRow({ item, isLast, docTypeId }) {
       : item.fileLink;
 
   return (
-    <div
-      className={`mb-6 mt-[19px] pb-6 ${
-        !isLast && "border-b border-[#B4B4B4]"
-      } last:mb-0 mr-[20px]`}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <div className="font-medium text-gray-700 flex text-[17px]">
+    <>
+      <div
+        className={`mb-6 mt-[19px] pb-6 ${
+          !isLast && "border-b border-[#B4B4B4]"
+        } last:mb-0 mr-[20px]`}
+      >
+        <div className="flex items-center justify-between mb-2">
+          <div className="font-medium text-gray-700 flex text-[17px]">
 
-          {isEditing ? (
-            <div className="w-[333px] relative">
-              <input
-                type="text"
-                value={editValue}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-                className="w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none"
-                autoFocus
-                disabled={isLoading}
-              />
-              <div className="border-b border-[#D9D9D9]" />
-            </div>
-          ) : (
-            <>
-              {item.name}
-              {isempty && <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />}
-            </>
-          )}
+            {isEditing ? (
+              <div className="w-[333px] relative">
+                <input
+                  type="text"
+                  value={editValue}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onKeyDown={handleKeyDown}
+                  className="w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none"
+                  autoFocus
+                  disabled={isUpdating}
+                />
+                <div className="border-b border-[#D9D9D9]" />
+              </div>
+            ) : (
+              <>
+                {item.name}
+                {isempty && <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />}
+              </>
+            )}
 
-        </div>
-      </div>
-      <div className="flex items-center justify-between text-sm text-gray-500">
-        <div>
-          <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative mt-[9px]">
-            <div
-              className="bg-[#14AE5C] h-[36px] rounded-full absolute"
-              style={{
-                width: `${item.progressPercent}%`,
-              }}
-            />
-            <div
-              className="bg-[#5A5A5A] h-[36px] rounded-full"
-              style={{
-                width: `${waittotal}%`,
-              }}
-            />
           </div>
         </div>
+        <div className="flex items-center justify-between text-sm text-gray-500">
+          <div>
+            <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative mt-[9px]">
+              <div
+                className="bg-[#14AE5C] h-[36px] rounded-full absolute"
+                style={{
+                  width: `${item.progressPercent}%`,
+                }}
+              />
+              <div
+                className="bg-[#5A5A5A] h-[36px] rounded-full"
+                style={{
+                  width: `${waittotal}%`,
+                }}
+              />
+            </div>
+          </div>
 
-        <div
-          className="flex items-center text-black text-[20px] font-medium truncate"
-          style={{ maxWidth: "200px" }}
-          title={item.fileLink}
-        >
-          <span>{item.fileLink}</span>
-        </div>
-        <div className="flex items-center gap-10 mr-[70px] text-[20px]">
-          <span>{item.updated}</span>
-
-          <button 
-            className="hover:text-gray-700"
-            onClick={handleUpdateClick}
-            disabled={isLoading}
+          <div
+            className="flex items-center text-black text-[20px] font-medium truncate"
+            style={{ maxWidth: "200px" }}
+            title={item.fileLink}
           >
-            <span> 
+            <span>{item.fileLink}</span>
+          </div>
+          <div className="flex items-center gap-10 mr-[70px] text-[20px]">
+            <span>{item.updated}</span>
 
-              <img className="h-[20px] w-[20px]" src={UpdateIcon} />
-            </span>
-          </button>
-          <button className="hover:text-gray-700">
-            <span>
+            <button 
+              className="hover:text-gray-700"
+              onClick={handleUpdateClick}
+              disabled={isUpdating}
+            >
+              <span> 
 
-              <img className="h-[20px] w-[20px]" src={DeletIcon} />
-            </span>
-          </button>
+                <img className="h-[20px] w-[20px]" src={UpdateIcon} />
+              </span>
+            </button>
+            <button 
+              className="hover:text-gray-700"
+              onClick={handleDeleteClick}
+              disabled={isDeleting}
+            >
+              <span>
+
+                <img className="h-[20px] w-[20px]" src={DeletIcon} />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {showDeleteModal && (
+        <ListDeleteModal
+          onDelete={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+      )}
+    </>
   );
 }
 

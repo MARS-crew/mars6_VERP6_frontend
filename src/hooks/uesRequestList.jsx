@@ -7,6 +7,7 @@ import { authState } from '../recoil/auth/auth';
 
 
 export function useRequest(docId){
+    const docId = Number(32);
     const auth = useRecoilValue(authState);
     const setRequestList = useSetRecoilState(requestListState(docId));
 

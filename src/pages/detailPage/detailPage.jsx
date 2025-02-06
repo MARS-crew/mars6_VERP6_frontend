@@ -9,7 +9,7 @@ import editIcon from "../../assets/svg/Edit.svg";
 import AddVersion from "../../components/list/AddList/AddVersion";
 import AddRequest from "../../components/list/AddList/AddRequest";
 
-function DetailPage() {
+function DetailPage({ data }) {
   const position = "leader";
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
@@ -44,7 +44,9 @@ function DetailPage() {
           </div>
           <VersionListHeader position={position} />
           {addModal ? <AddVersion /> : null}
-          <VersionList position={position} />
+          {data?.map((item) => (
+            <VersionList item={item} position={position} />
+          ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">

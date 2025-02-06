@@ -44,9 +44,10 @@ function DetailPage({ data }) {
           </div>
           <VersionListHeader position={position} />
           {addModal ? <AddVersion /> : null}
-          {data.data.result?.map((item) => (
-            <VersionList item={item} position={position} />
-          ))}
+          {data &&
+            data.data.result?.map((item) => (
+              <VersionList item={item} position={position} />
+            ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">

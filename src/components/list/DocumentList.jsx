@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import moreIcon from '../../assets/images/more-icon.png';
-import DocModifyModal from '../Modal/DocModifyModal';
-import DocumentTypeInput from '../Input/DocumentTypeInput';
-import DocumentListInput from '../Input/DocumentListInput';
-import DocTypeValidator from '../Validator/DocTypeValidator';
-import ItemRow from './DocumentRow/ItemRow';
-import useDocument from '../../hooks/useDocument';
+import React, { useState } from "react";
+import moreIcon from "../../assets/images/more-icon.png";
+import DocModifyModal from "../Modal/DocModifyModal";
+import DocumentTypeInput from "../Input/DocumentTypeInput";
+import DocumentListInput from "../Input/DocumentListInput";
+import DocTypeValidator from "../Validator/DocTypeValidator";
+import ItemRow from "./DocumentRow/ItemRow";
+import useDocument from "../../hooks/useDocument";
 
 const INITIAL_ITEMS = (inputValue) => ({
   name: inputValue,
@@ -13,7 +13,7 @@ const INITIAL_ITEMS = (inputValue) => ({
   progressPercent: 33,
   waitPercent: 33,
   updated: "1일전",
-  state: true
+  state: true,
 });
 
 function DocumentList({ id, onRemove }) {
@@ -21,12 +21,12 @@ function DocumentList({ id, onRemove }) {
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [items, setItems] = useState([]);
   const [currentInput, setCurrentInput] = useState({
-    value: '',
-    showValidator: false
+    value: "",
+    showValidator: false,
   });
   const [showInput, setShowInput] = useState(false);
 
-  const handleMoreClick = () => setShowModifyModal(prev => !prev);
+  const handleMoreClick = () => setShowModifyModal((prev) => !prev);
   const handleCloseModal = () => setShowModifyModal(false);
   const handleDelete = () => {
     onRemove(id);
@@ -44,21 +44,21 @@ function DocumentList({ id, onRemove }) {
     const value = e.target.value;
     setCurrentInput({
       value,
-      showValidator: value.length > 20
+      showValidator: value.length > 20,
     });
   };
 
   const handleDocumentCreated = (createdDoc) => {
     if (!currentInput.value.trim()) return;
-    
+
     const newItem = INITIAL_ITEMS(currentInput.value);
-    setItems(prev => [...prev, newItem]);
-    setCurrentInput({ value: '', showValidator: false });
+    setItems((prev) => [...prev, newItem]);
+    setCurrentInput({ value: "", showValidator: false });
     setShowInput(false);
   };
 
   const handlelistKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       e.target.blur();
     }
@@ -71,15 +71,15 @@ function DocumentList({ id, onRemove }) {
   return (
     <div className="w-[1194px] bg-white rounded-[8px] shadow-[0_0_2px_2px_rgba(0,0,0,0.10)] relative min-h-[230px] pb-[60px]">
       <div className="absolute top-[32px] right-[6px]">
-        <img 
-          src={moreIcon} 
-          alt="more" 
+        <img
+          src={moreIcon}
+          alt="more"
           className="cursor-pointer w-[32px] h-[32px]"
           onClick={handleMoreClick}
         />
         {showModifyModal && (
           <div className="absolute top-[40px] right-[20px] z-[100]">
-            <DocModifyModal 
+            <DocModifyModal
               onClose={handleCloseModal}
               onDelete={handleDelete}
               onModify={handleModify}
@@ -94,14 +94,14 @@ function DocumentList({ id, onRemove }) {
             <div className="pl-[20px] space-y-4">
               <div className="space-y-4">
                 {items.map((item, idx) => (
-                  <ItemRow 
+                  <ItemRow
                     key={idx}
-                    item={item} 
+                    item={item}
                     isLast={idx === items.length - 1}
                   />
                 ))}
               </div>
-              
+
               {showInput && (
                 <div className="mb-4">
                   <DocumentListInput
@@ -123,7 +123,7 @@ function DocumentList({ id, onRemove }) {
         </div>
       </div>
       <div className="absolute bottom-[18px] left-0 w-full flex justify-center">
-        <span 
+        <span
           className="text-[30px] text-[#8E98A8] leading-[30px] cursor-pointer"
           onClick={handleAddList}
         >

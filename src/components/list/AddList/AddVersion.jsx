@@ -1,10 +1,15 @@
+import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import useDocumentDetail from "../../../hooks/useDocumentDetail";
 
-function AddVersion() {
+function AddVersion({ setAddModal, addModal }) {
   const [file, setFile] = useState("");
   const [kind, setKind] = useState("file");
   const [version, setVersion] = useState();
   const [url, setUrl] = useState();
+  const [contents, setContents] = useState();
+
+  const { createDocumentDetail } = useDocumentDetail(null);
 
   const changeFile = (e) => {
     setFile(e.target.files[0].name);
@@ -18,8 +23,25 @@ function AddVersion() {
     setVersion(e.target.value);
   };
 
+  const changeContents = (e) => {
+    setContents(e.target.value);
+  };
+
+  const changeURL = (e) => {
+    setUrl(e.target.value);
+  };
+
   const handleSubmit = () => {
-    console.log(version, file);
+    createDocumentDetail.mutate({
+      docId: 254,
+      externalUrl: url == null ? null : url,
+      originalFileName: file == null ? null : file,
+      data: {
+        content: contents,
+        version: version,
+      },
+    });
+    setAddModal(!addModal);
   };
 
   useEffect(() => {}, [file]);
@@ -87,14 +109,18 @@ function AddVersion() {
           <div className="text-sm font-semibold mr-[83px]">주소 업로드</div>
           <input
             className="w-[336px] h-[21px] border-b border-[#d9d9d9] text-xs"
-            placeholder="버전 입력"
+            placeholder="주소 입력"
+            onChange={changeURL}
           />
         </div>
       )}
 
       <div className="mt-[18px]">
         <div className="text-sm font-semibold mb-[10px]">작업 내역</div>
-        <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" />
+        <textarea
+          className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4"
+          onChange={changeContents}
+        />
       </div>
       <button
         onClick={handleSubmit}

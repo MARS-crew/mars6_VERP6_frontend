@@ -17,14 +17,25 @@ function useDocumentDetail(docTitle) {
           "Content-Type": "application/json",
         },
       });
+
       return response;
     },
+    enabled: !!docTitle,
   });
 
   const createDocumentDetail = useMutation({
-    mutationFn: async (newDoc) => {
-      const response = await axios.post(`/api/docs-detail/create`, newDoc, {
-        headers: { Authorization: `Bearer ${token}` },
+    mutationFn: async ({ docId, externalUrl, originalFileName, data }) => {
+      const response = await axios.post(`/api/docs-detail/create`, data, {
+        params: {
+          docId: docId,
+          externalUrl: externalUrl,
+          originalFileName: originalFileName,
+        },
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       });
       return response;
     },

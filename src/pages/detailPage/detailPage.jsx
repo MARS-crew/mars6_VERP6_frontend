@@ -43,7 +43,9 @@ function DetailPage({ data }) {
             ) : null}
           </div>
           <VersionListHeader position={position} />
-          {addModal ? <AddVersion /> : null}
+          {addModal ? (
+            <AddVersion setAddModal={setAddModal} addModal={addModal} />
+          ) : null}
           {data &&
             data.data.result?.map((item) => (
               <VersionList item={item} position={position} />

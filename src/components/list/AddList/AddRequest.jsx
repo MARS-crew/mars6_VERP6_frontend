@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 function AddRequest() {
   const [file, setFile] = useState("");
   const [kind, setKind] = useState("file");
+  const [content, setContent] = useState("");
 
   const changeFile = (e) => {
     setFile(e.target.files[0].name);
@@ -75,9 +76,12 @@ function AddRequest() {
 
       <div className="mt-[18px]">
         <div className="text-sm font-semibold mb-[10px]">작업 내역</div>
-        <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" />
+        <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" 
+        />
       </div>
-      <button className="bg-[#8E98A8] w-[146px] h-[27px] text-white rounded-[3px] ml-[381px]">
+      <button className="bg-[#8E98A8] w-[146px] h-[27px] text-white rounded-[3px] ml-[381px]"
+
+      >
         등록하기
       </button>
     </div>

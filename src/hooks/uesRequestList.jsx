@@ -6,10 +6,9 @@ import { useRecoilValue } from 'recoil';
 import { authState } from '../recoil/auth/auth';
 
 
-export function useRquest(docId){
+export function useRequest(docId){
     const auth = useRecoilValue(authState);
     const setRequestList = useSetRecoilState(requestListState(docId));
-    //const queryClient = useQueryClient();
 
     //요청 리스트 조회
     const getRequestMutation  = useMutation({
@@ -23,7 +22,7 @@ export function useRquest(docId){
         },
         onSuccess:(data)=>{
             console.log('[요청 목록 조회 성공]', data);
-            setRequestList({ request: data.result || [] });
+            setRequestList({ request: data || [] });
         },
         onError:(error)=>{
             console.log('문서조회 실패 :',error);

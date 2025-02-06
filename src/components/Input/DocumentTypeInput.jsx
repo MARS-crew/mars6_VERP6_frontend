@@ -40,7 +40,7 @@ function DocumentTypeInput({ documentId }) {
             onChange = {handleChange}
             onBlur = {handleBlur}
             onKeyDown = {handleKeyDown}
-            placeholder = "서류 종류를 입력해주세요."
+            placeholder = "서류의 종류를 입력해주세요."
             className = "w-[333px] h-[45px] text-[24px] focus:outline-none placeholder-[#B2B2B2]"
             autoFocus
             disabled = {isLoading}

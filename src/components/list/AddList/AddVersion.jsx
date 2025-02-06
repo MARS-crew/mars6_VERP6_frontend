@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 function AddVersion() {
   const [file, setFile] = useState("");
   const [kind, setKind] = useState("file");
+  const [version, setVersion] = useState();
+  const [url, setUrl] = useState();
 
   const changeFile = (e) => {
     setFile(e.target.files[0].name);
@@ -10,6 +12,14 @@ function AddVersion() {
 
   const changeKind = (e) => {
     setKind(e.target.value);
+  };
+
+  const handleVersion = (e) => {
+    setVersion(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    console.log(version, file);
   };
 
   useEffect(() => {}, [file]);
@@ -22,6 +32,8 @@ function AddVersion() {
         <input
           className="w-[132px] h-[21px] border-b border-[#d9d9d9] text-xs"
           placeholder="버전 입력"
+          id="version"
+          onChange={handleVersion}
         />
       </div>
       <div className="mt-[18px] flex text-sm font-semibold">
@@ -84,7 +96,10 @@ function AddVersion() {
         <div className="text-sm font-semibold mb-[10px]">작업 내역</div>
         <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" />
       </div>
-      <button className="bg-[#8E98A8] w-[146px] h-[27px] text-white rounded-[3px] ml-[381px]">
+      <button
+        onClick={handleSubmit}
+        className="bg-[#8E98A8] w-[146px] h-[27px] text-white rounded-[3px] ml-[381px]"
+      >
         등록하기
       </button>
     </div>

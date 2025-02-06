@@ -21,12 +21,12 @@ function useDocumentDetail(docTitle) {
     },
   });
 
-  const createDocument = useMutation({
+  const createDocumentDetail = useMutation({
     mutationFn: async (newDoc) => {
-      const response = await axios.post(`/docs-detail`, newDoc, {
+      const response = await axios.post(`/api/docs-detail/create`, newDoc, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      return response.data;
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["getDocumentDetail"]);
@@ -53,7 +53,7 @@ function useDocumentDetail(docTitle) {
     data,
     isLoading,
     error,
-    createDocument,
+    createDocumentDetail,
     updateDocument,
   };
 }

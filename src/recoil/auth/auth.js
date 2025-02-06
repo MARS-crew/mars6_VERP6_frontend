@@ -7,4 +7,4 @@ export const authState = atom({
     token: null,
     user: null
   }
-}); 
+});

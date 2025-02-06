@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../api/axios';
 import { authState } from '../recoil/auth/auth';
 
 function useAuth() {
@@ -11,11 +11,7 @@ function useAuth() {
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
       console.log('[로그인 API 요청]', credentials);
-      const response = await axios.post('/api/login', credentials, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await axiosInstance.post('/login', credentials);
       console.log('[로그인 API 응답]', response.data);
       return response.data;
     },
@@ -27,14 +23,18 @@ function useAuth() {
           token: data.result.token,
           user: data.result.user
         });
-        localStorage.setItem('token', data.result.token);
-        navigate('/');
+        navigate('/main');
       } else {
         throw new Error('로그인에 실패했습니다.');
       }
     },
     onError: (error) => {
       console.error('[로그인 실패]', error);
+      setAuth({
+        isAuthenticated: false,
+        token: null,
+        user: null
+      });
     }
   });
 

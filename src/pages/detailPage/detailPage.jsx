@@ -11,19 +11,23 @@ import AddRequest from "../../components/list/AddList/AddRequest";
 import { useRequest } from "../../hooks/uesRequestList";
 
 function DetailPage({ data }) {
-  const position = "leader";
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
+  const position = "leader";
   const docId = 32;
-  const { data, isLoading, error,createRequestMutation } = useRequest(docId); // useRequest 사용
+  const { request, isLoading, error,createRequestMutation } = useRequest(docId); // useRequest 사용
 
-  console.log("data : ",data)
+  console.log("request : ",request)
   const addModalState = () => {
     setAddModal(!addModal);
   };
 
   const addRequestModal = () => {
     setAddRequest(!addRequest);
+  };
+
+  const handleRequestSuccess = () => {
+    setAddRequest(false); //요청 성공 시 모달 닫기
   };
 
   return (
@@ -49,8 +53,8 @@ function DetailPage({ data }) {
           <VersionListHeader position={position} />
           {addModal ? <AddVersion /> : null}
           {data &&
-            data.data.result?.map((item) => (
-              <VersionList item={item} position={position} />
+            data.data.result?.map((item,index) => (
+              <VersionList  key={index} item={item} position={position}/>
             ))}
         </div>
         <div className="mt-[30px]">
@@ -64,8 +68,8 @@ function DetailPage({ data }) {
             </p>
           </div>
           <RequestListHeader />
-          {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} /> : null}
-          {data && data.map((item, index) => (
+          {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} onSuccess={handleRequestSuccess} /> : null}
+          {request && request.map((item, index) => (
             <RequestList
               key={index}
               no={index} // 항목의 번호

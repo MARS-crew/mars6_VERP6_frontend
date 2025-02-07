@@ -13,7 +13,7 @@ export function useRequest(docId){
 
     //요청 리스트 조회
     const { data, isLoading, error } = useQuery({
-        queryKey: ["getDocumentDetail", docId],
+        queryKey: ["requestStatus", docId],
         queryFn: async () => {
           const response = await axiosInstance.get(`/doc-request/${docId}`, {
             headers: {
@@ -35,27 +35,26 @@ export function useRequest(docId){
     const createRequestMutation  = useMutation({
       mutationFn : async (mRequest) =>{
           try{
-            const requestData = {
-              docId: docId,
-              content: mRequest.content,
-            };
-      
+            const params = new URLSearchParams();
+            params.append("docId", Number(docId)); // 숫자로 변환
             if (mRequest.filename) {
-              requestData.originalFileName = mRequest.filename;
-            } else if (mRequest.url) {
-              requestData.externalUrl = mRequest.url;
+              params.append("originalFileName", mRequest.filename);
+            }
+            if (mRequest.url) {
+              params.append("externalUrl", mRequest.url);
             }
             console.log("현재 토큰", auth.token);
-            console.log("보내는 데이터 : ",requestData);
-              const response = await axiosInstance.post('/doc-request/create',
-                  //JSON.stringify(requestData), 
-                  requestData,
+            console.log("params: ",params.toString())
+              const response = await axiosInstance.post(
+                `/doc-request/create?${params.toString()}`,
+                  {content: mRequest.content},
                   {
                     headers: {
-                      Authorization: `Bearer ${auth.token}`,
+                      //Authorization: `Bearer ${auth.token}`,
                       Accept: "application/json",
                       "Content-Type": "application/json",
                     },
+                    withCredentials: true,
               });
               if (!response.data.isSuccess) {
                   throw new Error(response.data.message || '요청 생성 실패');
@@ -72,6 +71,9 @@ export function useRequest(docId){
           setRequestList(prev => ({
               request: [...prev.request, newRequest]
           }));
+          if (typeof handleRequestSuccess === "function") {
+            handleRequestSuccess(); // 요청 성공 후 모달 닫기
+          }
       },
       error : (error)=>{
           console.log('요청 생성 실패 :',error)
@@ -80,7 +82,7 @@ export function useRequest(docId){
   })
 
     return{
-        data,
+        request : data,
         isLoading,
         error,
         createRequestMutation

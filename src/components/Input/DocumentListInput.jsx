@@ -1,22 +1,47 @@
 import React from 'react';
-import useDocumentList from '../../hooks/useDocumentList';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRecoilValue } from 'recoil';
+import axiosInstance from '../../api/axios';
+import { authState } from '../../recoil/auth/auth';
 
-function DocumentListInput({ value, onChange, onBlur, onKeyDown, docTypeId, onDocumentCreated }) {
-  const { createDocument, isLoading, error } = useDocumentList(docTypeId);
+function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCreated }) {
+  const auth = useRecoilValue(authState);
+  const queryClient = useQueryClient();
 
-  const handleBlur = async (e) => {
-    const trimmedValue = e.target.value.trim();
-    if (trimmedValue) {
-      try {
-        const response = await createDocument(trimmedValue);
-        console.log('Document created:', response);
-        if (onDocumentCreated) {
-          onDocumentCreated(response);
-        }
-        if (onBlur) onBlur(e);
-      } catch (error) {
-        console.error('문서 생성 실패:', error);
+  const createDocumentMutation = useMutation({
+    mutationFn: async (title) => {
+      if (!auth.token) {
+        throw new Error('인증 토큰이 없습니다.');
       }
+
+      const response = await axiosInstance.post(`/docs`, {
+        title: title,
+        docTypeId: docTypeId
+      }, {
+        headers: {
+          'Authorization': `Bearer ${auth.token}`
+        }
+      });
+
+      return response.data;
+    },
+    onSuccess: (data) => {
+      onDocumentCreated(data);
+      queryClient.invalidateQueries(['docTypeDocuments', docTypeId]);
+    },
+    onError: (error) => {
+      console.error('[문서 생성 실패]', error);
+      alert(error.response?.data?.message || '문서 생성에 실패했습니다.');
+    }
+  });
+
+  const handleBlur = async () => {
+    if (!value.trim()) return;
+    
+    try {
+      await createDocumentMutation.mutateAsync(value);
+    } catch (error) {
+      
     }
   };
 
@@ -38,14 +63,9 @@ function DocumentListInput({ value, onChange, onBlur, onKeyDown, docTypeId, onDo
         onKeyDown = {handleKeyDown}
         placeholder = "서류명을 입력해주세요."
         className = "w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none placeholder-[#B2B2B2]"
-        disabled = {isLoading}
+        disabled = {createDocumentMutation.isPending}
       />
       <div className = "border-b border-[#D9D9D9]" />
-      {error && (
-        <div className = "text-red-500 text-sm mt-1">
-          {error.message}
-        </div>
-      )}
     </div>
   );
 }

@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import useDocument from '../../hooks/useDocument';
 import DocValidator from '../Validator/DocValidator';
+import { useQueryClient } from '@tanstack/react-query';
 
-function DocumentTypeInput({ documentId }) {
+function DocumentTypeInput({ documentId, isNew }) {
   const { createDocument, updateDocument, resetDocument, isLoading, error, document } = useDocument(documentId);
   const [title, setTitle] = useState('');
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    resetDocument();
-    setTitle('');
-  }, [documentId]);
+    if (document.isEditing) {
+      setTitle(document.title || '');
+    }
+  }, [document.isEditing]);
 
   const handleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleBlur = () => {
+  const handleBlur = async () => {
+    if (!title.trim()) {
+      if (isNew) {
+        queryClient.setQueryData(['docTypes'], (old) => ({
+          ...old,
+          result: old?.result?.filter(doc => doc.id) || []
+        }));
+      }
+      return;
+    }
+    
     if (document.id) {
       updateDocument(title);
     } else {

@@ -135,7 +135,8 @@ function useDocument(documentId) {
     resetDocument,
     isLoading: createDocumentMutation.isPending || updateDocumentMutation.isPending,
     error: createDocumentMutation.error || updateDocumentMutation.error,
-    document
+    document,
+    setDocument
   };
 }
 

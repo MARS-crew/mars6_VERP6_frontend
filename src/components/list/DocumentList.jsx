@@ -53,7 +53,7 @@ function DocumentList({ id, initialTitle, isNew }) {
   useEffect(() => {
     const handleDocTypeDeleted = (event) => {
       if (event.detail.id === Number(id)) {
-        console.log('문서 타입 삭제 감지:', id);
+        // console.log('문서 타입 삭제 감지:', id);
         setIsDeleted(true);
       }
     };
@@ -79,7 +79,7 @@ function DocumentList({ id, initialTitle, isNew }) {
       const response = await deleteDocType(id);
       if (response.isSuccess) {
         handleCloseModal();
-        setIsDeleted(true);  // 삭제 성공 시 컴포넌트를 숨김
+        setIsDeleted(true);
       } else {
         alert(response.message || '문서 타입 삭제에 실패했습니다.');
       }
@@ -106,13 +106,6 @@ function DocumentList({ id, initialTitle, isNew }) {
   };
 
   const handleDocumentCreated = async (createdDoc) => {
-    console.log('[문서 생성 후 처리]', { 
-      createdDoc, 
-      currentDocTypeId,
-      documentId: document?.id,
-      id
-    });
-    
     try {
       await queryClient.invalidateQueries({
         queryKey: ['docTypeDocuments', currentDocTypeId],
@@ -120,7 +113,6 @@ function DocumentList({ id, initialTitle, isNew }) {
       });
       
       const result = await refetchDocuments();
-      console.log('[문서 목록 재조회 결과]', result);
       
       setCurrentInput({ value: '', showValidator: false });
       setShowInput(false);

@@ -8,23 +8,7 @@ function useDocTypeDocuments(docTypeId) {
       if (!docTypeId) return { result: [] };
       
       try {
-        // console.log('[문서 목록 조회 요청]', { 
-        //   docTypeId,
-        //   requestUrl: `/docs/${docTypeId}`
-        // });
-
         const response = await axiosInstance.get(`/docs/${docTypeId}`);
-
-        // console.log('[문서 목록 조회 응답]', {
-        //   data: response.data,
-        //   status: response.status,
-        //   docTypeId
-        // });
-
-        if (!response.data.isSuccess) {
-          throw new Error(response.data.message || '문서 목록 조회에 실패했습니다.');
-        }
-
         return response.data;
       } catch (error) {
         console.error('[문서 목록 조회 에러]', {

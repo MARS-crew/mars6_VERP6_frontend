@@ -4,14 +4,15 @@ import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
 
-function VersionList({ no, ver, title, date, position }) {
+function VersionList({ no, ver, title, date, position, item }) {
   const [modalState, setModalState] = useState(false);
 
   const handleModal = () => {
     setModalState(!modalState);
   };
+
   return (
-    <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg">
+    <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]">
       <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px] ">
         <div className="flex w-[5%] items-center">
           {position == "leader" ? (
@@ -29,11 +30,11 @@ function VersionList({ no, ver, title, date, position }) {
               </label>
             </>
           ) : null}
-          <div className=" text-[#8E98A8] font-medium ml-[9px]">{no}1</div>
+          <div className=" text-[#8E98A8] font-medium ml-[9px]">{}</div>
         </div>
-        <div className="w-[10%] text-center font-medium">V{ver}0.1</div>
-        <div className="w-[30%] text-center">{title}asdkjsakjas.ppt</div>
-        <div className="text-center">{date}2025.01.01</div>
+        <div className="w-[10%] text-center font-medium">V{item.version}</div>
+        <div className="w-[30%] text-center">{item.fileName}</div>
+        <div className="text-center">{item.createdAt}</div>
         <img src={DownloadIcon} />
       </div>
       {modalState ? (

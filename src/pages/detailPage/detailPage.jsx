@@ -10,7 +10,7 @@ import AddVersion from "../../components/list/AddList/AddVersion";
 import AddRequest from "../../components/list/AddList/AddRequest";
 import { useRequest } from "../../hooks/uesRequestList";
 
-function DetailPage() {
+function DetailPage({ data }) {
   const position = "leader";
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
@@ -48,7 +48,10 @@ function DetailPage() {
           </div>
           <VersionListHeader position={position} />
           {addModal ? <AddVersion /> : null}
-          <VersionList position={position} />
+          {data &&
+            data.data.result?.map((item) => (
+              <VersionList item={item} position={position} />
+            ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">

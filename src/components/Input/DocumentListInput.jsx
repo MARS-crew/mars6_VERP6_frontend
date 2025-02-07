@@ -36,7 +36,7 @@ function DocumentListInput({ value, onChange, onBlur, onKeyDown, docTypeId, onDo
         onChange = {onChange}
         onBlur = {handleBlur}
         onKeyDown = {handleKeyDown}
-        placeholder = "서류 종류를 입력해주세요."
+        placeholder = "서류명을 입력해주세요."
         className = "w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none placeholder-[#B2B2B2]"
         disabled = {isLoading}
       />

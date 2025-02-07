@@ -12,7 +12,7 @@ function useDocTypes() {
             size: 3,
           }
         });
-        console.log('[문서 타입 조회 응답]', response.data);
+        // console.log('[문서 타입 조회 응답]', response.data);
         return response.data;
       } catch (error) {
         console.error('[문서 타입 조회 에러]', error);

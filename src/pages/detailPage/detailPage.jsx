@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/header/Header";
 import VersionList from "../../components/list/VersionList/VersionList";
 import VersionListHeader from "../../components/list/VersionList/VersionListHeader";
@@ -56,9 +56,16 @@ function DetailPage({ data }) {
             <AddVersion setAddModal={setAddModal} addModal={addModal} />
           ) : null}
           {data &&
-            data.data.result?.map((item, index) => (
-              <VersionList item={item} position={position} index={index} />
-            ))}
+            data.data.result
+              .slice(0)
+              .reverse()
+              .map((item, index) => (
+                <VersionList
+                  item={item}
+                  position={position}
+                  index={data.data.result.length - 1 - index}
+                />
+              ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">

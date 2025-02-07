@@ -38,22 +38,22 @@ function AddVersion({ setAddModal, addModal }) {
   };
 
   const handleSubmit = () => {
-    if (kind === "file") {
-      uploadFile.mutate({
-        url: data.data.result.presignedUrl,
-        formData,
-      });
-    }
+    // if (kind === "file") {
+    //   uploadFile.mutate({
+    //     url: data.data.result.presignedUrl,
+    //     formData,
+    //   });
+    // }
     console.log(data.data.result.presignedUrl);
-    createDocumentDetail.mutate({
-      docId: 254,
-      externalUrl: url == null ? "null" : url,
-      originalFileName: file == null ? null : file,
-      data: {
-        content: contents,
-        version: version,
-      },
-    });
+    // createDocumentDetail.mutate({
+    //   docId: 254,
+    //   externalUrl: url == null ? "null" : url,
+    //   originalFileName: file == null ? null : file,
+    //   data: {
+    //     content: contents,
+    //     version: version,
+    //   },
+    // });
 
     // setAddModal(!addModal);
   };

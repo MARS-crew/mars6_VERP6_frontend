@@ -14,23 +14,49 @@ function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCr
         throw new Error('인증 토큰이 없습니다.');
       }
 
+      console.log('[문서 생성 요청 데이터]', {
+        title,
+        docTypeId,
+        token: auth.token
+      });
+
       const response = await axiosInstance.post(`/docs`, {
         title: title,
-        docTypeId: docTypeId
+        docTypeId: Number(docTypeId)
       }, {
         headers: {
-          'Authorization': `Bearer ${auth.token}`
+          'Authorization': `Bearer ${auth.token}`,
+          'Content-Type': 'application/json'
         }
       });
 
+      console.log('[문서 생성 응답]', response.data);
       return response.data;
     },
-    onSuccess: (data) => {
-      onDocumentCreated(data);
-      queryClient.invalidateQueries(['docTypeDocuments', docTypeId]);
+    onSuccess: async (data) => {
+      console.log('[문서 생성 성공]', {
+        data,
+        docTypeId,
+        result: data.result
+      });
+      
+      // 캐시 무효화 및 즉시 리프레시
+      await queryClient.invalidateQueries({
+        queryKey: ['docTypeDocuments', docTypeId],
+        refetchType: 'active'
+      });
+
+      // 부모 컴포넌트에 알림
+      if (onDocumentCreated) {
+        onDocumentCreated(data.result);
+      }
     },
     onError: (error) => {
-      console.error('[문서 생성 실패]', error);
+      console.error('[문서 생성 실패]', {
+        error,
+        docTypeId,
+        response: error.response?.data
+      });
       alert(error.response?.data?.message || '문서 생성에 실패했습니다.');
     }
   });
@@ -39,9 +65,14 @@ function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCr
     if (!value.trim()) return;
     
     try {
+      console.log('[문서 생성 시도]', {
+        title: value,
+        docTypeId: docTypeId,
+        docTypeIdType: typeof docTypeId
+      });
       await createDocumentMutation.mutateAsync(value);
     } catch (error) {
-      
+      console.error('[문서 생성 에러 상세]', error);
     }
   };
 

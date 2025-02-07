@@ -5,7 +5,8 @@ import DocumentTypeInput from "../Input/DocumentTypeInput";
 import DocumentListInput from "../Input/DocumentListInput";
 import DocTypeValidator from "../Validator/DocTypeValidator";
 import ItemRow from "./DocumentRow/ItemRow";
-import useDocument from "../../hooks/useDocument";import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
+import useDocument from "../../hooks/useDocument";
+import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
 import useDocTypeDelete from "../../hooks/useDocTypeDelete";
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -20,7 +21,8 @@ import { useQueryClient } from '@tanstack/react-query';
 // });
 function DocumentList({ id, initialTitle, isNew }) {
   const { document, isLoading: isDocLoading, startEditing, setDocument } = useDocument(id);
-  const { documents, isLoading: isDocsLoading } = useDocTypeDocuments(id);
+  const currentDocTypeId = Number(document?.id || id);
+  const { documents, isLoading: isDocsLoading, refetch: refetchDocuments } = useDocTypeDocuments(currentDocTypeId);
   const { deleteDocType } = useDocTypeDelete();
   const queryClient = useQueryClient();
   const [showModifyModal, setShowModifyModal] = useState(false);
@@ -39,7 +41,7 @@ function DocumentList({ id, initialTitle, isNew }) {
     } else if (initialTitle) {
       setDocument(prev => ({
         ...prev,
-        id,
+        id: Number(id),
         title: initialTitle,
         isEditing: false
       }));
@@ -79,14 +81,43 @@ function DocumentList({ id, initialTitle, isNew }) {
     });
   };
 
-  const handleDocumentCreated = (createdDoc) => {
-    if (!currentInput.value.trim()) return;
+  const handleDocumentCreated = async (createdDoc) => {
+    console.log('[문서 생성 후 처리]', { 
+      createdDoc, 
+      currentDocTypeId,
+      documentId: document?.id,
+      id
+    });
     
-    queryClient.invalidateQueries(['docTypeDocuments', id]);
-    
-    setCurrentInput({ value: '', showValidator: false });
-    setShowInput(false);
+    try {
+      // 캐시 무효화
+      await queryClient.invalidateQueries({
+        queryKey: ['docTypeDocuments', currentDocTypeId],
+        exact: true
+      });
+      
+      // 즉시 재조회
+      const result = await refetchDocuments();
+      console.log('[문서 목록 재조회 결과]', result);
+      
+      setCurrentInput({ value: '', showValidator: false });
+      setShowInput(false);
+    } catch (error) {
+      console.error('[문서 목록 갱신 실패]', {
+        error,
+        currentDocTypeId,
+        documentId: document?.id
+      });
+      alert('문서가 생성되었지만 목록을 갱신하는데 실패했습니다.');
+    }
   };
+
+  useEffect(() => {
+    if (currentDocTypeId) {
+      console.log('[문서 타입 ID 변경 감지]', { currentDocTypeId });
+      refetchDocuments();
+    }
+  }, [currentDocTypeId, refetchDocuments]);
 
   const handlelistKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -156,7 +187,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                   value={currentInput.value}
                   onChange={handleListInputChange}
                   onKeyDown={handlelistKeyDown}
-                  docTypeId={id}
+                  docTypeId={currentDocTypeId}
                   onDocumentCreated={handleDocumentCreated}
                 />
                 {currentInput.showValidator && (

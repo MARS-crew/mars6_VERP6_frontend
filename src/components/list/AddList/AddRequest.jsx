@@ -22,6 +22,9 @@ function AddRequest({onAddRequest}) {
       url: kind === "url" ? url : null,
       content,
     });
+    if (onSuccess) {
+      onSuccess(); //요청 성공 후 모달 닫기
+    }
   }
 
   return (

@@ -67,6 +67,7 @@ export function useRequest(docId){
           }
       },
       onSuccess:(newRequest)=>{
+        //onSuccess: async () => {
           console.log('[요청 생성 성공]', newRequest);
           setRequestList(prev => ({
               request: [...prev.request, newRequest]
@@ -74,6 +75,8 @@ export function useRequest(docId){
           if (typeof handleRequestSuccess === "function") {
             handleRequestSuccess(); // 요청 성공 후 모달 닫기
           }
+          window.location.reload();
+          
       },
       error : (error)=>{
           console.log('요청 생성 실패 :',error)

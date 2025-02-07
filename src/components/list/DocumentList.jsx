@@ -20,17 +20,19 @@ import { useQueryClient } from '@tanstack/react-query';
 //   docId: null
 // });
 function DocumentList({ id, initialTitle, isNew }) {
-  const { document, isLoading: isDocLoading, startEditing, setDocument } = useDocument(id);
-  const currentDocTypeId = Number(document?.id || id);
-  const { documents, isLoading: isDocsLoading, refetch: refetchDocuments } = useDocTypeDocuments(currentDocTypeId);
-  const { deleteDocType } = useDocTypeDelete();
-  const queryClient = useQueryClient();
+  const [isDeleted, setIsDeleted] = useState(false);
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [currentInput, setCurrentInput] = useState({
     value: "",
     showValidator: false,
   });
   const [showInput, setShowInput] = useState(false);
+
+  const { document, isLoading: isDocLoading, startEditing, setDocument } = useDocument(id);
+  const currentDocTypeId = Number(document?.id || id);
+  const { documents, isLoading: isDocsLoading, refetch: refetchDocuments } = useDocTypeDocuments(currentDocTypeId);
+  const { deleteDocType } = useDocTypeDelete();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isNew) {
@@ -48,6 +50,27 @@ function DocumentList({ id, initialTitle, isNew }) {
     }
   }, [initialTitle, id, setDocument, isNew]);
 
+  useEffect(() => {
+    const handleDocTypeDeleted = (event) => {
+      if (event.detail.id === Number(id)) {
+        console.log('문서 타입 삭제 감지:', id);
+        setIsDeleted(true);
+      }
+    };
+
+    window.addEventListener('docTypeDeleted', handleDocTypeDeleted);
+    return () => {
+      window.removeEventListener('docTypeDeleted', handleDocTypeDeleted);
+    };
+  }, [id]);
+
+  useEffect(() => {
+    if (currentDocTypeId) {
+      console.log('[문서 타입 ID 변경 감지]', { currentDocTypeId });
+      refetchDocuments();
+    }
+  }, [currentDocTypeId, refetchDocuments]);
+
   const handleMoreClick = () => setShowModifyModal((prev) => !prev);
   const handleCloseModal = () => setShowModifyModal(false);
   
@@ -56,6 +79,7 @@ function DocumentList({ id, initialTitle, isNew }) {
       const response = await deleteDocType(id);
       if (response.isSuccess) {
         handleCloseModal();
+        setIsDeleted(true);  // 삭제 성공 시 컴포넌트를 숨김
       } else {
         alert(response.message || '문서 타입 삭제에 실패했습니다.');
       }
@@ -90,13 +114,11 @@ function DocumentList({ id, initialTitle, isNew }) {
     });
     
     try {
-      // 캐시 무효화
       await queryClient.invalidateQueries({
         queryKey: ['docTypeDocuments', currentDocTypeId],
         exact: true
       });
       
-      // 즉시 재조회
       const result = await refetchDocuments();
       console.log('[문서 목록 재조회 결과]', result);
       
@@ -112,13 +134,6 @@ function DocumentList({ id, initialTitle, isNew }) {
     }
   };
 
-  useEffect(() => {
-    if (currentDocTypeId) {
-      console.log('[문서 타입 ID 변경 감지]', { currentDocTypeId });
-      refetchDocuments();
-    }
-  }, [currentDocTypeId, refetchDocuments]);
-
   const handlelistKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -132,6 +147,10 @@ function DocumentList({ id, initialTitle, isNew }) {
 
   if (isDocLoading || isDocsLoading) {
     return <div>로딩 중...</div>;
+  }
+
+  if (isDeleted) {
+    return null;
   }
 
   return (

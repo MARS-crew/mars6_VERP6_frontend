@@ -24,7 +24,7 @@ function MainPage() {
           <div className = "space-y-[30px] mt-[30px] mb-[30px]">
             {docTypes.map((docType) => (
               <DocumentList
-                key={docType.id}
+                key={`doctype-${docType.id}`}
                 id={docType.id}
                 initialTitle={docType.name}
               />

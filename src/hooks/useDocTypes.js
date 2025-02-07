@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../api/axios';
 
 function useDocTypes() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['docTypes'],
     queryFn: async () => {
       try {
@@ -25,7 +25,8 @@ function useDocTypes() {
   return {
     docTypes: data?.result || [],
     isLoading,
-    error
+    error,
+    refetch
   };
 }
 

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-function AddRequest() {
+function AddRequest({onAddRequest}) {
   const [file, setFile] = useState("");
   const [kind, setKind] = useState("file");
+  const [url, setUrl] = useState("");
   const [content, setContent] = useState("");
 
   const changeFile = (e) => {
@@ -14,6 +15,14 @@ function AddRequest() {
   };
 
   useEffect(() => {}, [file]);
+
+  const handleRegister = ()=>{
+    onAddRequest({
+      filename: kind === "file" ? file : null,
+      url: kind === "url" ? url : null,
+      content,
+    });
+  }
 
   return (
     <div className="w-[582px] h-[360px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
@@ -70,6 +79,8 @@ function AddRequest() {
           <input
             className="w-[336px] h-[21px] border-b border-[#d9d9d9] text-xs"
             placeholder="버전 입력"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
           />
         </div>
       )}
@@ -77,10 +88,12 @@ function AddRequest() {
       <div className="mt-[18px]">
         <div className="text-sm font-semibold mb-[10px]">작업 내역</div>
         <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" 
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
       </div>
       <button className="bg-[#8E98A8] w-[146px] h-[27px] text-white rounded-[3px] ml-[381px]"
-
+        onClick={handleRegister}
       >
         등록하기
       </button>

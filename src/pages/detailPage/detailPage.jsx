@@ -8,12 +8,16 @@ import trashIcon from "../../assets/svg/Trash.svg";
 import editIcon from "../../assets/svg/Edit.svg";
 import AddVersion from "../../components/list/AddList/AddVersion";
 import AddRequest from "../../components/list/AddList/AddRequest";
+import { useRequest } from "../../hooks/uesRequestList";
 
 function DetailPage() {
   const position = "leader";
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
+  const docId = 32;
+  const { data, isLoading, error,createRequestMutation } = useRequest(docId); // useRequest 사용
 
+  console.log("data : ",data)
   const addModalState = () => {
     setAddModal(!addModal);
   };
@@ -57,8 +61,18 @@ function DetailPage() {
             </p>
           </div>
           <RequestListHeader />
-          {addRequest ? <AddRequest /> : null}
-          <RequestList />
+          {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} /> : null}
+          {data && data.map((item, index) => (
+            <RequestList
+              key={index}
+              no={index} // 항목의 번호
+              filename={item.fileName} // 파일 이름
+              date={item.createdAt} // 날짜
+              writer={item.name} // 작성자
+              content={item.content} // 내용
+              state={item.status} // 상태
+            />
+          ))}
         </div>
       </div>
     </div>

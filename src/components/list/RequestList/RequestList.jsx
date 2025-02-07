@@ -7,9 +7,10 @@ import DescriptionIcon from "../../../assets/svg/Description.svg";
 import StateButton from "../../stateButton/StateButton";
 import StateSelectModal from "../../stateButton/StateSelectModal";
 
-function RequestList({ no, title, state, date, writer, open,content }) {
+function RequestList({ no, filename, state:initialState, date, writer, open,content }) {
   const [modalState, setModalState] = useState(false);
   const [selectModal, setSelectModal] = useState(false);
+  const [state, setState] = useState(initialState); // 상태 관리 추가
 
   const handleModal = () => {
     setModalState(!modalState);
@@ -18,14 +19,28 @@ function RequestList({ no, title, state, date, writer, open,content }) {
   const handleSelectStateModal = () => {
     setSelectModal(!selectModal);
   };
+
+  const handleStateChange = (newState) => {
+    setState(newState);
+    setSelectModal(false); // 선택 후 모달 닫기
+  };
+
   return (
     <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg">
       <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px] ">
-        <div className="w-[5%] text-[#8E98A8] font-medium">{no}1</div>
-        <div className="text-center">{title}asdkjsakjas.ppt</div>
+        <div className="w-[5%] text-[#8E98A8] font-medium">{no+1}</div>
+        <div className="text-center">
+          {filename.startsWith("http") ? (
+            <a href={filename} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+              {filename}
+            </a>
+          ) : (
+            filename
+          )}
+        </div>
         <div>
-          <StateButton onClick={handleSelectStateModal} state="REQUESTED"/>
-          {selectModal ? <StateSelectModal /> : null}
+          <StateButton onClick={handleSelectStateModal} state={state}/>
+          {selectModal ? <StateSelectModal onStateChange={handleStateChange} /> : null}
         </div>
 
         <div>{writer}</div>

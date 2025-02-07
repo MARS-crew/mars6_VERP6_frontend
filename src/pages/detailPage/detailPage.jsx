@@ -47,8 +47,8 @@ function DetailPage({ data }) {
             <AddVersion setAddModal={setAddModal} addModal={addModal} />
           ) : null}
           {data &&
-            data.data.result?.map((item) => (
-              <VersionList item={item} position={position} />
+            data.data.result?.map((item, index) => (
+              <VersionList item={item} position={position} index={index} />
             ))}
         </div>
         <div className="mt-[30px]">

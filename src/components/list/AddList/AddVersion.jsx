@@ -1,18 +1,24 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import useDocumentDetail from "../../../hooks/useDocumentDetail";
+import useUploadFile from "../../../hooks/File/useUploadFile";
+import useGetFileUrl from "../../../hooks/File/useGetFileUrl";
 
 function AddVersion({ setAddModal, addModal }) {
-  const [file, setFile] = useState("");
+  const [fileName, setFileName] = useState("");
   const [kind, setKind] = useState("file");
   const [version, setVersion] = useState();
   const [url, setUrl] = useState();
   const [contents, setContents] = useState();
+  const formData = new FormData();
 
   const { createDocumentDetail } = useDocumentDetail(null);
+  const { data, isLoading, error } = useGetFileUrl(null);
+  const { uploadFile } = useUploadFile();
 
   const changeFile = (e) => {
-    setFile(e.target.files[0].name);
+    setFileName(e.target.files[0].name);
+    formData.append("file", e.target.files[0], e.target.files[0].name);
   };
 
   const changeKind = (e) => {
@@ -32,19 +38,25 @@ function AddVersion({ setAddModal, addModal }) {
   };
 
   const handleSubmit = () => {
+    if (kind === "file") {
+      uploadFile.mutate({
+        url: data.data.result.presignedUrl,
+        formData,
+      });
+    }
+    console.log(data.data.result.presignedUrl);
     createDocumentDetail.mutate({
       docId: 254,
-      externalUrl: url == null ? null : url,
+      externalUrl: url == null ? "null" : url,
       originalFileName: file == null ? null : file,
       data: {
         content: contents,
         version: version,
       },
     });
-    setAddModal(!addModal);
-  };
 
-  useEffect(() => {}, [file]);
+    // setAddModal(!addModal);
+  };
 
   return (
     <div className="w-[582px] h-[399px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
@@ -88,7 +100,7 @@ function AddVersion({ setAddModal, addModal }) {
           <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
           <div class="flex">
             <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
-              {file}
+              {fileName}
             </div>
             <label
               className="w-[71px] h-[21px] bg-[#d9d9d9] text-xs text-center flex items-center justify-center"

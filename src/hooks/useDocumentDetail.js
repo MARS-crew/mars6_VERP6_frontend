@@ -13,7 +13,6 @@ function useDocumentDetail(docTitle) {
       const response = await axios.get(`/api/docs-detail/${docTitle}`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
-          Accept: "application/json",
           "Content-Type": "application/json",
         },
       });

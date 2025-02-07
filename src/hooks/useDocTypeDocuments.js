@@ -13,12 +13,7 @@ function useDocTypeDocuments(docTypeId) {
         //   requestUrl: `/docs/${docTypeId}`
         // });
 
-        const response = await axiosInstance.get(`/docs/${docTypeId}`, {
-          params: {
-            page: 0,
-            size: 10
-          }
-        });
+        const response = await axiosInstance.get(`/docs/${docTypeId}`);
 
         // console.log('[문서 목록 조회 응답]', {
         //   data: response.data,
@@ -41,9 +36,7 @@ function useDocTypeDocuments(docTypeId) {
       }
     },
     enabled: !!docTypeId,
-    refetchOnWindowFocus: false,
-    staleTime: 0,
-    cacheTime: 5 * 60 * 1000
+    refetchOnWindowFocus: false
   });
 
   return {

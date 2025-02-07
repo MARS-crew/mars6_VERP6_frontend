@@ -9,7 +9,7 @@ function useDocTypes() {
         const response = await axiosInstance.get('/doc-types', {
           params: {
             page: 0,
-            size: 3,
+            size: 100,
           }
         });
         // console.log('[문서 타입 조회 응답]', response.data);

@@ -111,6 +111,7 @@ function DocumentList({ id, onRemove }) {
               onClose={handleCloseModal}
               onDelete={handleDelete}
               onModify={handleModify}
+              docTypeId={document.id}
             />
           </div>
         )}

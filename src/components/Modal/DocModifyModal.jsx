@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import DocDeleteModal from './DocDeleteModal';
+import useDocTypeDelete from '../../hooks/useDocTypeDelete';
 
 function ModifyButton({ onClick, children }) {
   return (
@@ -12,9 +13,10 @@ function ModifyButton({ onClick, children }) {
   );
 }
 
-function DocModifyModal({ onClose, onDelete, onModify }) {
+function DocModifyModal({ onClose, onDelete, onModify, docTypeId }) {
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { deleteDocType, isLoading } = useDocTypeDelete();
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget && !showDeleteModal) {
@@ -32,10 +34,39 @@ function DocModifyModal({ onClose, onDelete, onModify }) {
     }
   };
 
-  const handleDelete = () => {
-    onDelete();
-    setShowDeleteModal(false);
-    onClose();
+  const handleDelete = async () => {
+    try {
+      if (!docTypeId) {
+        console.error('삭제할 문서 타입의 ID가 없습니다.');
+        alert('삭제할 문서 타입이 존재하지 않습니다.');
+        return;
+      }
+
+      console.log('[문서 타입 삭제 시도]', {
+        docTypeId: docTypeId
+      });
+
+      const result = await deleteDocType(docTypeId);
+      
+      if (result.isSuccess) {
+        alert('문서 타입이 성공적으로 삭제되었습니다.');
+        onDelete();
+        setShowDeleteModal(false);
+        onClose();
+      }
+    } catch (error) {
+      console.error('[문서 타입 삭제 에러]', error);
+      
+      if (error.response?.status === 404) {
+        alert('해당 문서 타입을 찾을 수 없거나 이미 삭제되었습니다.');
+        onDelete();
+      } else {
+        alert('문서 타입 삭제 중 오류가 발생했습니다.');
+      }
+      
+      setShowDeleteModal(false);
+      onClose();
+    }
   };
 
   const handleCancel = () => {
@@ -60,6 +91,7 @@ function DocModifyModal({ onClose, onDelete, onModify }) {
             <ModifyButton 
               selected = {selectedButton === '삭제'}
               onClick = {() => handleButtonClick('삭제')}
+              disabled = {isLoading}
             >
               삭제
             </ModifyButton>

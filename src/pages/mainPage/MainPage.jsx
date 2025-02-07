@@ -8,12 +8,25 @@ function MainPage() {
   const [documents, setDocuments] = useState([]);
   const { docTypes } = useDocTypes();
 
+  React.useEffect(() => {
+    const handleDocTypeCreated = (event) => {
+      setDocuments([]);
+    };
+
+    window.addEventListener('docTypeCreated', handleDocTypeCreated);
+    return () => {
+      window.removeEventListener('docTypeCreated', handleDocTypeCreated);
+    };
+  }, []);
+
   const handleAddDocument = () => {
-    setDocuments((prev) => [...prev, Date.now()]);
+    if (documents.length === 0) {
+      setDocuments([Date.now()]);
+    }
   };
 
   const handleRemoveDocument = (id) => {
-    setDocuments((prev) => prev.filter((docId) => docId !== id));
+    setDocuments([]);
   };
 
   return (
@@ -29,13 +42,11 @@ function MainPage() {
                 initialTitle={docType.name}
               />
             ))}
-          </div>
-
-          <div className="space-y-[30px] mt-[30px] mb-[30px]">
             {documents.map((id) => (
               <DocumentList
                 key={id}
                 id={id}
+                isNew={true}
                 onRemove={handleRemoveDocument}
               />
             ))}

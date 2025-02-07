@@ -41,17 +41,23 @@ function useDocument(documentId) {
     },
     onSuccess: (response) => {
       console.log('[문서 타입 생성 성공]', response);
+      const newDocId = response.data.result?.id;
+      
       setDocument(prev => ({
         ...prev,
-        id: response.data.result?.id || documentId,
+        id: newDocId || documentId,
         title: response.title,
         isEditing: false,
         showValidator: false
       }));
-      queryClient.invalidateQueries(['docTypes']);
-      if (response.data.result?.id) {
-        queryClient.invalidateQueries(['docTypeDocuments', response.data.result.id]);
+      
+      if (newDocId) {
+        queryClient.invalidateQueries(['docTypeDocuments', newDocId]);
       }
+
+      window.dispatchEvent(new CustomEvent('docTypeCreated', {
+        detail: { id: documentId }
+      }));
     },
     onError: (error, title) => {
       console.error('[문서 타입 생성 실패]', error);

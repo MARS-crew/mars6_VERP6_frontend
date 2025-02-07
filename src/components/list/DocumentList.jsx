@@ -66,7 +66,7 @@ function DocumentList({ id, initialTitle, isNew }) {
 
   useEffect(() => {
     if (currentDocTypeId) {
-      console.log('[문서 타입 ID 변경 감지]', { currentDocTypeId });
+      // console.log('[문서 타입 ID 변경 감지]', { currentDocTypeId });
       refetchDocuments();
     }
   }, [currentDocTypeId, refetchDocuments]);

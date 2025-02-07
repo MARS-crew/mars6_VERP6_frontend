@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../components/header/Header";
 import AddDocument from "../../components/Button/AddDocument";
 import DocumentList from "../../components/list/DocumentList";
 import useDocTypes from "../../hooks/useDocTypes";
 
 function MainPage() {
+  const [documents, setDocuments] = useState([]);
   const { docTypes } = useDocTypes();
 
   const handleAddDocument = () => {
+    setDocuments((prev) => [...prev, Date.now()]);
+  };
+
+  const handleRemoveDocument = (id) => {
+    setDocuments((prev) => prev.filter((docId) => docId !== id));
   };
 
   return (
@@ -16,7 +22,7 @@ function MainPage() {
       <div className = "flex justify-center">
         <div className = "w-[1194px]">
           <div className = "space-y-[30px] mt-[30px] mb-[30px]">
-            {docTypes.map(docType => (
+            {docTypes.map((docType) => (
               <DocumentList
                 key={docType.id}
                 id={docType.id}
@@ -24,7 +30,18 @@ function MainPage() {
               />
             ))}
           </div>
-          <AddDocument onClick = {handleAddDocument} />
+
+          <div className="space-y-[30px] mt-[30px] mb-[30px]">
+            {documents.map((id) => (
+              <DocumentList
+                key={id}
+                id={id}
+                onRemove={handleRemoveDocument}
+              />
+            ))}
+          </div>
+
+          <AddDocument onClick={handleAddDocument} />
         </div>
       </div>
     </div>

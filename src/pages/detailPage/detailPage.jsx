@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/header/Header";
 import VersionList from "../../components/list/VersionList/VersionList";
 import VersionListHeader from "../../components/list/VersionList/VersionListHeader";
@@ -13,9 +13,21 @@ import { useRequest } from "../../hooks/uesRequestList";
 function DetailPage({ data }) {
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
+  const [filterState, setFilterState] = useState(null); // ✅ 상태 필터 추가
+  const [filteredRequests, setFilteredRequests] = useState([]);
   const position = "leader";
   const docId = 32;
   const { request, isLoading, error,createRequestMutation } = useRequest(docId); // useRequest 사용
+
+  useEffect(() => {
+    if (!filterState) {
+      setFilteredRequests(request); // 필터가 없으면 전체 리스트 반환
+    } else {
+      const newFilteredRequests = request?.filter((item) => item.status === filterState);
+      console.log("✅ DetailPage - 필터링된 리스트:", newFilteredRequests);
+      setFilteredRequests(newFilteredRequests);
+    }
+  }, [filterState, request]); // ✅ filterState나 request 변경 시 실행
 
   console.log("request : ",request)
   const addModalState = () => {
@@ -67,9 +79,9 @@ function DetailPage({ data }) {
               요청하기
             </p>
           </div>
-          <RequestListHeader />
+          <RequestListHeader filterState={filterState} setFilterState={setFilterState} />
           {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} onSuccess={handleRequestSuccess} /> : null}
-          {request && request.map((item, index) => (
+          {filteredRequests?.map((item, index) => (
             <RequestList
               key={index}
               no={index} // 항목의 번호

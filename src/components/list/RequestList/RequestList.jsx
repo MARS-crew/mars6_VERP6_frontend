@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DownloadIcon from "../../../assets/svg/Download.svg";
 import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
@@ -6,12 +6,17 @@ import DescriptionIcon from "../../../assets/svg/Description.svg";
 
 import StateButton from "../../stateButton/StateButton";
 import StateSelectModal from "../../stateButton/StateSelectModal";
+import { useRequestStatus } from "../../../hooks/useRequestStatusUpdate";
 
 function RequestList({ no, filename, state:initialState, date, writer, open,content,reqId }) {
   const [modalState, setModalState] = useState(false);
   const [selectModal, setSelectModal] = useState(false);
   const [state, setState] = useState(initialState); // 상태 관리 추가
   const { updateStatus } = useRequestStatus({ reqId }); // useRequestStatus 추가
+
+  useEffect(() => {
+    setState(initialState);
+  }, [initialState]);
 
   const handleModal = () => {
     setModalState(!modalState);

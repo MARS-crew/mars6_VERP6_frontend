@@ -67,7 +67,6 @@ export function useRequest(docId){
           }
       },
       onSuccess:(newRequest)=>{
-        //onSuccess: async () => {
           console.log('[요청 생성 성공]', newRequest);
           setRequestList(prev => ({
               request: [...prev.request, newRequest]

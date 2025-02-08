@@ -7,10 +7,11 @@ import DescriptionIcon from "../../../assets/svg/Description.svg";
 import StateButton from "../../stateButton/StateButton";
 import StateSelectModal from "../../stateButton/StateSelectModal";
 
-function RequestList({ no, filename, state:initialState, date, writer, open,content }) {
+function RequestList({ no, filename, state:initialState, date, writer, open,content,reqId }) {
   const [modalState, setModalState] = useState(false);
   const [selectModal, setSelectModal] = useState(false);
   const [state, setState] = useState(initialState); // 상태 관리 추가
+  const { updateStatus } = useRequestStatus({ reqId }); // useRequestStatus 추가
 
   const handleModal = () => {
     setModalState(!modalState);
@@ -20,9 +21,11 @@ function RequestList({ no, filename, state:initialState, date, writer, open,cont
     setSelectModal(!selectModal);
   };
 
-  const handleStateChange = (newState) => {
+  const handleStateChange = async (newState) => {
     setState(newState);
     setSelectModal(false); // 선택 후 모달 닫기
+
+    await updateStatus.mutateAsync(newState); //상태 업데이트
   };
 
   return (

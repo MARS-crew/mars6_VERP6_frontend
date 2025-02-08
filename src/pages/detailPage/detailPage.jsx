@@ -78,6 +78,7 @@ function DetailPage({ data }) {
               writer={item.name} // 작성자
               content={item.content} // 내용
               state={item.status} // 상태
+              reqId={item.reqId}
             />
           ))}
         </div>

@@ -3,11 +3,13 @@ import axiosInstance from '../api/axios';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { documentListState } from '../recoil/document';
 import { authState } from '../recoil/auth/auth';
+import { useQueryClient } from '@tanstack/react-query';
 
 function useDocumentList(docTypeId) {
   const setDocumentList = useSetRecoilState(documentListState(docTypeId));
   const documentList = useRecoilValue(documentListState(docTypeId));
   const auth = useRecoilValue(authState);
+  const queryClient = useQueryClient();
 
   const createDocumentMutation = useMutation({
     mutationFn: async (title) => {
@@ -55,6 +57,7 @@ function useDocumentList(docTypeId) {
           ...prev,
           documents: [...prev.documents, data.result]
         }));
+        queryClient.invalidateQueries(['docTypeDocuments', docTypeId]);
       }
       return data;
     },

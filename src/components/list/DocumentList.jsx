@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moreIcon from "../../assets/images/more-icon.png";
 import DocModifyModal from "../Modal/DocModifyModal";
 import DocumentTypeInput from "../Input/DocumentTypeInput";
@@ -6,33 +6,89 @@ import DocumentListInput from "../Input/DocumentListInput";
 import DocTypeValidator from "../Validator/DocTypeValidator";
 import ItemRow from "./DocumentRow/ItemRow";
 import useDocument from "../../hooks/useDocument";
+import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
+import useDocTypeDelete from "../../hooks/useDocTypeDelete";
+import { useQueryClient } from '@tanstack/react-query';
 
-const INITIAL_ITEMS = (inputValue) => ({
-  name: inputValue,
-  fileLink: `${inputValue}.ppt`,
-  progressPercent: 33,
-  waitPercent: 33,
-  updated: "1일전",
-  state: true,
-  docId: null
-});
-
-function DocumentList({ id, onRemove }) {
-  const { document, isLoading, startEditing } = useDocument(id);
+// const INITIAL_ITEMS = (inputValue) => ({
+//   name: inputValue,
+//   fileLink: `${inputValue}.ppt`,
+//   progressPercent: 33,
+//   waitPercent: 33,
+//   updated: "1일전",
+//   state: true,
+//   docId: null
+// });
+function DocumentList({ id, initialTitle, isNew }) {
+  const [isDeleted, setIsDeleted] = useState(false);
   const [showModifyModal, setShowModifyModal] = useState(false);
-  const [items, setItems] = useState([]);
   const [currentInput, setCurrentInput] = useState({
     value: "",
     showValidator: false,
   });
   const [showInput, setShowInput] = useState(false);
 
+  const { document, isLoading: isDocLoading, startEditing, setDocument } = useDocument(id);
+  const currentDocTypeId = Number(document?.id || id);
+  const { documents, isLoading: isDocsLoading, refetch: refetchDocuments } = useDocTypeDocuments(currentDocTypeId);
+  const { deleteDocType } = useDocTypeDelete();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (isNew) {
+      setDocument(prev => ({
+        ...prev,
+        isEditing: true
+      }));
+    } else if (initialTitle) {
+      setDocument(prev => ({
+        ...prev,
+        id: Number(id),
+        title: initialTitle,
+        isEditing: false
+      }));
+    }
+  }, [initialTitle, id, setDocument, isNew]);
+
+  useEffect(() => {
+    const handleDocTypeDeleted = (event) => {
+      if (event.detail.id === Number(id)) {
+        // console.log('문서 타입 삭제 감지:', id);
+        setIsDeleted(true);
+      }
+    };
+
+    window.addEventListener('docTypeDeleted', handleDocTypeDeleted);
+    return () => {
+      window.removeEventListener('docTypeDeleted', handleDocTypeDeleted);
+    };
+  }, [id]);
+
+  useEffect(() => {
+    if (currentDocTypeId) {
+      // console.log('[문서 타입 ID 변경 감지]', { currentDocTypeId });
+      refetchDocuments();
+    }
+  }, [currentDocTypeId, refetchDocuments]);
+
   const handleMoreClick = () => setShowModifyModal((prev) => !prev);
   const handleCloseModal = () => setShowModifyModal(false);
-  const handleDelete = () => {
-    onRemove(id);
-    handleCloseModal();
+  
+  const handleDelete = async () => {
+    try {
+      const response = await deleteDocType(id);
+      if (response.isSuccess) {
+        handleCloseModal();
+        setIsDeleted(true);
+      } else {
+        alert(response.message || '문서 타입 삭제에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('[문서 타입 삭제 실패]', error);
+      alert(error.response?.data?.message || '문서 타입 삭제 중 오류가 발생했습니다.');
+    }
   };
+
   const handleModify = () => {
     startEditing();
   };
@@ -49,40 +105,25 @@ function DocumentList({ id, onRemove }) {
     });
   };
 
-  const handleDocumentCreated = (createdDoc) => {
-    if (!currentInput.value.trim()) return;
-
-    console.log('[생성된 문서 정보]', createdDoc);
-
-    if (createdDoc.result && createdDoc.result.docId) {
-      const newItem = {
-        ...INITIAL_ITEMS(currentInput.value),
-        docId: createdDoc.result.docId,
-        name: currentInput.value
-      };
-
-      console.log('[새로 생성된 아이템]', newItem);
-      setItems(prev => [...prev, newItem]);
+  const handleDocumentCreated = async (createdDoc) => {
+    try {
+      await queryClient.invalidateQueries({
+        queryKey: ['docTypeDocuments', currentDocTypeId],
+        exact: true
+      });
+      
+      const result = await refetchDocuments();
+      
       setCurrentInput({ value: '', showValidator: false });
       setShowInput(false);
-    } else {
-      console.error('문서 생성 응답에 docId가 없습니다:', createdDoc);
+    } catch (error) {
+      console.error('[문서 목록 갱신 실패]', {
+        error,
+        currentDocTypeId,
+        documentId: document?.id
+      });
+      alert('문서가 생성되었지만 목록을 갱신하는데 실패했습니다.');
     }
-  };
-
-  const handleDocumentDelete = (docId) => {
-    if (!docId) {
-      console.error('삭제할 문서의 ID가 없습니다.');
-      return;
-    }
-
-    console.log('[문서 삭제 처리]', { docId });
-    
-    setItems(prev => {
-      const filtered = prev.filter(item => item.docId !== docId);
-      console.log('[삭제 후 남은 아이템]', filtered);
-      return filtered;
-    });
   };
 
   const handlelistKeyDown = (e) => {
@@ -92,75 +133,94 @@ function DocumentList({ id, onRemove }) {
     }
   };
 
-  if (isLoading) {
+  const handleRemoveDocument = (docId) => {
+    queryClient.invalidateQueries(['docTypeDocuments', id]);
+  };
+
+  if (isDocLoading || isDocsLoading) {
     return <div>로딩 중...</div>;
+  }
+
+  if (isDeleted) {
+    return null;
   }
 
   return (
     <div className="w-[1194px] bg-white rounded-[8px] shadow-[0_0_2px_2px_rgba(0,0,0,0.10)] relative min-h-[230px] pb-[60px]">
-      <div className="absolute top-[32px] right-[6px]">
-        <img
-          src={moreIcon}
-          alt="more"
-          className="cursor-pointer w-[32px] h-[32px]"
-          onClick={handleMoreClick}
-        />
-        {showModifyModal && (
-          <div className="absolute top-[40px] right-[20px] z-[100]">
-            <DocModifyModal
-              onClose={handleCloseModal}
-              onDelete={handleDelete}
-              onModify={handleModify}
-              docTypeId={document.id}
-            />
-          </div>
-        )}
-      </div>
-      <div>
-        <DocumentTypeInput documentId={id} />
-        <div className="mt-4">
-          {document?.title && !document?.isEditing && (
-            <div className="pl-[20px] space-y-4">
-              <div className="space-y-4">
-                {items.map((item, idx) => (
-                  <ItemRow
-                    key={idx}
-                    item={item}
-                    isLast={idx === items.length - 1}
-                    docTypeId={document.id}
-                    onRemove={handleDocumentDelete}
-                  />
-                ))}
-              </div>
-
-              {showInput && (
-                <div className="mb-4">
-                  <DocumentListInput
-                    value={currentInput.value}
-                    onChange={handleListInputChange}
-                    onKeyDown={handlelistKeyDown}
-                    docTypeId={document.id}
-                    onDocumentCreated={handleDocumentCreated}
-                  />
-                  {currentInput.showValidator && (
-                    <div className="pl-[20px]">
-                      <DocTypeValidator />
-                    </div>
-                  )}
-                </div>
-              )}
+      {!isNew && (
+        <div className="absolute top-[32px] right-[6px]">
+          <img
+            src={moreIcon}
+            alt="more"
+            className="cursor-pointer w-[32px] h-[32px]"
+            onClick={handleMoreClick}
+          />
+          {showModifyModal && (
+            <div className="absolute top-[40px] right-[20px] z-[100]">
+              <DocModifyModal
+                onClose={handleCloseModal}
+                onDelete={handleDelete}
+                onModify={handleModify}
+                docTypeId={document.id}
+              />
             </div>
           )}
         </div>
+      )}
+      <div>
+        <DocumentTypeInput documentId={id} isNew={isNew} />
+        {document?.title && !document?.isEditing && (
+          <div className="mt-4">
+            <div className="pl-[20px] space-y-4">
+              {Array.isArray(documents) && documents.map((doc, idx) => (
+                <ItemRow
+                  key={doc.docId}
+                  item={{
+                    docId: doc.docId,
+                    name: doc.title,
+                    fileLink: `${doc.title}.ppt`,
+                    progressPercent: doc.currentRequestStep || 0,
+                    waitPercent: doc.totalRequestStep || 0,
+                    completion: doc.completion || 0,
+                    updated: doc.timeAgo || "방금 전",
+                    state: true
+                  }}
+                  isLast={idx === documents.length - 1}
+                  docTypeId={id}
+                  onRemove={handleRemoveDocument}
+                />
+              ))}
+            </div>
+
+            {showInput && (
+              <div className="pl-[20px] mb-4">
+                <DocumentListInput
+                  value={currentInput.value}
+                  onChange={handleListInputChange}
+                  onKeyDown={handlelistKeyDown}
+                  docTypeId={currentDocTypeId}
+                  onDocumentCreated={handleDocumentCreated}
+                />
+                {currentInput.showValidator && (
+                  <div className="mt-2">
+                    <DocTypeValidator />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
-      <div className="absolute bottom-[18px] left-0 w-full flex justify-center">
-        <span
-          className="text-[30px] text-[#8E98A8] leading-[30px] cursor-pointer"
-          onClick={handleAddList}
-        >
-          +
-        </span>
-      </div>
+      {document?.title && !document?.isEditing && (
+        <div className="absolute bottom-[18px] left-0 w-full flex justify-center">
+          <span
+            className="text-[30px] text-[#8E98A8] leading-[30px] cursor-pointer"
+            onClick={handleAddList}
+          >
+            +
+          </span>
+        </div>
+      )}
     </div>
   );
 }

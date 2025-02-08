@@ -17,17 +17,22 @@ function DocumentTypeInput({ documentId, isNew }) {
 
   const handleInputChange = (e) => {
     const value = e.target.value;
+    setTitle(value);
+  };
+
+  const validateInput = (value) => {
     const validPattern = /^[가-힣a-zA-Z0-9\s]*$/;
     const isValidLength = value.length > 0 && value.length <= 8;
     const isValidChar = validPattern.test(value);
     
-    setTitle(value);
     setDocument(prev => ({
       ...prev,
       title: value,
       showLengthValidator: !isValidLength,
       showCharValidator: !isValidChar
     }));
+
+    return isValidLength && isValidChar;
   };
 
   const handleBlur = async () => {
@@ -40,17 +45,21 @@ function DocumentTypeInput({ documentId, isNew }) {
       }
       return;
     }
-    
-    if (document.id) {
-      updateDocument(title);
-    } else {
-      createDocument(title);
+
+    const isValid = validateInput(title);
+    if (isValid) {
+      if (document.id) {
+        updateDocument(title);
+      } else {
+        createDocument(title);
+      }
     }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      validateInput(title);
       e.target.blur();
     }
   };

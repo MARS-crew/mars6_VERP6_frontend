@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import axiosInstance from '../api/axios';
 import { documentState } from '../recoil/document';
@@ -8,6 +8,7 @@ function useDocument(documentId) {
   const setDocument = useSetRecoilState(documentState(documentId));
   const document = useRecoilValue(documentState(documentId));
   const auth = useRecoilValue(authState);
+  const queryClient = useQueryClient();
 
   const resetDocument = () => {
     setDocument({
@@ -40,12 +41,22 @@ function useDocument(documentId) {
     },
     onSuccess: (response) => {
       console.log('[문서 타입 생성 성공]', response);
+      const newDocId = response.data.result?.id;
+      
       setDocument(prev => ({
         ...prev,
-        id: response.data.result?.id || documentId,
+        id: newDocId || documentId,
         title: response.title,
         isEditing: false,
         showValidator: false
+      }));
+      
+      if (newDocId) {
+        queryClient.invalidateQueries(['docTypeDocuments', newDocId]);
+      }
+
+      window.dispatchEvent(new CustomEvent('docTypeCreated', {
+        detail: { id: documentId }
       }));
     },
     onError: (error, title) => {
@@ -135,7 +146,8 @@ function useDocument(documentId) {
     resetDocument,
     isLoading: createDocumentMutation.isPending || updateDocumentMutation.isPending,
     error: createDocumentMutation.error || updateDocumentMutation.error,
-    document
+    document,
+    setDocument
   };
 }
 

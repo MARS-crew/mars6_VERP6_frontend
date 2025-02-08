@@ -36,8 +36,8 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const handleDeleteConfirm = async () => {
     try {
       if (!item.docId) {
-        console.error('삭제할 문서의 ID가 없습니다:', item);
         alert('삭제할 문서가 존재하지 않습니다.');
+        setShowDeleteModal(false);
         return;
       }
 
@@ -46,22 +46,21 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
         documentName: item.name
       });
 
-      await deleteDocument(item.docId);
+      const response = await deleteDocument(item.docId);
       
-      console.log('[문서 삭제 UI 업데이트]', item.docId);
-      onRemove(item.docId);
-      setShowDeleteModal(false);
+      console.log('[문서 삭제 응답]', response);
       
-    } catch (error) {
-      console.error('[문서 삭제 에러]', error);
-      
-      if (error.response?.status === 404) {
-        alert('문서를 찾을 수 없습니다.');
+      if (response.isSuccess) {
+        alert(response.message || '문서가 성공적으로 삭제되었습니다.');
         onRemove(item.docId);
       } else {
-        alert('문서 삭제 중 오류가 발생했습니다.');
+        alert(response.message || '문서 삭제에 실패했습니다.');
       }
       
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error('[문서 삭제 에러]', error);
+      alert(error.response?.data?.message || '문서 삭제 중 오류가 발생했습니다.');
       setShowDeleteModal(false);
     }
   };

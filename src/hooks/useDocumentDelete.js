@@ -9,53 +9,54 @@ function useDocumentDelete() {
 
   const deleteDocumentMutation = useMutation({
     mutationFn: async (id) => {
+      if (!auth.token) {
+        throw new Error('인증 토큰이 없습니다.');
+      }
+
       try {
-        if (!auth.token) {
-          throw new Error('인증 토큰이 없습니다.');
-        }
-
-        console.log('[문서 삭제 요청]', { 
-          documentId: id,
-          requestUrl: `/docs/${id}`
-        });
-
+        console.log('[문서 삭제 요청]', { documentId: id });
+        
         const response = await axiosInstance.delete(`/docs/${id}`, {
           headers: {
             'Authorization': `Bearer ${auth.token}`
           }
         });
 
-        console.log('[문서 삭제 응답]', response.status);
+        console.log('[문서 삭제 응답]', response.data);
 
-        if (response.status === 200) {
-          alert('문서가 삭제되었습니다.');
-          return { isSuccess: true, message: '문서가 성공적으로 삭제되었습니다.' };
-        }
-
-        throw new Error('문서 삭제에 실패했습니다.');
+        return { 
+          isSuccess: true, 
+          message: '문서가 성공적으로 삭제되었습니다.',
+          data: response.data 
+        };
       } catch (error) {
-        console.error('[문서 삭제 에러]', error.response || error);
+        console.error('[문서 삭제 에러]', error);
         
         if (error.response?.status === 404) {
-            alert('해당 문서를 찾을 수 없거나 삭제된 문서입니다.');
-            return { isSuccess: true, message: '이미 삭제된 문서입니다.' };
+          return { 
+            isSuccess: true, 
+            message: '이미 삭제된 문서입니다.',
+            data: null 
+          };
         }
         
-        throw error;
+        return {
+          isSuccess: false,
+          message: error.response?.data?.message || '문서 삭제에 실패했습니다.',
+          error: error
+        };
       }
     },
-    onSuccess: (data) => {
-      console.log('[문서 삭제 성공]', data);
-      queryClient.invalidateQueries(['documents']);
-    },
-    onError: (error) => {
-      console.error('[문서 삭제 실패]', error);
-      throw error;
+    onSuccess: (response) => {
+      if (response.isSuccess) {
+        console.log('[문서 삭제 성공]', response);
+        queryClient.invalidateQueries(['docTypeDocuments']);
+      }
     }
   });
 
   return {
-    deleteDocument: (id) => deleteDocumentMutation.mutateAsync(id),
+    deleteDocument: deleteDocumentMutation.mutateAsync,
     isLoading: deleteDocumentMutation.isPending,
     error: deleteDocumentMutation.error
   };

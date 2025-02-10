@@ -34,7 +34,7 @@ function DetailPage({ data, docTitle }) {
   };
 
   return (
-    <div className="bg-[#F6F6F6] w-full h-screen">
+    <div className="bg-[#F6F6F6] w-full min-h-screen pb-4">
       <Header />
       <div className="max-w-[1194px] m-auto flex place-content-between">
         <div className="mt-[30px]">

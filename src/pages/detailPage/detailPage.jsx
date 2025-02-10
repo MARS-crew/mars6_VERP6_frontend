@@ -9,10 +9,12 @@ import editIcon from "../../assets/svg/Edit.svg";
 import AddVersion from "../../components/list/AddList/AddVersion";
 import AddRequest from "../../components/list/AddList/AddRequest";
 import { useRequest } from "../../hooks/uesRequestList";
+import { useSearchParams } from "react-router-dom";
 
-function DetailPage({ data }) {
+function DetailPage({ data, docTitle }) {
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
+  const [filter, setFilter] = useState();
   const position = "leader";
   const docId = 32;
   const { request, isLoading, error, createRequestMutation } =
@@ -37,7 +39,7 @@ function DetailPage({ data }) {
       <div className="max-w-[1194px] m-auto flex place-content-between">
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
-            <p className="font-bold text-xl">Todo list 앱 기획서</p>
+            <p className="font-bold text-xl">{docTitle}</p>
             {position == "leader" ? (
               <div className="flex">
                 <p
@@ -51,25 +53,36 @@ function DetailPage({ data }) {
               </div>
             ) : null}
           </div>
-          <VersionListHeader position={position} />
+          <VersionListHeader
+            position={position}
+            filter={filter}
+            setFilter={setFilter}
+          />
           {addModal ? (
             <AddVersion setAddModal={setAddModal} addModal={addModal} />
           ) : null}
-          {data &&
-            data.data.result
-              .slice(0)
-              .reverse()
-              .map((item, index) => (
-                <VersionList
-                  item={item}
-                  position={position}
-                  index={data.data.result.length - 1 - index}
-                />
-              ))}
+          {filter
+            ? data &&
+              data.data.result
+                .slice(0)
+                .reverse()
+                .map((item, index) => (
+                  <VersionList
+                    item={item}
+                    position={position}
+                    index={data.data.result.length - 1 - index}
+                  />
+                ))
+            : data &&
+              data.data.result
+                .slice(0)
+                .map((item, index) => (
+                  <VersionList item={item} position={position} index={index} />
+                ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
-            <p className="font-bold text-xl">Todo list 앱 기획서</p>
+            <p className="font-bold text-xl">{docTitle}</p>
             <p
               onClick={addRequestModal}
               className="font-normal text-sm my-auto text-[#7C838A]"

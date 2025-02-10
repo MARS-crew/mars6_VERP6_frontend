@@ -3,10 +3,12 @@ import DownloadIcon from "../../../assets/svg/Download.svg";
 import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
+import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
 
 function VersionList({ position, item, index }) {
   const [modalState, setModalState] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  // const downloadFile = useGetDownloadFile(353);
 
   const handleModal = () => {
     setModalState(!modalState);
@@ -40,9 +42,11 @@ function VersionList({ position, item, index }) {
           <div className="text-[#8E98A8] font-medium ml-[9px]">{index + 1}</div>
         </div>
         <div className="w-[10%] text-center font-medium">V{item.version}</div>
-        <div className="w-[30%] text-center">{item.fileName}</div>
+        <div className="w-[30%] text-center truncate">{item.fileName}</div>
         <div className="text-center">{item.createdAt}</div>
+        {/* <a href={downloadFile.data.data.result} download={item.fileName}> */}
         <img src={DownloadIcon} alt="Download" />
+        {/* </a> */}
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">

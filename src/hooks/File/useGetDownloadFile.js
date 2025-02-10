@@ -12,8 +12,6 @@ function useGetDownloadFile(docId) {
       const response = await axios.get(`/api/docs-detail/${docId}/download`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
         },
       });
 

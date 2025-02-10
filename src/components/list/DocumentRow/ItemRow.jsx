@@ -135,7 +135,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
           !isLast && "border-b border-[#B4B4B4]"
         } last:mb-0 mr-[20px]`}
       >
-        {totalSteps === 0 ? (
+        {totalrequest === 0 ? (
           <div className="flex items-center text-sm text-gray-500">
             <div className="w-[200px] font-medium text-gray-700 text-[17px]">
               {isEditing ? (

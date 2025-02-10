@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AlignDownIcon from "../../../assets/svg/AlignDown.svg";
 import filterIcon from "../../../assets/svg/filter.svg";
-import StateSelectModal from "../../stateButton/StateSelectModal";
+import StateFilterSelectModal from "../../stateButton/StateFilterSelectModal";
+
 
 function RequestListHeader({ filterState, setFilterState }) {
   const [showFilter, setShowFilter] = useState(false);
@@ -14,7 +15,7 @@ function RequestListHeader({ filterState, setFilterState }) {
     setFilterState(newState);
     setShowFilter(false);
   };
-
+  
   useEffect(() => {
   }, [filterState]);
 
@@ -26,11 +27,12 @@ function RequestListHeader({ filterState, setFilterState }) {
         <div className="relative">
           <button onClick={toggleFilter} className="flex items-center">
             <img src={filterIcon} className="mr-1" />
-            <p>{filterState || "상태"}</p>
+            {/* <p>{filterState || "상태"}</p> */}
+            <p>{filterState ? filterState : "전체"}</p>
           </button>
           {showFilter && (
             <div className="absolute left-0 top-6 z-50">
-              <StateSelectModal onStateChange={handleFilterChange} />
+              <StateFilterSelectModal onStateChange={handleFilterChange} />
             </div>
           )}
         </div>

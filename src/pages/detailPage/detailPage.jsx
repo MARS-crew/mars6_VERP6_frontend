@@ -13,8 +13,10 @@ import { useRequest } from "../../hooks/uesRequestList";
 function DetailPage({ data }) {
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
-  const [filterState, setFilterState] = useState(null); // ✅ 상태 필터 추가
+  const [filterState, setFilterState] = useState(null); // 상태 필터 추가
   const [filteredRequests, setFilteredRequests] = useState([]);
+  const [selectedDocId, setSelectedDocId] = useState(null); // 선택된 docId 상태 추가
+
   const position = "leader";
   const docId = 32;
   const { request, isLoading, error,createRequestMutation } = useRequest(docId); // useRequest 사용
@@ -24,12 +26,10 @@ function DetailPage({ data }) {
       setFilteredRequests(request); // 필터가 없으면 전체 리스트 반환
     } else {
       const newFilteredRequests = request?.filter((item) => item.status === filterState);
-      console.log("✅ DetailPage - 필터링된 리스트:", newFilteredRequests);
-      setFilteredRequests(newFilteredRequests);
+    setFilteredRequests(newFilteredRequests);
     }
-  }, [filterState, request]); // ✅ filterState나 request 변경 시 실행
+  }, [filterState, request]); // filterState나 request 변경 시 실행
 
-  console.log("request : ",request)
   const addModalState = () => {
     setAddModal(!addModal);
   };
@@ -40,6 +40,10 @@ function DetailPage({ data }) {
 
   const handleRequestSuccess = () => {
     setAddRequest(false); //요청 성공 시 모달 닫기
+  };
+
+  const handleVersionClick = (docId) => {
+    setSelectedDocId(docId);
   };
 
   return (
@@ -66,12 +70,12 @@ function DetailPage({ data }) {
           {addModal ? <AddVersion /> : null}
           {data &&
             data.data.result?.map((item,index) => (
-              <VersionList  key={index} item={item} position={position}/>
+              <VersionList  key={index} item={item} position={position} onClick={()=>handleVersionClick(item.docId)}/>
             ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
-            <p className="font-bold text-xl">Todo list 앱 기획서</p>
+            <p className="font-bold text-xl">V0.0.4 화면설계서</p>
             <p
               onClick={addRequestModal}
               className="font-normal text-sm my-auto text-[#7C838A]"
@@ -81,7 +85,7 @@ function DetailPage({ data }) {
           </div>
           <RequestListHeader filterState={filterState} setFilterState={setFilterState} />
           {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} onSuccess={handleRequestSuccess} /> : null}
-          {filteredRequests?.map((item, index) => (
+          {filteredRequests ? filteredRequests?.map((item, index) => (
             <RequestList
               key={index}
               no={index} // 항목의 번호
@@ -92,7 +96,7 @@ function DetailPage({ data }) {
               state={item.status} // 상태
               reqId={item.reqId}
             />
-          ))}
+          )) : null}
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import useDocumentUpdate from "../../../hooks/useDocumentUpdate";
 import useDocumentDelete from "../../../hooks/useDocumentDelete";
 import ListDeleteModal from "../../Modal/ListDeleteModal";
 import DocumentListInput from "../../Input/DocumentListInput";
+import { useAlert } from "../../../hooks/usealertIcon";
 
 function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +20,17 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const { updateDocument, isLoading: isUpdating } = useDocumentUpdate();
   const { deleteDocument, isLoading: isDeleting } = useDocumentDelete();
   const isempty = item.state;
-  const waittotal = item.waitPercent + item.progressPercent;
+  const inrequtes = Number(item.inProgressRequestStep);
+  const completrequest = Number(item.inProgressRequestStep);
+  const cancelrequest = Number(item.canceledRequestStep);
+  const totalrequest = Number(item.totalRequestStep);
+
+  const successpr = ((completrequest+ cancelrequest)/totalrequest)*100;
+  const inprpr = ((completrequest+ cancelrequest +inrequtes)/totalrequest)*100;
+
+
+  const docId = item.docId;
+  const {check} = useAlert(docId);
 
   const handleUpdateClick = () => {
     setIsEditing(true);
@@ -144,7 +155,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
             ) : (
               <>
                 {item.name}
-                {isempty && <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />}
+                {check && <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />}
               </>
             )}
 
@@ -156,13 +167,13 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
               <div
                 className="bg-[#14AE5C] h-[36px] rounded-full absolute"
                 style={{
-                  width: `${item.progressPercent}%`,
+                  width: `${successpr}%`,
                 }}
               />
               <div
                 className="bg-[#5A5A5A] h-[36px] rounded-full"
                 style={{
-                  width: `${waittotal}%`,
+                  width: `${inprpr}%`,
                 }}
               />
             </div>

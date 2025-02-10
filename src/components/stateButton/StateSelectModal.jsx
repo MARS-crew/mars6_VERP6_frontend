@@ -14,9 +14,6 @@ function StateSelectModal({ onStateChange }) {
         <StateButton key={item} state={item} onClick={() => handleClick(item)} />
       ))}
       
-      {/* {config.map((item) => (
-        <StateButton key={item} state={item} />
-      ))} */}
     </div>
   );
 }

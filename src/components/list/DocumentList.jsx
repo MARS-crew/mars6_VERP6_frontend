@@ -179,9 +179,10 @@ function DocumentList({ id, initialTitle, isNew }) {
                     docId: doc.docId,
                     name: doc.title,
                     fileLink: `${doc.title}.ppt`,
-                    progressPercent: doc.currentRequestStep || 0,
-                    waitPercent: doc.totalRequestStep || 0,
-                    completion: doc.completion || 0,
+                    completedRequestStep: doc.completedRequestStep || 0,
+                    inProgressRequestStep: doc.inProgressRequestStep || 0,
+                    canceledRequestStep: doc.canceledRequestStep || 0,
+                    totalRequestStep: doc.totalRequestStep|| 0,
                     updated: doc.timeAgo || "방금 전",
                     state: true
                   }}

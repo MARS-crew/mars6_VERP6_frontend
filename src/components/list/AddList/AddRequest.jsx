@@ -28,7 +28,7 @@ function AddRequest({onAddRequest}) {
   }
 
   return (
-    <div className="w-[582px] h-[360px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
+    <div className="w-[582px] h-[400px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
       <div className="text-xl font-semibold">요청하기</div>
       <div className="mt-[18px] flex text-sm font-semibold">
         <div className="text-sm font-semibold mr-[43px]">
@@ -57,9 +57,9 @@ function AddRequest({onAddRequest}) {
       </div>
       {kind == "file" ? (
         <div className="mt-[18px] flex">
-          <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
+          {/* <div className="text-sm font-semibold mr-[83px]">파일 업로드</div> */}
           <div class="flex">
-            <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
+            {/* <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
               {file}
             </div>
             <label
@@ -73,7 +73,13 @@ function AddRequest({onAddRequest}) {
               type="file"
               id="file"
               onChange={changeFile}
-            />
+            /> */}
+            <div className="mt-[18px] flex">
+                  <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
+                  <div className="flex">
+                      <input type="file" onChange={changeFile} />
+                  </div>
+            </div>
           </div>
         </div>
       ) : (

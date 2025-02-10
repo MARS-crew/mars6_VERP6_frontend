@@ -17,3 +17,10 @@ export const documentListState = atomFamily({
     error: null
   }
 }); 
+
+export const documentCheck = atomFamily({
+  key:'dcheck',
+  default:{
+    data:[]
+  }
+})

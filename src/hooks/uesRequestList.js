@@ -30,15 +30,50 @@ export function useRequest(docId){
         }
       });
 
+      // MinIO Presigned URL 요청 (서버에서 업로드 URL 받기)
+    const getPresignedUrl = async () => {
+      const response = await axiosInstance.get(`/minio/upload`, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+          Accept: "application/json",
+        },
+      });
+      return response.data; // { presignedUrl: "...", generatedFileName: "..." }
+    };
+
+      //Presigned URL을 이용해 MinIO에 파일 업로드
+    const uploadFileToPresignedUrl = async (presignedUrl, file) => {
+      await fetch(presignedUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+    };
+
 
       //요청 리스트 생성
     const createRequestMutation  = useMutation({
       mutationFn : async (mRequest) =>{
           try{
+            let fileUrl = null;
+
+            if (mRequest.file) {
+              // MinIO에서 Presigned URL 요청
+              const { presignedUrl, generatedFileName } = await getPresignedUrl();
+              
+              // Presigned URL을 통해 MinIO에 파일 업로드
+              await uploadFileToPresignedUrl(presignedUrl, mRequest.file);
+
+              fileUrl = generatedFileName; // MinIO에 업로드된 파일 URL 저장
+            }
+
             const params = new URLSearchParams();
             params.append("docId", Number(docId)); // 숫자로 변환
             if (mRequest.filename) {
               params.append("originalFileName", mRequest.filename);
+            }
+            if (fileUrl) {
+              params.append("externalUrl", fileUrl); // MinIO 파일 URL 추가
             }
             if (mRequest.url) {
               params.append("externalUrl", mRequest.url);

@@ -162,32 +162,6 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
               <div className="text-[#9CA2B3] text-[17px]">
                 현재 등록되어 있는 요청이 없습니다.
               </div>
-<<<<<<< HEAD
-            ) : (
-              <>
-                {item.name}
-                {check && <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />}
-              </>
-            )}
-
-          </div>
-        </div>
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <div>
-            <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative mt-[9px]">
-              <div
-                className="bg-[#14AE5C] h-[36px] rounded-full absolute"
-                style={{
-                  width: `${successpr}%`,
-                }}
-              />
-              <div
-                className="bg-[#5A5A5A] h-[36px] rounded-full"
-                style={{
-                  width: `${inprpr}%`,
-                }}
-              />
-=======
             </div>
             <div className="w-[200px] flex items-center gap-10 justify-end mr-[70px] text-[17px]">
               <button
@@ -208,7 +182,6 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                   <img className="h-[20px] w-[20px]" src={DeletIcon} />
                 </span>
               </button>
->>>>>>> 780b688c279b2bf0cd905b78a838a1b7bc977382
             </div>
           </div>
         ) : (
@@ -243,13 +216,13 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                   <div
                     className="bg-[#14AE5C] h-[36px] rounded-full absolute"
                     style={{
-                      width: `${item.progressPercent}%`,
+                      width: `${successpr}%`,
                     }}
                   />
                   <div
                     className="bg-[#5A5A5A] h-[36px] rounded-full"
                     style={{
-                      width: `${waittotal}%`,
+                      width: `${inprpr}%`,
                     }}
                   />
                 </div>

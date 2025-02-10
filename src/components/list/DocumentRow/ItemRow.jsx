@@ -135,23 +135,34 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
           !isLast && "border-b border-[#B4B4B4]"
         } last:mb-0 mr-[20px]`}
       >
-        <div className="flex items-center justify-between mb-2">
-          <div className="font-medium text-gray-700 flex text-[17px]">
-
-            {isEditing ? (
-              <div className="w-[333px] relative">
-                <input
-                  type="text"
-                  value={editValue}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  onKeyDown={handleKeyDown}
-                  className="w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none"
-                  autoFocus
-                  disabled={isUpdating}
-                />
-                <div className="border-b border-[#D9D9D9]" />
+        {totalSteps === 0 ? (
+          <div className="flex items-center text-sm text-gray-500">
+            <div className="w-[200px] font-medium text-gray-700 text-[17px]">
+              {isEditing ? (
+                <div className="w-[333px] relative">
+                  <input
+                    type="text"
+                    value={editValue}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                    className="w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none"
+                    autoFocus
+                    disabled={isUpdating}
+                  />
+                  <div className="border-b border-[#D9D9D9]" />
+                </div>
+              ) : (
+                <div className="truncate">
+                  {item.name}
+                </div>
+              )}
+            </div>
+            <div className="flex-1 flex justify-center">
+              <div className="text-[#9CA2B3] text-[17px]">
+                현재 등록되어 있는 요청이 없습니다.
               </div>
+<<<<<<< HEAD
             ) : (
               <>
                 {item.name}
@@ -176,43 +187,105 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                   width: `${inprpr}%`,
                 }}
               />
+=======
+            </div>
+            <div className="w-[200px] flex items-center gap-10 justify-end mr-[70px] text-[17px]">
+              <button
+                className="hover:text-gray-700"
+                onClick={handleUpdateClick}
+                disabled={isUpdating}
+              >
+                <span>
+                  <img className="h-[20px] w-[20px]" src={UpdateIcon} />
+                </span>
+              </button>
+              <button
+                className="hover:text-gray-700"
+                onClick={handleDeleteClick}
+                disabled={isDeleting}
+              >
+                <span>
+                  <img className="h-[20px] w-[20px]" src={DeletIcon} />
+                </span>
+              </button>
+>>>>>>> 780b688c279b2bf0cd905b78a838a1b7bc977382
             </div>
           </div>
-
-          <div
-            className="flex items-center text-black text-[20px] font-medium truncate"
-            style={{ maxWidth: "200px" }}
-            title={item.fileLink}
-          >
-            <span>{item.fileLink}</span>
-          </div>
-          <div className="flex items-center gap-10 mr-[70px] text-[20px]">
-            <span>{item.updated}</span>
-
-            <button 
-              className="hover:text-gray-700"
-              onClick={handleUpdateClick}
-              disabled={isUpdating}
-            >
-              <span> 
-
-                <img className="h-[20px] w-[20px]" src={UpdateIcon} />
-              </span>
-            </button>
-            <button 
-              className="hover:text-gray-700"
-              onClick={handleDeleteClick}
-              disabled={isDeleting}
-            >
-              <span>
-
-                <img className="h-[20px] w-[20px]" src={DeletIcon} />
-              </span>
-            </button>
-          </div>
-        </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-2">
+              <div className="font-medium text-gray-700 flex text-[17px]">
+                {isEditing ? (
+                  <div className="w-[333px] relative">
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      onKeyDown={handleKeyDown}
+                      className="w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none"
+                      autoFocus
+                      disabled={isUpdating}
+                    />
+                    <div className="border-b border-[#D9D9D9]" />
+                  </div>
+                ) : (
+                  <>
+                    {item.name}
+                    {isempty && <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />}
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center justify-between text-sm text-gray-500">
+              <div>
+                <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative mt-[9px]">
+                  <div
+                    className="bg-[#14AE5C] h-[36px] rounded-full absolute"
+                    style={{
+                      width: `${item.progressPercent}%`,
+                    }}
+                  />
+                  <div
+                    className="bg-[#5A5A5A] h-[36px] rounded-full"
+                    style={{
+                      width: `${waittotal}%`,
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                className="flex items-center text-black text-[20px] font-medium truncate"
+                style={{ maxWidth: "200px" }}
+                title={item.fileLink}
+              >
+                <span>{item.fileLink}</span>
+              </div>
+              <div className="flex items-center gap-10 mr-[70px] text-[20px]">
+                <span>{item.updated}</span>
+                <button
+                  className="hover:text-gray-700"
+                  onClick={handleUpdateClick}
+                  disabled={isUpdating}
+                >
+                  <span>
+                    <img className="h-[20px] w-[20px]" src={UpdateIcon} />
+                  </span>
+                </button>
+                <button
+                  className="hover:text-gray-700"
+                  onClick={handleDeleteClick}
+                  disabled={isDeleting}
+                >
+                  <span>
+                    <img className="h-[20px] w-[20px]" src={DeletIcon} />
+                  </span>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
-
       {showDeleteModal && (
         <ListDeleteModal
           onDelete={handleDeleteConfirm}

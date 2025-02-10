@@ -1,12 +1,12 @@
 // src/components/ItemRow.js
 import React, { useState } from "react";
-import MoreIcon from "../../../assets/images/more-icon.png"
-import PencilIcon from "../../../assets/images/icon-pencil.png"
+import MoreIcon from "../../../assets/images/more-icon.png";
+import PencilIcon from "../../../assets/images/icon-pencil.png";
 import { useNavigate } from "react-router-dom";
-import AlertIcon from "../../../assets/svg/AlertIcon.svg"
-import UpdateIcon from "../../../assets/svg/UpdateIcon.svg"
-import DeletIcon from "../../../assets/svg/DeletIcon.svg"
-import BellIcon from "../../../assets/images/bell-icon.png"
+import AlertIcon from "../../../assets/svg/AlertIcon.svg";
+import UpdateIcon from "../../../assets/svg/UpdateIcon.svg";
+import DeletIcon from "../../../assets/svg/DeletIcon.svg";
+import BellIcon from "../../../assets/images/bell-icon.png";
 import useDocumentUpdate from "../../../hooks/useDocumentUpdate";
 import useDocumentDelete from "../../../hooks/useDocumentDelete";
 import ListDeleteModal from "../../Modal/ListDeleteModal";
@@ -21,6 +21,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const isempty = item.state;
   const waittotal = item.waitPercent + item.progressPercent;
   const totalSteps = item.waitPercent + item.progressPercent;
+  const navigate = useNavigate();
 
   const handleUpdateClick = () => {
     setIsEditing(true);
@@ -37,31 +38,33 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const handleDeleteConfirm = async () => {
     try {
       if (!item.docId) {
-        alert('삭제할 문서가 존재하지 않습니다.');
+        alert("삭제할 문서가 존재하지 않습니다.");
         setShowDeleteModal(false);
         return;
       }
 
-      console.log('[문서 삭제 시도]', {
+      console.log("[문서 삭제 시도]", {
         documentId: item.docId,
-        documentName: item.name
+        documentName: item.name,
       });
 
       const response = await deleteDocument(item.docId);
-      
-      console.log('[문서 삭제 응답]', response);
-      
+
+      console.log("[문서 삭제 응답]", response);
+
       if (response.isSuccess) {
-        alert(response.message || '문서가 성공적으로 삭제되었습니다.');
+        alert(response.message || "문서가 성공적으로 삭제되었습니다.");
         onRemove(item.docId);
       } else {
-        alert(response.message || '문서 삭제에 실패했습니다.');
+        alert(response.message || "문서 삭제에 실패했습니다.");
       }
-      
+
       setShowDeleteModal(false);
     } catch (error) {
-      console.error('[문서 삭제 에러]', error);
-      alert(error.response?.data?.message || '문서 삭제 중 오류가 발생했습니다.');
+      console.error("[문서 삭제 에러]", error);
+      alert(
+        error.response?.data?.message || "문서 삭제 중 오류가 발생했습니다."
+      );
       setShowDeleteModal(false);
     }
   };
@@ -73,30 +76,26 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const handleBlur = async () => {
     if (editValue.trim() && editValue !== item.name) {
       try {
-        console.log('[문서 수정 시도]', {
+        console.log("[문서 수정 시도]", {
           documentId: item.docId,
           currentTitle: item.name,
           newTitle: editValue,
-          docTypeId: docTypeId
+          docTypeId: docTypeId,
         });
 
-        const result = await updateDocument(
-          item.docId,
-          editValue,
-          docTypeId
-        );
+        const result = await updateDocument(item.docId, editValue, docTypeId);
 
         if (result.isSuccess) {
-          console.log('[문서 수정 성공]', result);
+          console.log("[문서 수정 성공]", result);
           item.name = editValue;
           setIsEditing(false);
         } else {
-          console.error('[문서 수정 실패]', result);
+          console.error("[문서 수정 실패]", result);
           setEditValue(item.name);
           setIsEditing(false);
         }
       } catch (error) {
-        console.error('[문서 수정 에러]', error);
+        console.error("[문서 수정 에러]", error);
         setEditValue(item.name);
         setIsEditing(false);
       }
@@ -107,7 +106,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       e.target.blur();
     }
@@ -118,12 +117,17 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
       ? `${item.fileLink.slice(0, 10)}...`
       : item.fileLink;
 
+  const handleClick = () => {
+    navigate(`/detail-page?title=${item.name}`);
+  };
+
   return (
     <>
       <div
         className={`mb-6 mt-[19px] pb-6 ${
           !isLast && "border-b border-[#B4B4B4]"
         } last:mb-0 mr-[20px]`}
+        onClick={handleClick}
       >
         {totalSteps === 0 ? (
           <div className="flex items-center text-sm text-gray-500">
@@ -143,9 +147,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                   <div className="border-b border-[#D9D9D9]" />
                 </div>
               ) : (
-                <div className="truncate">
-                  {item.name}
-                </div>
+                <div className="truncate">{item.name}</div>
               )}
             </div>
             <div className="flex-1 flex justify-center">
@@ -195,7 +197,12 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                 ) : (
                   <>
                     {item.name}
-                    {isempty && <img className="ml-[10px] mt-[5px] h-[16px]" src={BellIcon} />}
+                    {isempty && (
+                      <img
+                        className="ml-[10px] mt-[5px] h-[16px]"
+                        src={BellIcon}
+                      />
+                    )}
                   </>
                 )}
               </div>

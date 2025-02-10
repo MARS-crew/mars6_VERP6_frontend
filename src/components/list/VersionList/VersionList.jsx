@@ -4,6 +4,7 @@ import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
 import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
+import CopyIcon from "../../../assets/svg/Copy.svg";
 
 function VersionList({ position, item, index }) {
   const [modalState, setModalState] = useState(false);
@@ -16,6 +17,14 @@ function VersionList({ position, item, index }) {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+  };
+
+  const Copy = (text) => {
+    if (!text) return;
+
+    navigator.clipboard.writeText(text).then(() => {
+      alert("URL이 복사되었습니다!");
+    });
   };
 
   return (
@@ -44,9 +53,20 @@ function VersionList({ position, item, index }) {
         <div className="w-[10%] text-center font-medium">V{item.version}</div>
         <div className="w-[30%] text-center truncate">{item.fileName}</div>
         <div className="text-center">{item.createdAt}</div>
-        {/* <a href={downloadFile.data.data.result} download={item.fileName}> */}
-        <img src={DownloadIcon} alt="Download" />
-        {/* </a> */}
+        {/* <a href={downloadFile.data.data.result} download={item.fileName}>
+          <img src={DownloadIcon} alt="Download" />
+        </a> */}
+        {item.fileName && item.fileName.startsWith("http") ? (
+          <img
+            onClick={() => {
+              Copy(item.fileName);
+            }}
+            src={CopyIcon}
+            alt="copy"
+          />
+        ) : (
+          <img src={DownloadIcon} alt="download" />
+        )}
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">

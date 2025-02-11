@@ -3,10 +3,13 @@ import DownloadIcon from "../../../assets/svg/Download.svg";
 import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
+import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
+import CopyIcon from "../../../assets/svg/Copy.svg";
 
 function VersionList({ position, item, index }) {
   const [modalState, setModalState] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  // const downloadFile = useGetDownloadFile(353);
 
   const handleModal = () => {
     setModalState(!modalState);
@@ -14,6 +17,14 @@ function VersionList({ position, item, index }) {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+  };
+
+  const Copy = (text) => {
+    if (!text) return;
+
+    navigator.clipboard.writeText(text).then(() => {
+      alert("URL이 복사되었습니다!");
+    });
   };
 
   return (
@@ -40,9 +51,22 @@ function VersionList({ position, item, index }) {
           <div className="text-[#8E98A8] font-medium ml-[9px]">{index + 1}</div>
         </div>
         <div className="w-[10%] text-center font-medium">V{item.version}</div>
-        <div className="w-[30%] text-center">{item.fileName}</div>
+        <div className="w-[30%] text-center truncate">{item.fileName}</div>
         <div className="text-center">{item.createdAt}</div>
-        <img src={DownloadIcon} alt="Download" />
+        {/* <a href={downloadFile.data.data.result} download={item.fileName}>
+          <img src={DownloadIcon} alt="Download" />
+        </a> */}
+        {item.fileName && item.fileName.startsWith("http") ? (
+          <img
+            onClick={() => {
+              Copy(item.fileName);
+            }}
+            src={CopyIcon}
+            alt="copy"
+          />
+        ) : (
+          <img src={DownloadIcon} alt="download" />
+        )}
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">
@@ -51,8 +75,7 @@ function VersionList({ position, item, index }) {
             <div className="ml-2 font-normal text-[15px]">작업 내역</div>
           </div>
           <div className="w-[527px] h-[151px] border border-[#8E98A8] rounded-lg p-4">
-            마이페이지 화면 작업 내용 - Description 작성 완료 - 오탈자 수정 완료
-            관리 페이지 작업 내용 - 오탈자 및 이미지 변경 - ui 변경
+            {item.content}
           </div>
           <img
             onClick={handleModal}

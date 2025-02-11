@@ -137,7 +137,6 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
         className={`mb-6 mt-[19px] pb-6 ${
           !isLast && "border-b border-[#B4B4B4]"
         } last:mb-0 mr-[20px]`}
-        onClick={handleClick}
       >
         {totalrequest === 0 ? (
           <div className="flex items-center text-sm text-gray-500">
@@ -161,7 +160,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
               )}
             </div>
             <div className="flex-1 flex justify-center">
-              <div className="text-[#9CA2B3] text-[17px]">
+              <div onClick={handleClick} className="text-[#9CA2B3] text-[17px]">
                 현재 등록되어 있는 요청이 없습니다.
               </div>
             </div>
@@ -238,6 +237,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                 className="flex items-center text-black text-[20px] font-medium truncate"
                 style={{ maxWidth: "200px" }}
                 title={item.fileLink}
+                onClick={handleClick}
               >
                 <span>{item.fileLink}</span>
               </div>

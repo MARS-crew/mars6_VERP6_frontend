@@ -75,8 +75,7 @@ function VersionList({ position, item, index }) {
             <div className="ml-2 font-normal text-[15px]">작업 내역</div>
           </div>
           <div className="w-[527px] h-[151px] border border-[#8E98A8] rounded-lg p-4">
-            마이페이지 화면 작업 내용 - Description 작성 완료 - 오탈자 수정 완료
-            관리 페이지 작업 내용 - 오탈자 및 이미지 변경 - ui 변경
+            {item.content}
           </div>
           <img
             onClick={handleModal}

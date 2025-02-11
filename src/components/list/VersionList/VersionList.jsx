@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DownloadIcon from "../../../assets/svg/Download.svg";
 import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
@@ -6,10 +6,16 @@ import DescriptionIcon from "../../../assets/svg/Description.svg";
 import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
 import CopyIcon from "../../../assets/svg/Copy.svg";
 
-function VersionList({ position, item, index }) {
+function VersionList({ position, item, index, setSelectDoc }) {
   const [modalState, setModalState] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  // const downloadFile = useGetDownloadFile(353);
+
+  // const downloadFile =
+  //   item.fileName && !item.fileName.startsWith("http")
+  //     ? useGetDownloadFile(item.docId)
+  //     : { data: null, isLoading: false, error: null };
+
+  // console.log(downloadFile.data.data);
 
   const handleModal = () => {
     setModalState(!modalState);
@@ -17,6 +23,7 @@ function VersionList({ position, item, index }) {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+    setSelectDoc(item.docId);
   };
 
   const Copy = (text) => {
@@ -53,9 +60,7 @@ function VersionList({ position, item, index }) {
         <div className="w-[10%] text-center font-medium">V{item.version}</div>
         <div className="w-[30%] text-center truncate">{item.fileName}</div>
         <div className="text-center">{item.createdAt}</div>
-        {/* <a href={downloadFile.data.data.result} download={item.fileName}>
-          <img src={DownloadIcon} alt="Download" />
-        </a> */}
+
         {item.fileName && item.fileName.startsWith("http") ? (
           <img
             onClick={() => {
@@ -65,7 +70,15 @@ function VersionList({ position, item, index }) {
             alt="copy"
           />
         ) : (
-          <img src={DownloadIcon} alt="download" />
+          // <a href={downloadFile.data.data.result} download={item.fileName}>
+          <img
+            onClick={() => {
+              console.log(downloadUrl);
+            }}
+            src={DownloadIcon}
+            alt="Download"
+          />
+          // </a>
         )}
       </div>
       {modalState ? (

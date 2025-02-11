@@ -15,6 +15,7 @@ function DetailPage({ data, docTitle }) {
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
   const [filter, setFilter] = useState();
+  const [selectDoc, setSelectDoc] = useState(null);
   const position = "leader";
   const docId = 32;
   const { request, isLoading, error, createRequestMutation } =
@@ -71,13 +72,19 @@ function DetailPage({ data, docTitle }) {
                     item={item}
                     position={position}
                     index={data.data.result.length - 1 - index}
+                    setSelectDoc={setSelectDoc}
                   />
                 ))
             : data &&
               data.data.result
                 .slice(0)
                 .map((item, index) => (
-                  <VersionList item={item} position={position} index={index} />
+                  <VersionList
+                    item={item}
+                    position={position}
+                    index={index}
+                    setSelectDoc={setSelectDoc}
+                  />
                 ))}
         </div>
         <div className="mt-[30px]">

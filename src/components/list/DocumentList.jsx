@@ -184,7 +184,6 @@ function DocumentList({ id, initialTitle, isNew }) {
         {document?.title && !document?.isEditing && (
           <div className="mt-4">
             <div className="pl-[20px] space-y-4">
-<<<<<<< HEAD
               {Array.isArray(documents) && documents.map((doc, idx) => (
                 <ItemRow
                   key={doc.docId}
@@ -197,34 +196,13 @@ function DocumentList({ id, initialTitle, isNew }) {
                     canceledRequestStep: doc.canceledRequestStep || 0,
                     totalRequestStep: doc.totalRequestStep|| 0,
                     updated: doc.timeAgo || "방금 전",
-                    state: true
+                    state: true,
                   }}
                   isLast={idx === documents.length - 1}
                   docTypeId={id}
                   onRemove={handleRemoveDocument}
                 />
               ))}
-=======
-              {Array.isArray(documents) &&
-                documents.map((doc, idx) => (
-                  <ItemRow
-                    key={doc.docId}
-                    item={{
-                      docId: doc.docId,
-                      name: doc.title,
-                      fileLink: `${doc.title}.ppt`,
-                      progressPercent: doc.currentRequestStep || 0,
-                      waitPercent: doc.totalRequestStep || 0,
-                      completion: doc.completion || 0,
-                      updated: doc.timeAgo || "방금 전",
-                      state: true,
-                    }}
-                    isLast={idx === documents.length - 1}
-                    docTypeId={id}
-                    onRemove={handleRemoveDocument}
-                  />
-                ))}
->>>>>>> b15b30fca1f392a3d7d9e241a5d11f350e51004f
             </div>
             {showInput && (
               <div className="pl-[20px] mb-4">

@@ -106,7 +106,6 @@ function DetailPage({ data, docTitle }) {
               요청하기
             </p>
           </div>
-<<<<<<< HEAD
           <RequestListHeader filterState={filterState} setFilterState={setFilterState} />
           {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} onSuccess={handleRequestSuccess} /> : null}
           {filteredRequests ? filteredRequests?.map((item, index) => (
@@ -121,27 +120,6 @@ function DetailPage({ data, docTitle }) {
               reqId={item.reqId}
             />
           )) : null}
-=======
-          <RequestListHeader />
-          {addRequest ? (
-            <AddRequest
-              onAddRequest={createRequestMutation.mutate}
-              onSuccess={handleRequestSuccess}
-            />
-          ) : null}
-          {request &&
-            request.map((item, index) => (
-              <RequestList
-                key={index}
-                no={index} // 항목의 번호
-                filename={item.fileName} // 파일 이름
-                date={item.createdAt} // 날짜
-                writer={item.name} // 작성자
-                content={item.content} // 내용
-                state={item.status} // 상태
-              />
-            ))}
->>>>>>> b15b30fca1f392a3d7d9e241a5d11f350e51004f
         </div>
       </div>
     </div>

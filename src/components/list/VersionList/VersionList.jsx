@@ -5,7 +5,7 @@ import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
 import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
 
-function VersionList({ position, item, index }) {
+function VersionList({ position, item, index,onClick }) {
   const [modalState, setModalState] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   // const downloadFile = useGetDownloadFile(353);
@@ -19,7 +19,11 @@ function VersionList({ position, item, index }) {
   };
 
   return (
-    <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]">
+    <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]"
+      onClick={() => {
+        if (onClick) onClick(item);
+      }}
+    >
       <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px]">
         <div className="flex w-[5%] items-center">
           {position === "leader" ? (

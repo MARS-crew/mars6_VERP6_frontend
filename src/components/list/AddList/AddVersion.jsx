@@ -48,7 +48,7 @@ function AddVersion({ setAddModal, addModal }) {
     createDocumentDetail.mutate({
       docId: 254,
       externalUrl: url == null ? null : url,
-      originalFileName: file == null ? null : fileName,
+      originalFileName: fileName == null ? null : fileName,
       data: {
         content: contents,
         version: version,

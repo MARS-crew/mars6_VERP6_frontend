@@ -6,7 +6,6 @@ import { authState } from '../recoil/auth/auth';
 export function useAlert(docId){
     const auth = useRecoilValue(authState);
 
-    console.log("doc:",docId)
     const { data, isLoading, error} = useQuery({
         queryKey: ['dcheck',docId],
         queryFn: async () => {
@@ -19,7 +18,6 @@ export function useAlert(docId){
               },
               withCredentials: true,
             });
-            console.log('[문서 알림 조회 응답]', response.data.result);
             return response.data;
           } catch (error) {
             console.error('[문서 알림 조회 에러]', error);

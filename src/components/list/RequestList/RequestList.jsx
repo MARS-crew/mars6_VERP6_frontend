@@ -34,12 +34,21 @@ function RequestList({ no, filename, state:initialState, date, writer, open,cont
   };
 
   return (
-    <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg">
+    <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]">
       <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px] ">
-        <div className="w-[5%] text-[#8E98A8] font-medium">{no+1}</div>
-        <div className="text-center truncate" style={{width:"120px", maxWidth:"120px"}} title={filename}>
+        <div className="w-[5%] text-[#8E98A8] font-medium">{no + 1}</div>
+        <div
+          className="text-center truncate"
+          style={{ width: "120px", maxWidth: "120px" }}
+          title={filename}
+        >
           {filename.startsWith("http") ? (
-            <a href={filename} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+            <a
+              href={filename}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
               {filename}
             </a>
           ) : (
@@ -47,8 +56,10 @@ function RequestList({ no, filename, state:initialState, date, writer, open,cont
           )}
         </div>
         <div>
-          <StateButton onClick={handleSelectStateModal} state={state}/>
-          {selectModal ? <StateSelectModal onStateChange={handleStateChange} /> : null}
+          <StateButton onClick={handleSelectStateModal} state={state} />
+          {selectModal ? (
+            <StateSelectModal onStateChange={handleStateChange} />
+          ) : null}
         </div>
 
         <div>{writer}</div>

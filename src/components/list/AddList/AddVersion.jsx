@@ -1,13 +1,24 @@
+import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import useDocumentDetail from "../../../hooks/useDocumentDetail";
+import useUploadFile from "../../../hooks/File/useUploadFile";
+import useGetFileUrl from "../../../hooks/File/useGetFileUrl";
 
-function AddVersion() {
-  const [file, setFile] = useState("");
+function AddVersion({ setAddModal, addModal }) {
+  const [fileName, setFileName] = useState("");
   const [kind, setKind] = useState("file");
   const [version, setVersion] = useState();
   const [url, setUrl] = useState();
+  const [contents, setContents] = useState();
+  const formData = new FormData();
+
+  const { createDocumentDetail } = useDocumentDetail(null);
+  const { data, isLoading, error } = useGetFileUrl(null);
+  const { uploadFile } = useUploadFile();
 
   const changeFile = (e) => {
-    setFile(e.target.files[0].name);
+    setFileName(e.target.files[0].name);
+    formData.append("file", e.target.files[0], e.target.files[0].name);
   };
 
   const changeKind = (e) => {
@@ -18,11 +29,34 @@ function AddVersion() {
     setVersion(e.target.value);
   };
 
-  const handleSubmit = () => {
-    console.log(version, file);
+  const changeContents = (e) => {
+    setContents(e.target.value);
   };
 
-  useEffect(() => {}, [file]);
+  const changeURL = (e) => {
+    setUrl(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (kind === "file") {
+      uploadFile.mutate({
+        url: data.data.result.presignedUrl,
+        formData,
+      });
+    }
+
+    createDocumentDetail.mutate({
+      docId: 254,
+      externalUrl: url == null ? null : url,
+      originalFileName: file == null ? null : fileName,
+      data: {
+        content: contents,
+        version: version,
+      },
+    });
+
+    setAddModal(!addModal);
+  };
 
   return (
     <div className="w-[582px] h-[399px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
@@ -66,7 +100,7 @@ function AddVersion() {
           <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
           <div class="flex">
             <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
-              {file}
+              {fileName}
             </div>
             <label
               className="w-[71px] h-[21px] bg-[#d9d9d9] text-xs text-center flex items-center justify-center"
@@ -87,14 +121,18 @@ function AddVersion() {
           <div className="text-sm font-semibold mr-[83px]">주소 업로드</div>
           <input
             className="w-[336px] h-[21px] border-b border-[#d9d9d9] text-xs"
-            placeholder="버전 입력"
+            placeholder="주소 입력"
+            onChange={changeURL}
           />
         </div>
       )}
 
       <div className="mt-[18px]">
         <div className="text-sm font-semibold mb-[10px]">작업 내역</div>
-        <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" />
+        <textarea
+          className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4"
+          onChange={changeContents}
+        />
       </div>
       <button
         onClick={handleSubmit}

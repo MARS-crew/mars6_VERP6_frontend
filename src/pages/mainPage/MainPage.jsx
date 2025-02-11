@@ -13,9 +13,9 @@ function MainPage() {
       setDocuments([]);
     };
 
-    window.addEventListener('docTypeCreated', handleDocTypeCreated);
+    window.addEventListener("docTypeCreated", handleDocTypeCreated);
     return () => {
-      window.removeEventListener('docTypeCreated', handleDocTypeCreated);
+      window.removeEventListener("docTypeCreated", handleDocTypeCreated);
     };
   }, []);
 
@@ -30,11 +30,11 @@ function MainPage() {
   };
 
   return (
-    <div className = "bg-[#F6F6F6] w-full min-h-screen">
+    <div className="bg-[#F6F6F6] w-full min-h-screen">
       <Header />
-      <div className = "flex justify-center">
-        <div className = "w-[1194px]">
-          <div className = "space-y-[30px] mt-[30px] mb-[30px]">
+      <div className="flex justify-center">
+        <div className="w-[1194px]">
+          <div className="space-y-[30px] mt-[30px] mb-[30px]">
             {docTypes.map((docType) => (
               <DocumentList
                 key={`doctype-${docType.id}`}

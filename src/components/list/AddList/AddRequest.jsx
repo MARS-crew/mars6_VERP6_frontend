@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import useGetFileUrl from "../../../hooks/File/useGetFileUrl";
+import useUploadFile from "../../../hooks/File/useUploadFile";
+import { useMutation } from "@tanstack/react-query";
+
 
 function AddRequest({onAddRequest}) {
   const [file, setFile] = useState("");
@@ -6,8 +10,13 @@ function AddRequest({onAddRequest}) {
   const [url, setUrl] = useState("");
   const [content, setContent] = useState("");
 
+  const { data, isLoading, error } = useGetFileUrl(null);
+  const { uploadFile } = useUploadFile();
+  const formData = new FormData();
+
   const changeFile = (e) => {
     setFile(e.target.files[0].name);
+    formData.append("file", e.target.files[0], e.target.files[0].name);
   };
 
   const changeKind = (e) => {
@@ -17,6 +26,13 @@ function AddRequest({onAddRequest}) {
   useEffect(() => {}, [file]);
 
   const handleRegister = ()=>{
+    if (kind === "file") {
+      uploadFile.mutate({
+        url: data.data.result.presignedUrl,
+        formData,
+      });
+    }
+
     onAddRequest({
       filename: kind === "file" ? file : null,
       url: kind === "url" ? url : null,
@@ -57,29 +73,29 @@ function AddRequest({onAddRequest}) {
       </div>
       {kind == "file" ? (
         <div className="mt-[18px] flex">
-          {/* <div className="text-sm font-semibold mr-[83px]">파일 업로드</div> */}
+          <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
           <div class="flex">
-            {/* <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
-              {file}
-            </div>
-            <label
-              className="w-[71px] h-[21px] bg-[#d9d9d9] text-xs text-center flex items-center justify-center"
-              for="file"
-            >
-              파일등록
-            </label>
-            <input
-              className="absolute hidden"
-              type="file"
-              id="file"
-              onChange={changeFile}
-            /> */}
-            <div className="mt-[18px] flex">
+            <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
+                {file}
+              </div>
+              <label
+                className="w-[71px] h-[21px] bg-[#d9d9d9] text-xs text-center flex items-center justify-center"
+                for="file"
+              >
+                파일등록
+              </label>
+              <input
+                className="absolute hidden"
+                type="file"
+                id="file"
+                onChange={changeFile}
+              />
+            {/* <div className="mt-[18px] flex">
                   <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
                   <div className="flex">
                       <input type="file" onChange={changeFile} />
                   </div>
-            </div>
+            </div> */}
           </div>
         </div>
       ) : (

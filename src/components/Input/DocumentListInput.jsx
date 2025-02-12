@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from "react";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
 import axiosInstance from '../../api/axios';
 import { authState } from '../../recoil/auth/auth';
+import ListValidator from '../Validator/ListValidator';
 
 function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCreated }) {
   const auth = useRecoilValue(authState);
   const queryClient = useQueryClient();
+  const [showValidator, setShowValidator] = useState(false);
 
   const createDocumentMutation = useMutation({
     mutationFn: async (title) => {
@@ -23,11 +25,6 @@ function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCr
       const response = await axiosInstance.post(`/docs`, {
         title: title,
         docTypeId: Number(docTypeId)
-      }, {
-        headers: {
-          'Authorization': `Bearer ${auth.token}`,
-          'Content-Type': 'application/json'
-        }
       });
 
       console.log('[문서 생성 응답]', response.data);
@@ -57,22 +54,24 @@ function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCr
         docTypeId,
         response: error.response?.data
       });
-      alert(error.response?.data?.message || '문서 생성에 실패했습니다.');
+      setShowValidator(true);
     }
   });
 
+  const validateInput = (value) => {
+    return value.length === 0 || value.length > 20;
+  };
+
   const handleBlur = async () => {
-    if (!value.trim()) return;
-    
-    try {
-      console.log('[문서 생성 시도]', {
-        title: value,
-        docTypeId: docTypeId,
-        docTypeIdType: typeof docTypeId
-      });
-      await createDocumentMutation.mutateAsync(value);
-    } catch (error) {
-      console.error('[문서 생성 에러 상세]', error);
+    const isInvalid = validateInput(value);
+    setShowValidator(isInvalid);
+
+    if (!isInvalid && value.trim()) {
+      try {
+        await createDocumentMutation.mutateAsync(value);
+      } catch (error) {
+        console.error('[문서 생성 에러]', error);
+      }
     }
   };
 
@@ -85,18 +84,21 @@ function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCr
   };
 
   return (
-    <div className = "w-[333px] relative">
-      <input
-        type = "text"
-        value = {value}
-        onChange = {onChange}
-        onBlur = {handleBlur}
-        onKeyDown = {handleKeyDown}
-        placeholder = "서류명을 입력해주세요."
-        className = "w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none placeholder-[#B2B2B2]"
-        disabled = {createDocumentMutation.isPending}
-      />
-      <div className = "border-b border-[#D9D9D9]" />
+    <div className = "relative">
+      <div className = "w-[333px] relative">
+        <input
+          type = "text"
+          value = {value}
+          onChange = {onChange}
+          onBlur = {handleBlur}
+          onKeyDown = {handleKeyDown}
+          className = "w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none"
+          placeholder = "서류명을 입력해주세요."
+          disabled = {createDocumentMutation.isPending}
+        />
+        <div className = "border-b border-[#D9D9D9]" />
+      </div>
+      {showValidator && <ListValidator />}
     </div>
   );
 }

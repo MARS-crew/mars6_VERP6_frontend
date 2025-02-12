@@ -5,8 +5,10 @@ import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
 import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
 import CopyIcon from "../../../assets/svg/Copy.svg";
+import StateButton from "../../stateButton/StateButton";
+import { formatDate } from "../../../utils/formatDate";
 
-function VersionList({ position, item, index,onClick }) {
+function VersionList({ position, item, index, onClick }) {
   const [modalState, setModalState] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
@@ -35,55 +37,26 @@ function VersionList({ position, item, index,onClick }) {
   };
 
   return (
-    <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]"
+    <div
+      className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]"
       onClick={() => {
         if (onClick) onClick(item);
       }}
     >
-      <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px]">
-        <div className="flex w-[5%] items-center">
-          {position === "leader" ? (
-            <>
-              <input
-                type="checkbox"
-                id={`check_btn_${index}`}
-                className="hidden peer"
-                checked={isChecked}
-                onChange={handleCheckboxChange}
-              />
-              <label
-                htmlFor={`check_btn_${index}`}
-                className="text-white w-[17px] h-[17px] border-2 border-[#8E98A8] rounded flex items-center justify-center peer-checked:bg-[#8E98A8] peer-checked:text-white cursor-pointer"
-              >
-                ✓
-              </label>
-            </>
-          ) : null}
-          <div className="text-[#8E98A8] font-medium ml-[9px]">{index + 1}</div>
+      <div className="h-6 flex items-center ml-[30px] text-[15px]">
+        <div className="w-[20px] text-[#8E98A8] font-medium text-center mr-[26px]">
+          {index + 1}
         </div>
-        <div className="w-[10%] text-center font-medium">V{item.version}</div>
-        <div className="w-[30%] text-center truncate">{item.fileName}</div>
-        <div className="text-center">{item.createdAt}</div>
-
-        {item.fileName && item.fileName.startsWith("http") ? (
-          <img
-            onClick={() => {
-              Copy(item.fileName);
-            }}
-            src={CopyIcon}
-            alt="copy"
-          />
-        ) : (
-          // <a href={downloadFile.data.data.result} download={item.fileName}>
-          <img
-            onClick={() => {
-              console.log(downloadUrl);
-            }}
-            src={DownloadIcon}
-            alt="Download"
-          />
-          // </a>
-        )}
+        <div className="w-[60px] text-center font-medium mr-[46px]">
+          V{item.version}
+        </div>
+        <div className="w-[170px] text-center truncate mr-[30px]">
+          {item.fileName}
+        </div>
+        <div className="w-[75px] text-center mr-[30px]">
+          {formatDate(item.createdAt, "short")}
+        </div>
+        <StateButton state="REQUESTED" />
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">

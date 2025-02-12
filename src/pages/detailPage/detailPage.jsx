@@ -16,8 +16,6 @@ function DetailPage({ data, docTitle }) {
   const [addRequest, setAddRequest] = useState(false);
   const [filterState, setFilterState] = useState(null); // 상태 필터 추가
   const [filteredRequests, setFilteredRequests] = useState([]);
-  const [selectedDocId, setSelectedDocId] = useState(null); // 선택된 docId 상태 추가
-  const [requestTitle, setRequestTilte] = useState("");
 
   const [filter, setFilter] = useState();
   const [selectDoc, setSelectDoc] = useState(null);
@@ -53,11 +51,6 @@ function DetailPage({ data, docTitle }) {
     setAddRequest(false); //요청 성공 시 모달 닫기
   };
 
-  const handleVersionClick = (docId) => {
-    console.log("handleVersionClick 실행됨, 선택된 docId:", docId.docId);
-    setSelectedDocId(docId.docId);
-    setRequestTilte(docId.fileName)
-  };
 
   return (
     <div className="bg-[#F6F6F6] w-full min-h-screen pb-4">
@@ -98,7 +91,6 @@ function DetailPage({ data, docTitle }) {
                     item={item}
                     position={position}
                     index={data.data.result.length - 1 - index}
-                    onClick={()=>handleVersionClick(item.docId)}
                     setSelectDoc={setSelectDoc}
                   />
                 ))
@@ -106,18 +98,20 @@ function DetailPage({ data, docTitle }) {
               data.data.result
                 .slice(0)
                 .map((item, index) => (
-                  <VersionList key={index} item={item} position={position} index={index} onClick={()=>handleVersionClick(item)} />
+                  <VersionList key={index} item={item} position={position} index={index} />
                 ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
-            <p className="font-bold text-xl truncate" style={{ width: "500px", maxWidth: "500px" }}>{requestTitle}</p>
-            <p
+            <p className="font-bold text-xl">작업 요청</p>
+            {position == "leader" ? (
+              <p
               onClick={addRequestModal}
               className="font-normal text-sm my-auto text-[#7C838A]"
             >
               요청하기
             </p>
+            ) : null }
           </div>
           <RequestListHeader filterState={filterState} setFilterState={setFilterState} />
           {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} onSuccess={handleRequestSuccess} /> : null}

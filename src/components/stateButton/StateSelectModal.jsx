@@ -1,7 +1,7 @@
 import React from "react";
 import StateButton from "./StateButton";
 
-const config = ["REQUESTED", "IN_PROGRESS", "COMPLETED", "CANCELED"];
+const config = ["REQUESTED", "IN_PROGRESS", "COMPLETED"];
 function StateSelectModal({ onStateChange }) {
 
   const handleClick = (item) => {

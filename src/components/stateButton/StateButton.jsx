@@ -3,8 +3,7 @@ import React from "react";
 function StateButton({ state, onClick }) {
   const config = {
     REQUESTED: { text: "대기", bgColor: "bg-[#B3B3B3]" },
-    IN_PROGRESS: { text: "검토", bgColor: "bg-[#5A5A5A]" },
-    CANCELED: { text: "거절", bgColor: "bg-[#EC221F]" },
+    IN_PROGRESS: { text: "진행중중", bgColor: "bg-[#75A8E7]" },
     COMPLETED: { text: "승인", bgColor: "bg-[#14AE5C]" },
   };
   const { text, bgColor } = config[state] || {

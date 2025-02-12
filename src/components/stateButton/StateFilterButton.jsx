@@ -3,9 +3,8 @@ import React from "react";
 function StateFilterButton({ state, onClick }) {
   const config = {
     ALL : {text:"전체",bgColor:"bg-[#a032a8]"},
-    REQUESTED: { text: "대기", bgColor: "bg-[#B3B3B3]" },
+    REQUESTED: { text: "진행중", bgColor: "bg-[#75A8E7]" },
     IN_PROGRESS: { text: "검토", bgColor: "bg-[#5A5A5A]" },
-    CANCELED: { text: "거절", bgColor: "bg-[#EC221F]" },
     COMPLETED: { text: "승인", bgColor: "bg-[#14AE5C]" },
   };
   const { text, bgColor } = config[state] || {

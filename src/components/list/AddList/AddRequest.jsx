@@ -23,25 +23,7 @@ function AddRequest({onAddRequest}) {
     setKind(e.target.value);
   };
 
-  useEffect(() => {}, [file]);
 
-  const handleRegister = ()=>{
-    if (kind === "file") {
-      uploadFile.mutate({
-        url: data.data.result.presignedUrl,
-        formData,
-      });
-    }
-
-    onAddRequest({
-      filename: kind === "file" ? file : null,
-      url: kind === "url" ? url : null,
-      content,
-    });
-    if (onSuccess) {
-      onSuccess(); //요청 성공 후 모달 닫기
-    }
-  }
 
   return (
     <div className="w-[582px] h-[400px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
@@ -71,47 +53,9 @@ function AddRequest({onAddRequest}) {
           주소 업로드
         </label>
       </div>
-      {kind == "file" ? (
-        <div className="mt-[18px] flex">
-          <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
-          <div class="flex">
-            <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
-                {file}
-              </div>
-              <label
-                className="w-[71px] h-[21px] bg-[#d9d9d9] text-xs text-center flex items-center justify-center"
-                for="file"
-              >
-                파일등록
-              </label>
-              <input
-                className="absolute hidden"
-                type="file"
-                id="file"
-                onChange={changeFile}
-              />
-            {/* <div className="mt-[18px] flex">
-                  <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
-                  <div className="flex">
-                      <input type="file" onChange={changeFile} />
-                  </div>
-            </div> */}
-          </div>
-        </div>
-      ) : (
-        <div className="mt-[18px] flex">
-          <div className="text-sm font-semibold mr-[83px]">주소 업로드</div>
-          <input
-            className="w-[336px] h-[21px] border-b border-[#d9d9d9] text-xs"
-            placeholder="버전 입력"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-        </div>
-      )}
-
+      
       <div className="mt-[18px]">
-        <div className="text-sm font-semibold mb-[10px]">작업 내역</div>
+        <div className="text-sm font-semibold mb-[10px]">요청 사항항</div>
         <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" 
           value={content}
           onChange={(e) => setContent(e.target.value)}

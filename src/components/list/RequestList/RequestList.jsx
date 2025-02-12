@@ -37,40 +37,27 @@ function RequestList({ no, filename, state:initialState, date, writer, open,cont
     <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]">
       <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px] ">
         <div className="w-[5%] text-[#8E98A8] font-medium">{no + 1}</div>
+        <div>{writer}</div>{/* 담당자자 */}
         <div
           className="text-center truncate"
           style={{ width: "120px", maxWidth: "120px" }}
           title={filename}
         >
-          {filename.startsWith("http") ? (
-            <a
-              href={filename}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline"
-            >
-              {filename}
-            </a>
-          ) : (
-            filename
-          )}
+          { filename }
         </div>
+        <div className="text-center">{date}</div>
         <div>
           <StateButton onClick={handleSelectStateModal} state={state} />
           {selectModal ? (
             <StateSelectModal onStateChange={handleStateChange} />
           ) : null}
         </div>
-
-        <div>{writer}</div>
-        <div className="text-center">{date}</div>
-        <img src={DownloadIcon} />
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">
           <div className="flex mb-[9px]">
             <img src={DescriptionIcon} />
-            <div className="ml-2 font-normal text-[15px]">작업 내역</div>
+            <div className="ml-2 font-normal text-[15px]">요청 사항</div>
           </div>
           <div className="w-[527px] h-[151px] border border-[#8E98A8] rounded-lg p-4">
             {content}

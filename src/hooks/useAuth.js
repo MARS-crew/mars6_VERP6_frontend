@@ -3,6 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import { authState } from '../recoil/auth/auth';
+import { setCookie, removeCookie } from '../utils/cookies';
 
 function useAuth() {
   const setAuth = useSetRecoilState(authState);
@@ -18,9 +19,11 @@ function useAuth() {
     onSuccess: (data) => {
       console.log('[로그인 성공]', data);
       if (data.isSuccess && data.code === "2000") {
+        const token = data.result.token;
+        setCookie('auth_token', token);
         setAuth({
           isAuthenticated: true,
-          token: data.result.token,
+          token: token,
           user: data.result.user
         });
         navigate('/main');
@@ -30,6 +33,7 @@ function useAuth() {
     },
     onError: (error) => {
       console.error('[로그인 실패]', error);
+      removeCookie('auth_token');
       setAuth({
         isAuthenticated: false,
         token: null,
@@ -38,8 +42,19 @@ function useAuth() {
     }
   });
 
+  const logout = () => {
+    removeCookie('auth_token');
+    setAuth({
+      isAuthenticated: false,
+      token: null,
+      user: null
+    });
+    navigate('/login-page');
+  };
+
   return {
     login: loginMutation.mutate,
+    logout,
     isLoading: loginMutation.isPending,
     error: loginMutation.error
   };

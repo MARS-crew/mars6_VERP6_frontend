@@ -113,28 +113,28 @@ function DocumentList({ id, initialTitle, isNew }) {
     const value = e.target.value;
     setCurrentInput({
       value,
-      showValidator: value.length > 20,
+      showValidator: false
     });
   };
 
   const handleDocumentCreated = async (createdDoc) => {
     try {
       await queryClient.invalidateQueries({
-        queryKey: ["docTypeDocuments", currentDocTypeId],
-        exact: true,
+        queryKey: ['docTypeDocuments', currentDocTypeId],
+        exact: true
       });
-
+      
       const result = await refetchDocuments();
-
-      setCurrentInput({ value: "", showValidator: false });
+      
+      setCurrentInput({ value: '', showValidator: false });
       setShowInput(false);
     } catch (error) {
-      console.error("[문서 목록 갱신 실패]", {
+      console.error('[문서 목록 갱신 실패]', {
         error,
         currentDocTypeId,
-        documentId: document?.id,
+        documentId: document?.id
       });
-      alert("문서가 생성되었지만 목록을 갱신하는데 실패했습니다.");
+      alert('문서가 생성되었지만 목록을 갱신하는데 실패했습니다.');
     }
   };
 

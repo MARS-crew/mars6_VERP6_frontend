@@ -20,6 +20,7 @@ function DetailPage({ data, docTitle }) {
   const [requestTitle, setRequestTilte] = useState("");
 
   const [filter, setFilter] = useState();
+  const [selectDoc, setSelectDoc] = useState(null);
   const position = "leader";
   const docId = 32;
   const requestData = useRequest(selectedDocId); // 항상 호출됨
@@ -98,6 +99,7 @@ function DetailPage({ data, docTitle }) {
                     position={position}
                     index={data.data.result.length - 1 - index}
                     onClick={()=>handleVersionClick(item.docId)}
+                    setSelectDoc={setSelectDoc}
                   />
                 ))
             : data &&

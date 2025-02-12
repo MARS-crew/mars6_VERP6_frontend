@@ -19,6 +19,7 @@ function AddVersion({ setAddModal, addModal }) {
   const changeFile = (e) => {
     setFileName(e.target.files[0].name);
     formData.append("file", e.target.files[0], e.target.files[0].name);
+    console.log(e.target.files[0]);
   };
 
   const changeKind = (e) => {

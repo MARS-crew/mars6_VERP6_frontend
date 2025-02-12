@@ -109,7 +109,7 @@ function DetailPage({ data, docTitle }) {
           </div>
           <RequestListHeader filterState={filterState} setFilterState={setFilterState} />
           {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} onSuccess={handleRequestSuccess} /> : null}
-          {filteredRequests ? filteredRequests?.map((item, index) => (
+          {test ? test?.map((item, index) => (
             <RequestList
               key={index}
               no={index} // 항목의 번호

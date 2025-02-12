@@ -1,61 +1,49 @@
 import React, { useEffect, useState } from "react";
-import useGetFileUrl from "../../../hooks/File/useGetFileUrl";
-import useUploadFile from "../../../hooks/File/useUploadFile";
-import { useMutation } from "@tanstack/react-query";
 
 
 function AddRequest({onAddRequest}) {
-  const [file, setFile] = useState("");
-  const [kind, setKind] = useState("file");
-  const [url, setUrl] = useState("");
+  const [person, setPerson] = useState("");
+  const [requestTilte, setrequestTilte] = useState("");
   const [content, setContent] = useState("");
 
-  const { data, isLoading, error } = useGetFileUrl(null);
-  const { uploadFile } = useUploadFile();
-  const formData = new FormData();
 
-  const changeFile = (e) => {
-    setFile(e.target.files[0].name);
-    formData.append("file", e.target.files[0], e.target.files[0].name);
-  };
+  const handleRegister = ()=>{
 
-  const changeKind = (e) => {
-    setKind(e.target.value);
-  };
-
-
+    onAddRequest({
+      person,
+      requestTilte,
+      content,
+    });
+    if (onSuccess) {
+      onSuccess(); //요청 성공 후 모달 닫기
+    }
+  }
 
   return (
     <div className="w-[582px] h-[400px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
       <div className="text-xl font-semibold">요청하기</div>
       <div className="mt-[18px] flex text-sm font-semibold">
-        <div className="text-sm font-semibold mr-[43px]">
-          업로드할 서류 양식
+        <div className="text-sm font-semibold mr-[43px] w-[140px]">
+          담당자 이름
         </div>
-        <label className="mr-[62px]">
-          <input
-            className="mr-1"
-            type="radio"
-            name="kind"
-            value="file"
-            onChange={changeKind}
-          />
-          파일 업로드
-        </label>
-        <label>
-          <input
-            className="mr-1"
-            type="radio"
-            name="kind"
-            value="url"
-            onChange={changeKind}
-          />
-          주소 업로드
-        </label>
+        <input 
+          className="w-[132px] border-2 border-b-gray-200 border-t-white border-l-white border-r-white" 
+          placeholder="이름 입력" 
+          onChange={(e) => setPerson(e.target.value)}
+        />
       </div>
-      
+      <div className="mt-[18px] flex text-sm font-semibold">
+        <div className="text-sm font-semibold mr-[43px] w-[140px]">
+          요청 제목
+        </div>
+        <input 
+          className="w-[266px] border-2 border-b-gray-200 border-t-white border-l-white border-r-white" 
+          placeholder="요청 제목을 입력해 주세요"  
+          onChange={(e) => setrequestTilte(e.target.value)}
+        />
+      </div>
       <div className="mt-[18px]">
-        <div className="text-sm font-semibold mb-[10px]">요청 사항항</div>
+        <div className="text-sm font-semibold mb-[10px]">요청 사항</div>
         <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" 
           value={content}
           onChange={(e) => setContent(e.target.value)}

@@ -21,14 +21,8 @@ function DetailPage({ data, docTitle }) {
   const [selectDoc, setSelectDoc] = useState(null);
   const position = "leader";
   const docId = 32;
-  const requestData = useRequest(selectedDocId); // 항상 호출됨
+  const requestData = useRequest(32); // 항상 호출됨
   const { request, isLoading, error, createRequestMutation } = requestData || {}; // 데이터 없을 때 기본값 설정
-
-  // const { request, isLoading, error, createRequestMutation } = selectedDocId
-  // ? useRequest(selectedDocId)
-  // : { request: null};
-
-  // console.log("docId",selectedDocId);
 
   useEffect(() => {
     if (!filterState) {

@@ -8,7 +8,7 @@ import ItemRow from "./DocumentRow/ItemRow";
 import useDocument from "../../hooks/useDocument";
 import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
 import useDocTypeDelete from "../../hooks/useDocTypeDelete";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 
 // const INITIAL_ITEMS = (inputValue) => ({
 //   name: inputValue,
@@ -28,24 +28,33 @@ function DocumentList({ id, initialTitle, isNew }) {
   });
   const [showInput, setShowInput] = useState(false);
 
-  const { document, isLoading: isDocLoading, startEditing, setDocument } = useDocument(id);
+  const {
+    document,
+    isLoading: isDocLoading,
+    startEditing,
+    setDocument,
+  } = useDocument(id);
   const currentDocTypeId = Number(document?.id || id);
-  const { documents, isLoading: isDocsLoading, refetch: refetchDocuments } = useDocTypeDocuments(currentDocTypeId);
+  const {
+    documents,
+    isLoading: isDocsLoading,
+    refetch: refetchDocuments,
+  } = useDocTypeDocuments(currentDocTypeId);
   const { deleteDocType } = useDocTypeDelete();
   const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isNew) {
-      setDocument(prev => ({
+      setDocument((prev) => ({
         ...prev,
-        isEditing: true
+        isEditing: true,
       }));
     } else if (initialTitle) {
-      setDocument(prev => ({
+      setDocument((prev) => ({
         ...prev,
         id: Number(id),
         title: initialTitle,
-        isEditing: false
+        isEditing: false,
       }));
     }
   }, [initialTitle, id, setDocument, isNew]);
@@ -58,9 +67,9 @@ function DocumentList({ id, initialTitle, isNew }) {
       }
     };
 
-    window.addEventListener('docTypeDeleted', handleDocTypeDeleted);
+    window.addEventListener("docTypeDeleted", handleDocTypeDeleted);
     return () => {
-      window.removeEventListener('docTypeDeleted', handleDocTypeDeleted);
+      window.removeEventListener("docTypeDeleted", handleDocTypeDeleted);
     };
   }, [id]);
 
@@ -73,7 +82,7 @@ function DocumentList({ id, initialTitle, isNew }) {
 
   const handleMoreClick = () => setShowModifyModal((prev) => !prev);
   const handleCloseModal = () => setShowModifyModal(false);
-  
+
   const handleDelete = async () => {
     try {
       const response = await deleteDocType(id);
@@ -81,11 +90,14 @@ function DocumentList({ id, initialTitle, isNew }) {
         handleCloseModal();
         setIsDeleted(true);
       } else {
-        alert(response.message || '문서 타입 삭제에 실패했습니다.');
+        alert(response.message || "문서 타입 삭제에 실패했습니다.");
       }
     } catch (error) {
-      console.error('[문서 타입 삭제 실패]', error);
-      alert(error.response?.data?.message || '문서 타입 삭제 중 오류가 발생했습니다.');
+      console.error("[문서 타입 삭제 실패]", error);
+      alert(
+        error.response?.data?.message ||
+          "문서 타입 삭제 중 오류가 발생했습니다."
+      );
     }
   };
 
@@ -108,21 +120,21 @@ function DocumentList({ id, initialTitle, isNew }) {
   const handleDocumentCreated = async (createdDoc) => {
     try {
       await queryClient.invalidateQueries({
-        queryKey: ['docTypeDocuments', currentDocTypeId],
-        exact: true
+        queryKey: ["docTypeDocuments", currentDocTypeId],
+        exact: true,
       });
-      
+
       const result = await refetchDocuments();
-      
-      setCurrentInput({ value: '', showValidator: false });
+
+      setCurrentInput({ value: "", showValidator: false });
       setShowInput(false);
     } catch (error) {
-      console.error('[문서 목록 갱신 실패]', {
+      console.error("[문서 목록 갱신 실패]", {
         error,
         currentDocTypeId,
-        documentId: document?.id
+        documentId: document?.id,
       });
-      alert('문서가 생성되었지만 목록을 갱신하는데 실패했습니다.');
+      alert("문서가 생성되었지만 목록을 갱신하는데 실패했습니다.");
     }
   };
 
@@ -134,7 +146,7 @@ function DocumentList({ id, initialTitle, isNew }) {
   };
 
   const handleRemoveDocument = (docId) => {
-    queryClient.invalidateQueries(['docTypeDocuments', id]);
+    queryClient.invalidateQueries(["docTypeDocuments", id]);
   };
 
   if (isDocLoading || isDocsLoading) {
@@ -184,7 +196,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                     canceledRequestStep: doc.canceledRequestStep || 0,
                     totalRequestStep: doc.totalRequestStep|| 0,
                     updated: doc.timeAgo || "방금 전",
-                    state: true
+                    state: true,
                   }}
                   isLast={idx === documents.length - 1}
                   docTypeId={id}
@@ -192,7 +204,6 @@ function DocumentList({ id, initialTitle, isNew }) {
                 />
               ))}
             </div>
-
             {showInput && (
               <div className="pl-[20px] mb-4">
                 <DocumentListInput

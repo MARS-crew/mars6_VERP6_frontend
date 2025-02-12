@@ -9,24 +9,35 @@ import editIcon from "../../assets/svg/Edit.svg";
 import AddVersion from "../../components/list/AddList/AddVersion";
 import AddRequest from "../../components/list/AddList/AddRequest";
 import { useRequest } from "../../hooks/uesRequestList";
+import { useSearchParams } from "react-router-dom";
 
-function DetailPage({ data }) {
+function DetailPage({ data, docTitle }) {
   const [addModal, setAddModal] = useState(false);
   const [addRequest, setAddRequest] = useState(false);
   const [filterState, setFilterState] = useState(null); // 상태 필터 추가
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [selectedDocId, setSelectedDocId] = useState(null); // 선택된 docId 상태 추가
+  const [requestTitle, setRequestTilte] = useState("");
 
+  const [filter, setFilter] = useState();
+  const [selectDoc, setSelectDoc] = useState(null);
   const position = "leader";
   const docId = 32;
-  const { request, isLoading, error,createRequestMutation } = useRequest(docId); // useRequest 사용
+  const requestData = useRequest(selectedDocId); // 항상 호출됨
+  const { request, isLoading, error, createRequestMutation } = requestData || {}; // 데이터 없을 때 기본값 설정
+
+  // const { request, isLoading, error, createRequestMutation } = selectedDocId
+  // ? useRequest(selectedDocId)
+  // : { request: null};
+
+  // console.log("docId",selectedDocId);
 
   useEffect(() => {
     if (!filterState) {
       setFilteredRequests(request); // 필터가 없으면 전체 리스트 반환
     } else {
       const newFilteredRequests = request?.filter((item) => item.status === filterState);
-    setFilteredRequests(newFilteredRequests);
+    setFilteredRequests(newFilteredRequests || []);
     }
   }, [filterState, request]); // filterState나 request 변경 시 실행
 
@@ -43,16 +54,18 @@ function DetailPage({ data }) {
   };
 
   const handleVersionClick = (docId) => {
-    setSelectedDocId(docId);
+    console.log("handleVersionClick 실행됨, 선택된 docId:", docId.docId);
+    setSelectedDocId(docId.docId);
+    setRequestTilte(docId.fileName)
   };
 
   return (
-    <div className="bg-[#F6F6F6] w-full h-screen">
+    <div className="bg-[#F6F6F6] w-full min-h-screen pb-4">
       <Header />
       <div className="max-w-[1194px] m-auto flex place-content-between">
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
-            <p className="font-bold text-xl">Todo list 앱 기획서</p>
+            <p className="font-bold text-xl">{docTitle}</p>
             {position == "leader" ? (
               <div className="flex">
                 <p
@@ -66,16 +79,39 @@ function DetailPage({ data }) {
               </div>
             ) : null}
           </div>
-          <VersionListHeader position={position} />
-          {addModal ? <AddVersion /> : null}
-          {data &&
-            data.data.result?.map((item,index) => (
-              <VersionList  key={index} item={item} position={position} onClick={()=>handleVersionClick(item.docId)}/>
-            ))}
+          <VersionListHeader
+            position={position}
+            filter={filter}
+            setFilter={setFilter}
+          />
+          {addModal ? (
+            <AddVersion setAddModal={setAddModal} addModal={addModal} />
+          ) : null}
+          {filter
+            ? data &&
+              data.data.result
+                .slice(0)
+                .reverse()
+                .map((item, index) => (
+                  <VersionList
+                    key={index}
+                    item={item}
+                    position={position}
+                    index={data.data.result.length - 1 - index}
+                    onClick={()=>handleVersionClick(item.docId)}
+                    setSelectDoc={setSelectDoc}
+                  />
+                ))
+            : data &&
+              data.data.result
+                .slice(0)
+                .map((item, index) => (
+                  <VersionList key={index} item={item} position={position} index={index} onClick={()=>handleVersionClick(item)} />
+                ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
-            <p className="font-bold text-xl">V0.0.4 화면설계서</p>
+            <p className="font-bold text-xl truncate" style={{ width: "500px", maxWidth: "500px" }}>{requestTitle}</p>
             <p
               onClick={addRequestModal}
               className="font-normal text-sm my-auto text-[#7C838A]"

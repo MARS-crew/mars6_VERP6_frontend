@@ -15,6 +15,10 @@ export function useRequest(docId){
     const { data, isLoading, error } = useQuery({
         queryKey: ["requestStatus", docId],
         queryFn: async () => {
+          if (!docId) {
+            console.log("docId가 없음. API 요청 생략");
+            return [];
+          }
           const response = await axiosInstance.get(`/doc-request/${docId}`, {
             headers: {
               Authorization: `Bearer ${auth.token}`,
@@ -24,32 +28,8 @@ export function useRequest(docId){
           });
           return response.data.result;
         },
-        throwOnError:(error)=>{
-          console.log('조회 실패 : ',error);
-          throw error;
-        }
+        enabled: !!docId, // ✅ docId가 있을 때만 요청 실행
       });
-
-      // MinIO Presigned URL 요청 (서버에서 업로드 URL 받기)
-    const getPresignedUrl = async () => {
-      const response = await axiosInstance.get(`/minio/upload`, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-          Accept: "application/json",
-        },
-      });
-      return response.data; // { presignedUrl: "...", generatedFileName: "..." }
-    };
-
-      //Presigned URL을 이용해 MinIO에 파일 업로드
-    const uploadFileToPresignedUrl = async (presignedUrl, file) => {
-      await fetch(presignedUrl, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type },
-      });
-    };
-
 
       //요청 리스트 생성
     const createRequestMutation  = useMutation({

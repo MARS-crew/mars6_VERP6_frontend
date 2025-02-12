@@ -45,6 +45,11 @@ function DetailPage({ data, docTitle }) {
     setAddRequest(false); //요청 성공 시 모달 닫기
   };
 
+  const test=    [{no : 0,
+    fileName : "메인페이지 ",
+    name : "김도현",
+    content : "메인페이지 모달 , 팝업 크기 조절",
+    createdAt : "2020.01.01"}]
 
   return (
     <div className="bg-[#F6F6F6] w-full min-h-screen pb-4">

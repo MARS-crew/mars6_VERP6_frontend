@@ -35,9 +35,9 @@ function RequestList({ no, filename, state:initialState, date, writer, open,cont
 
   return (
     <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]">
-      <div className="h-6 flex place-content-between items-center ml-[30px] mr-[25px] text-[15px] ">
+      <div className="h-6 flex place-content-between items-center ml-[20px] mr-[25px] text-[15px] ">
         <div className="w-[5%] text-[#8E98A8] font-medium">{no + 1}</div>
-        <div>{writer}</div>{/* 담당자자 */}
+        <div className="ml-[20px]">{writer}</div>{/* 담당자자 */}
         <div
           className="text-center truncate"
           style={{ width: "120px", maxWidth: "120px" }}
@@ -45,8 +45,8 @@ function RequestList({ no, filename, state:initialState, date, writer, open,cont
         >
           { filename }
         </div>
-        <div className="text-center">{date}</div>
-        <div>
+        <div className="text-center mr-[10px]">{date}</div>
+        <div className="mr-[50px]">
           <StateButton onClick={handleSelectStateModal} state={state} />
           {selectModal ? (
             <StateSelectModal onStateChange={handleStateChange} />

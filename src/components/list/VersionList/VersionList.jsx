@@ -10,7 +10,6 @@ import { formatDate } from "../../../utils/formatDate";
 
 function VersionList({ position, item, index, onClick }) {
   const [modalState, setModalState] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
 
   // const downloadFile =
   //   item.fileName && !item.fileName.startsWith("http")
@@ -21,19 +20,6 @@ function VersionList({ position, item, index, onClick }) {
 
   const handleModal = () => {
     setModalState(!modalState);
-  };
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-    setSelectDoc(item.docId);
-  };
-
-  const Copy = (text) => {
-    if (!text) return;
-
-    navigator.clipboard.writeText(text).then(() => {
-      alert("URL이 복사되었습니다!");
-    });
   };
 
   return (

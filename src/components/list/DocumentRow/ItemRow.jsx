@@ -12,6 +12,7 @@ import useDocumentDelete from "../../../hooks/useDocumentDelete";
 import ListDeleteModal from "../../Modal/ListDeleteModal";
 import DocumentListInput from "../../Input/DocumentListInput";
 import { useAlert } from "../../../hooks/usealertIcon";
+import StateButton from "../../stateButton/StateButton";
 
 function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -20,14 +21,6 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const { updateDocument, isLoading: isUpdating } = useDocumentUpdate();
   const { deleteDocument, isLoading: isDeleting } = useDocumentDelete();
   const isempty = item.state;
-  const inrequtes = Number(item.inProgressRequestStep);
-  const completrequest = Number(item.inProgressRequestStep);
-  const cancelrequest = Number(item.canceledRequestStep);
-  const totalrequest = Number(item.totalRequestStep);
-
-  const successpr = ((completrequest+ cancelrequest)/totalrequest)*100;
-  const inprpr = ((completrequest+ cancelrequest +inrequtes)/totalrequest)*100;
-
 
   const docId = item.docId;
   const {check} = useAlert(docId);
@@ -138,7 +131,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
           !isLast && "border-b border-[#B4B4B4]"
         } last:mb-0 mr-[20px]`}
       >
-        {totalrequest === 0 ? (
+        {!item.state ? (
           <div className="flex items-center text-sm text-gray-500">
             <div className="w-[200px] font-medium text-gray-700 text-[17px]">
               {isEditing ? (
@@ -187,7 +180,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-8">
               <div className="font-medium text-gray-700 flex text-[17px]">
                 {isEditing ? (
                   <div className="w-[333px] relative">
@@ -217,22 +210,6 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
               </div>
             </div>
             <div className="flex items-center justify-between text-sm text-gray-500">
-              <div>
-                <div className="w-[533px] bg-[#9CA2B3] rounded-full h-[36px] mb-2 flex relative mt-[9px]">
-                  <div
-                    className="bg-[#14AE5C] h-[36px] rounded-full absolute"
-                    style={{
-                      width: `${successpr}%`,
-                    }}
-                  />
-                  <div
-                    className="bg-[#5A5A5A] h-[36px] rounded-full"
-                    style={{
-                      width: `${inprpr}%`,
-                    }}
-                  />
-                </div>
-              </div>
               <div
                 className="flex items-center text-black text-[20px] font-medium truncate"
                 style={{ maxWidth: "200px" }}
@@ -241,8 +218,13 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
               >
                 <span>{item.fileLink}</span>
               </div>
+              <span className="text-[20px]">{item.updated}</span>
+              <div className="flex gap-2 items-center">
+                <StateButton state="PENDING" />
+                <StateButton state="IN_PROGRESS" />
+                <StateButton state="COMPLETED" />
+              </div>
               <div className="flex items-center gap-10 mr-[70px] text-[20px]">
-                <span>{item.updated}</span>
                 <button
                   className="hover:text-gray-700"
                   onClick={handleUpdateClick}

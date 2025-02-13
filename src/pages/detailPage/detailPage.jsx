@@ -76,8 +76,6 @@ function DetailPage({ data, docTitle, docId }) {
                 >
                   +
                 </p>
-                <img className="w-6 ml-[15px]" src={editIcon} />
-                <img className="w-6 ml-[11px]" src={trashIcon} />
               </div>
             ) : null}
           </div>
@@ -87,7 +85,11 @@ function DetailPage({ data, docTitle, docId }) {
             setFilter={setFilter}
           />
           {addModal ? (
-            <AddVersion setAddModal={setAddModal} addModal={addModal} />
+            <AddVersion
+              setAddModal={setAddModal}
+              addModal={addModal}
+              docId={docId}
+            />
           ) : null}
           {filter
             ? data &&

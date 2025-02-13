@@ -4,8 +4,9 @@ import useDocumentDetail from "../../../hooks/useDocumentDetail";
 import useUploadFile from "../../../hooks/File/useUploadFile";
 import useGetFileUrl from "../../../hooks/File/useGetFileUrl";
 
-function AddVersion({ setAddModal, addModal }) {
+function AddVersion({ setAddModal, addModal, docId }) {
   const [fileName, setFileName] = useState("");
+  const [file, setFile] = useState();
   const [kind, setKind] = useState("file");
   const [version, setVersion] = useState();
   const [url, setUrl] = useState();
@@ -18,7 +19,7 @@ function AddVersion({ setAddModal, addModal }) {
 
   const changeFile = (e) => {
     setFileName(e.target.files[0].name);
-    formData.append("file", e.target.files[0], e.target.files[0].name);
+    setFile(e.target.files[0]);
     console.log(e.target.files[0]);
   };
 
@@ -38,25 +39,32 @@ function AddVersion({ setAddModal, addModal }) {
     setUrl(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    console.log(kind);
     if (kind === "file") {
-      uploadFile.mutate({
+      uploadFile.mutateAsync({
         url: data.data.result.presignedUrl,
-        formData,
+        file,
       });
     }
 
-    createDocumentDetail.mutate({
-      docId: 387,
-      externalUrl: url == null ? null : url,
-      originalFileName: fileName == null ? null : fileName,
-      data: {
-        content: contents,
-        version: version,
-      },
-    });
-
-    setAddModal(!addModal);
+    try {
+      await createDocumentDetail.mutate({
+        docId: docId,
+        externalUrl: "http://naver.com",
+        // kind === "url" ? url : null,
+        uploadFileUrl: kind === "file" ? data.data.result.presignedUrl : null,
+        fileName: kind === "file" ? data.data.result.generatedFileName : null,
+        data: {
+          content: contents,
+          version: version,
+        },
+      });
+      console.log("문서 생성 요청 성공");
+      setAddModal(!addModal);
+    } catch (error) {
+      console.error("문서 생성 실패:", error);
+    }
   };
 
   return (

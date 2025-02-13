@@ -25,12 +25,12 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const cancelrequest = Number(item.canceledRequestStep);
   const totalrequest = Number(item.totalRequestStep);
 
-  const successpr = ((completrequest+ cancelrequest)/totalrequest)*100;
-  const inprpr = ((completrequest+ cancelrequest +inrequtes)/totalrequest)*100;
-
+  const successpr = ((completrequest + cancelrequest) / totalrequest) * 100;
+  const inprpr =
+    ((completrequest + cancelrequest + inrequtes) / totalrequest) * 100;
 
   const docId = item.docId;
-  const {check} = useAlert(docId);
+  const { check } = useAlert(docId);
   const navigate = useNavigate();
 
   const handleUpdateClick = () => {
@@ -128,7 +128,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
       : item.fileLink;
 
   const handleClick = () => {
-    navigate(`/detail-page?title=${item.name}`);
+    navigate(`/detail-page?Id=${item.docId}&title=${item.name}`);
   };
 
   return (

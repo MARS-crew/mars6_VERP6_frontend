@@ -12,10 +12,12 @@ function StateButton({ state, onClick, count }) {
   };
 
   return (
-    <div onClick={onClick} className={`z-50 flex items-center justify-center ${bgColor} h-6 px-2 rounded-[5px]`}>
-      <span className="text-[15px] text-white">{text}</span>
+    <div className="flex items-center">
+      <div onClick={onClick} className={`z-50 w-[72px] h-[24px] flex items-center justify-center ${bgColor} rounded-[5px]`}>
+        <span className="text-[12px] font-medium text-white">{text}</span>
+      </div>
       {count !== undefined && (
-        <span className="text-[15px] text-white ml-1">| {count}건</span>
+        <span className="text-[17px] text-[#5A5A5A] gap-1"> ┃{count}건</span>
       )}
     </div>
   );

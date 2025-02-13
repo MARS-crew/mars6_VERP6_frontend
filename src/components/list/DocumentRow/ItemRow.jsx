@@ -128,7 +128,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
       : item.fileLink;
 
   const handleClick = () => {
-    navigate(`/detail-page?Id=${item.docId}&title=${item.name}`);
+    navigate(`/detail-page?docId=${item.docId}&title=${item.name}`);
   };
 
   return (

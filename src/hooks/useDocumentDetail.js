@@ -3,14 +3,14 @@ import { authState } from "../recoil/auth/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-function useDocumentDetail(docTitle) {
+function useDocumentDetail(docId) {
   const auth = useRecoilValue(authState);
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["getDocumentDetail", docTitle],
+    queryKey: ["getDocumentDetail", docId],
     queryFn: async () => {
-      const response = await axios.get(`/api/docs-detail/${docTitle}`, {
+      const response = await axios.get(`/api/docs-detail/${docId}`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
           "Content-Type": "application/json",
@@ -19,7 +19,6 @@ function useDocumentDetail(docTitle) {
 
       return response;
     },
-    enabled: !!docTitle,
   });
 
   const createDocumentDetail = useMutation({

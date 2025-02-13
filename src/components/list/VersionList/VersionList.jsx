@@ -42,7 +42,7 @@ function VersionList({ position, item, index, onClick }) {
         <div className="w-[75px] text-center mr-[30px]">
           {formatDate(item.createdAt, "short")}
         </div>
-        <StateButton state="REQUESTED" />
+        <StateButton state={item.status} />
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">

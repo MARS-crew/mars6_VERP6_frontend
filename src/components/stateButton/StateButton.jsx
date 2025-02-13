@@ -2,10 +2,10 @@ import React from "react";
 
 function StateButton({ state, onClick }) {
   const config = {
-    REQUESTED: { text: "대기", bgColor: "bg-[#B3B3B3]" },
-    IN_PROGRESS: { text: "검토", bgColor: "bg-[#5A5A5A]" },
-    CANCELED: { text: "거절", bgColor: "bg-[#EC221F]" },
-    COMPLETED: { text: "승인", bgColor: "bg-[#14AE5C]" },
+    PENDING: { text: "대기", bgColor: "bg-[#B3B3B3]" },
+    CHECKED: { text: "검토", bgColor: "bg-[#5A5A5A]" },
+    REJECTED: { text: "거절", bgColor: "bg-[#EC221F]" },
+    APPROVED: { text: "승인", bgColor: "bg-[#14AE5C]" },
   };
   const { text, bgColor } = config[state] || {
     text: "알 수 없음",
@@ -13,7 +13,10 @@ function StateButton({ state, onClick }) {
   };
 
   return (
-    <div onClick={onClick} className={`z-50 w-[72px] h-6 rounded-[5px] ${bgColor}`}>
+    <div
+      onClick={onClick}
+      className={`z-50 w-[72px] h-6 rounded-[5px] ${bgColor}`}
+    >
       <p className="text-[15px] font-bold text-white text-center">{text}</p>
     </div>
   );

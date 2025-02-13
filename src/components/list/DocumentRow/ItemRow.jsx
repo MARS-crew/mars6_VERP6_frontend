@@ -180,7 +180,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-4">
               <div className="font-medium text-gray-700 flex text-[17px]">
                 {isEditing ? (
                   <div className="w-[333px] relative">

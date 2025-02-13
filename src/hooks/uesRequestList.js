@@ -37,20 +37,15 @@ export function useRequest(docId){
           try{
             const params = new URLSearchParams();
             params.append("docId", Number(docId)); // 숫자로 변환
-            if (mRequest.filename) {
-              params.append("originalFileName", mRequest.filename);
-            }
-            if (fileUrl) {
-              params.append("externalUrl", fileUrl); // MinIO 파일 URL 추가
-            }
-            if (mRequest.url) {
-              params.append("externalUrl", mRequest.url);
-            }
             console.log("현재 토큰", auth.token);
             console.log("params: ",params.toString())
               const response = await axiosInstance.post(
-                `/doc-request/create?${params.toString()}`,
-                  {content: mRequest.content},
+                `/doc-request/${docId}`,
+                  {
+                    title: mRequest.requestTilte,
+                    content: mRequest.content,
+                    assignee : mRequest.worker
+                  },
                   {
                     headers: {
                       //Authorization: `Bearer ${auth.token}`,

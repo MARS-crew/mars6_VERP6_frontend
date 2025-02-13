@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 
 function AddRequest({onAddRequest}) {
-  const [person, setPerson] = useState("");
+  const [worker, setWoker] = useState("");
   const [requestTilte, setrequestTilte] = useState("");
   const [content, setContent] = useState("");
 
@@ -10,13 +10,10 @@ function AddRequest({onAddRequest}) {
   const handleRegister = ()=>{
 
     onAddRequest({
-      person,
+      worker,
       requestTilte,
       content,
     });
-    if (onSuccess) {
-      onSuccess(); //요청 성공 후 모달 닫기
-    }
   }
 
   return (
@@ -29,7 +26,7 @@ function AddRequest({onAddRequest}) {
         <input 
           className="w-[132px] border-2 border-b-gray-200 border-t-white border-l-white border-r-white" 
           placeholder="이름 입력" 
-          onChange={(e) => setPerson(e.target.value)}
+          onChange={(e) => setWoker(e.target.value)}
         />
       </div>
       <div className="mt-[18px] flex text-sm font-semibold">

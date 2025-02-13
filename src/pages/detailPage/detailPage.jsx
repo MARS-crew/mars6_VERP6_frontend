@@ -21,7 +21,7 @@ function DetailPage({ data, docTitle }) {
   const [selectDoc, setSelectDoc] = useState(null);
   const position = "leader";
   const docId = 32;
-  const requestData = useRequest(32); // 항상 호출됨
+  const requestData = useRequest(2); // 항상 호출됨
   const { request, isLoading, error, createRequestMutation } = requestData || {}; // 데이터 없을 때 기본값 설정
 
   useEffect(() => {
@@ -45,11 +45,6 @@ function DetailPage({ data, docTitle }) {
     setAddRequest(false); //요청 성공 시 모달 닫기
   };
 
-  const test=    [{no : 0,
-    fileName : "메인페이지 ",
-    name : "김도현",
-    content : "메인페이지 모달 , 팝업 크기 조절",
-    createdAt : "2020.01.01"}]
 
   return (
     <div className="bg-[#F6F6F6] w-full min-h-screen pb-4">
@@ -114,13 +109,13 @@ function DetailPage({ data, docTitle }) {
           </div>
           <RequestListHeader filterState={filterState} setFilterState={setFilterState} />
           {addRequest ? <AddRequest onAddRequest={createRequestMutation.mutate} onSuccess={handleRequestSuccess} /> : null}
-          {test ? test?.map((item, index) => (
+          {filteredRequests ? filteredRequests?.map((item, index) => (
             <RequestList
               key={index}
               no={index} // 항목의 번호
-              filename={item.fileName} // 파일 이름
+              retitle={item.title} // 파일 이름
               date={item.createdAt} // 날짜
-              writer={item.name} // 작성자
+              worker={item.assignee} // 작업자
               content={item.content} // 내용
               state={item.status} // 상태
               reqId={item.reqId}

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axiosInstance from '../api/axios';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../recoil/auth/auth';
@@ -26,11 +26,32 @@ export function useAlert(docId){
         },
       });
 
+      const readDoc = useMutation({
+        mutationFn : async (docId) =>{
+          const response = await axiosInstance.post(`/docs/${docId}/read`,{
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          })
+          return response;
+        },
+        onSuccess : (response) =>{
+          console.log("문서 읽기 성공 : ",response);
+        },
+        onError : (error)=>{
+          console.log("문서 일기 실패 : ",error);
+        }
+      })
+
       
 
     return{
         data,
         isLoading,
-        error
+        error,
+        readDoc
     }
 }

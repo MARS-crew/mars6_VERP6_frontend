@@ -19,6 +19,9 @@ import { useQueryClient } from "@tanstack/react-query";
 //   state: true,
 //   docId: null
 // });
+
+//handleclick으로 여기서 알림 읽기 호출하는게 좋을거 같다? 라고 생각 하고 있는중 
+
 function DocumentList({ id, initialTitle, isNew }) {
   const [isDeleted, setIsDeleted] = useState(false);
   const [showModifyModal, setShowModifyModal] = useState(false);

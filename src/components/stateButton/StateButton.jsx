@@ -2,9 +2,9 @@ import React from "react";
 
 function StateButton({ state, onClick }) {
   const config = {
-    REQUESTED: { text: "대기", bgColor: "bg-[#B3B3B3]" },
+    PENDING: { text: "대기", bgColor: "bg-[#B3B3B3]" },
     IN_PROGRESS: { text: "진행중", bgColor: "bg-[#75A8E7]" },
-    COMPLETED: { text: "승인", bgColor: "bg-[#14AE5C]" },
+    COMPLETED: { text: "완료", bgColor: "bg-[#14AE5C]" },
   };
   const { text, bgColor } = config[state] || {
     text: "알 수 없음",
@@ -17,5 +17,11 @@ function StateButton({ state, onClick }) {
     </div>
   );
 }
+
+/*
+PENDING - 대기
+IN_PROGRESS - 진행
+COMPLETED - 완료
+*/
 
 export default StateButton;

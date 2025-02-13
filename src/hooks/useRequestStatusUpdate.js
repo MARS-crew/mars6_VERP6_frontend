@@ -10,12 +10,9 @@ export function useRequestStatus({reqId}){
     const updateStatus = useMutation({
         mutationFn: async(statusUd)=>{
             const response = await axiosInstance.put(
-                `/doc-request/${reqId}/status`
-                ,{},
+                `/doc-request/${reqId}`
+                ,{status: statusUd,},
             {
-                params:{
-                    status: statusUd,
-                },
                 headers: {
                   //Authorization: `Bearer ${auth.token}`,
                   Accept: "application/json",

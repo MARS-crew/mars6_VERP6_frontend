@@ -51,10 +51,10 @@ function AddVersion({ setAddModal, addModal, docId }) {
     try {
       await createDocumentDetail.mutate({
         docId: docId,
-        externalUrl: "http://naver.com",
-        // kind === "url" ? url : null,
-        uploadFileUrl: kind === "file" ? data.data.result.presignedUrl : null,
-        fileName: kind === "file" ? data.data.result.generatedFileName : null,
+        externalUrl: kind === "url" ? url : null,
+        uploadFileUrl:
+          kind === "file" ? data.data.result.generatedFileName : null,
+        fileName: kind === "file" ? fileName : null,
         data: {
           content: contents,
           version: version,

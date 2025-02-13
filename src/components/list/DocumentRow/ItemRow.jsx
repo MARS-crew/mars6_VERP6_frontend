@@ -211,18 +211,17 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
             </div>
             <div className="flex items-center justify-between text-sm text-gray-500">
               <div
-                className="flex items-center text-black text-[20px] font-medium truncate"
-                style={{ maxWidth: "200px" }}
+                className="w-[150px] flex items-center text-black text-[20px] font-medium truncate"
                 title={item.fileLink}
                 onClick={handleClick}
               >
                 <span>{item.fileLink}</span>
               </div>
               <span className="text-[20px]">{item.updated}</span>
-              <div className="flex gap-2 items-center">
-                <StateButton state="PENDING" />
-                <StateButton state="IN_PROGRESS" />
-                <StateButton state="COMPLETED" />
+              <div className="flex gap-20 items-center">
+                <StateButton state="PENDING" count={item.pendingRequestStep} />
+                <StateButton state="IN_PROGRESS" count={item.inProgressRequestStep} />
+                <StateButton state="COMPLETED" count={item.completedRequestStep} />
               </div>
               <div className="flex items-center gap-10 mr-[70px] text-[20px]">
                 <button

@@ -39,7 +39,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const { data } = useAlert(docId);
   const alert = data ? data.result : false;
   // console.log(alert)
-  console.log("check :", data);
+  // console.log("check :", data);
   const navigate = useNavigate();
 
   const { data: docDetailData } = useDocumentDetail(item.docId);

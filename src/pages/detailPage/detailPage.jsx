@@ -18,9 +18,7 @@ function DetailPage({ data, docTitle, docId }) {
   const [filteredRequests, setFilteredRequests] = useState([]);
 
   const [filter, setFilter] = useState();
-  const [selectDoc, setSelectDoc] = useState(null);
   const position = "leader";
-  const docId = 32;
   const requestData = useRequest(2); // 항상 호출됨
   const { request, isLoading, error, createRequestMutation } =
     requestData || {}; // 데이터 없을 때 기본값 설정

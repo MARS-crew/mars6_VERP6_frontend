@@ -3,6 +3,9 @@ import React from "react";
 function StateButton({ state, onClick, count }) {
   const config = {
     PENDING: { text: "대기", bgColor: "bg-[#B3B3B3]" },
+    CHECKED: { text: "검토", bgColor: "bg-[#5A5A5A]" },
+    REJECTED: { text: "거절", bgColor: "bg-[#EC221F]" },
+    APPROVED: { text: "승인", bgColor: "bg-[#14AE5C]" },
     IN_PROGRESS: { text: "진행중", bgColor: "bg-[#75A8E7]" },
     COMPLETED: { text: "완료", bgColor: "bg-[#14AE5C]" },
   };
@@ -13,7 +16,10 @@ function StateButton({ state, onClick, count }) {
 
   return (
     <div className="flex items-center">
-      <div onClick={onClick} className={`z-50 w-[72px] h-[24px] flex items-center justify-center ${bgColor} rounded-[5px]`}>
+      <div
+        onClick={onClick}
+        className={`z-50 w-[72px] h-[24px] flex items-center justify-center ${bgColor} rounded-[5px]`}
+      >
         <span className="text-[12px] font-medium text-white">{text}</span>
       </div>
       {count !== undefined && (

@@ -23,10 +23,10 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const isempty = item.state;
 
   const docId = item.docId;
-  const {data} = useAlert(docId);
+  const { data } = useAlert(docId);
   const alert = data ? data.result : false;
   // console.log(alert)
-  console.log("check :",data);
+  console.log("check :", data);
   const navigate = useNavigate();
 
   const handleUpdateClick = () => {
@@ -124,7 +124,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
       : item.fileLink;
 
   const handleClick = () => {
-    navigate(`/detail-page?title=${item.name}`);
+    navigate(`/detail-page?docId=${item.docId}&title=${item.name}`);
   };
 
   return (
@@ -208,7 +208,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
                         className="ml-[10px] mt-[5px] h-[16px]"
                         src={BellIcon}
                       />
-                    ) :null}
+                    ) : null}
                   </>
                 )}
               </div>
@@ -224,8 +224,14 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
               <span className="text-[20px]">{item.updated}</span>
               <div className="flex gap-20 items-center">
                 <StateButton state="PENDING" count={item.pendingRequestStep} />
-                <StateButton state="IN_PROGRESS" count={item.inProgressRequestStep} />
-                <StateButton state="COMPLETED" count={item.completedRequestStep} />
+                <StateButton
+                  state="IN_PROGRESS"
+                  count={item.inProgressRequestStep}
+                />
+                <StateButton
+                  state="COMPLETED"
+                  count={item.completedRequestStep}
+                />
               </div>
               <div className="flex items-center gap-10 mr-[70px] text-[20px]">
                 <button

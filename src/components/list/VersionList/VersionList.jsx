@@ -10,13 +10,24 @@ import { formatDate } from "../../../utils/formatDate";
 
 function VersionList({ position, item, index, onClick }) {
   const [modalState, setModalState] = useState(false);
+  const { getDownloadUrl } = useGetDownloadFile();
+  const [downloadUrl, setDownloadUrl] = useState();
 
-  // const downloadFile =
-  //   item.fileName && !item.fileName.startsWith("http")
-  //     ? useGetDownloadFile(item.docId)
-  //     : { data: null, isLoading: false, error: null };
+  useEffect(() => {
+    fetchDownloadUrl();
+  }, [item.docDetailId, item.fileName]);
 
-  // console.log(downloadFile.data.data);
+  const fetchDownloadUrl = async () => {
+    try {
+      const response = await getDownloadUrl.mutateAsync({
+        docDetailId: item.docDetailId,
+        fileName: item.fileName,
+      });
+      setDownloadUrl(response.data.result.presignedUrl);
+    } catch (error) {
+      // console.error("다운로드 URL 요청 실패:", error);
+    }
+  };
 
   const handleModal = () => {
     setModalState(!modalState);
@@ -37,12 +48,16 @@ function VersionList({ position, item, index, onClick }) {
           V{item.version}
         </div>
         <div className="w-[170px] text-center truncate mr-[30px]">
-          {item.fileName}
+          {item.fileName && item.fileName.startsWith("http") ? (
+            <a href={`${item.fileName}`}>{item.fileName}</a>
+          ) : (
+            <a href={`${downloadUrl}`}>{item.fileName}</a>
+          )}
         </div>
         <div className="w-[75px] text-center mr-[30px]">
           {formatDate(item.createdAt, "short")}
         </div>
-        <StateButton state="REQUESTED" />
+        <StateButton state={item.status} />
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">

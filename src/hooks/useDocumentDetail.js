@@ -3,14 +3,14 @@ import { authState } from "../recoil/auth/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-function useDocumentDetail(docTitle) {
+function useDocumentDetail(docId) {
   const auth = useRecoilValue(authState);
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["getDocumentDetail", docTitle],
+    queryKey: ["getDocumentDetail", docId],
     queryFn: async () => {
-      const response = await axios.get(`/api/docs-detail/${docTitle}`, {
+      const response = await axios.get(`/api/docs-detail/${docId}`, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
           "Content-Type": "application/json",
@@ -19,16 +19,26 @@ function useDocumentDetail(docTitle) {
 
       return response;
     },
-    enabled: !!docTitle,
+    retry: 1,
   });
 
   const createDocumentDetail = useMutation({
-    mutationFn: async ({ docId, externalUrl, originalFileName, data }) => {
-      const response = await axios.post(`/api/docs-detail/create`, data, {
+    mutationFn: async ({
+      docId,
+      uploadFileUrl,
+      fileName,
+      externalUrl,
+      data,
+    }) => {
+      if (!docId) {
+        return;
+      }
+      const response = await axios.post(`/api/docs-detail/${docId}`, data, {
         params: {
           docId: docId,
           externalUrl: externalUrl,
-          originalFileName: originalFileName,
+          uploadFileUrl: uploadFileUrl,
+          fileName: fileName,
         },
         headers: {
           Authorization: `Bearer ${auth.token}`,
@@ -43,28 +53,11 @@ function useDocumentDetail(docTitle) {
     },
   });
 
-  const updateDocument = useMutation({
-    mutationFn: async (updatedDoc) => {
-      const response = await axios.patch(
-        `/docs-detail/${docTitle}`,
-        updatedDoc,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["getDocumentDetail", docTitle]);
-    },
-  });
-
   return {
     data,
     isLoading,
     error,
     createDocumentDetail,
-    updateDocument,
   };
 }
 

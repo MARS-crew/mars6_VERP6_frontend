@@ -1,28 +1,34 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { authState } from "../../recoil/auth/auth";
 
-function useGetDownloadFile(docId) {
+function useGetDownloadFile() {
   const auth = useRecoilValue(authState);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["getDownloadFile", docId],
-    queryFn: async () => {
-      const response = await axios.get(`/api/docs-detail/${docId}/download`, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      });
-
+  const getDownloadUrl = useMutation({
+    mutationFn: async ({ docDetailId, fileName }) => {
+      const response = await axios.post(
+        `/api/minio/download/${docDetailId}`,
+        { fileName },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
       return response;
+    },
+    onSuccess: () => {
+      console.log("파일 다운로드 URL 생성 완료");
+    },
+    onError: () => {
+      console.log("파일 주소 생성에 실패");
     },
   });
 
   return {
-    data,
-    isLoading,
-    error,
+    getDownloadUrl,
   };
 }
 

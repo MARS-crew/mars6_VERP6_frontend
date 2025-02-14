@@ -7,9 +7,11 @@ import useGetDownloadFile from "../../hooks/File/useGetDownloadFile";
 function DetailPageView() {
   const [searchParams] = useSearchParams();
   const docTitle = searchParams.get("title");
-  const { data, isLoading, error } = useDocumentDetail(docTitle);
+  const docId = searchParams.get("docId");
 
-  return <DetailPage data={data} docTitle={docTitle} />;
+  const { data, isLoading, error } = useDocumentDetail(docId);
+
+  return <DetailPage data={data} docTitle={docTitle} docId={docId} />;
 }
 
 export default DetailPageView;

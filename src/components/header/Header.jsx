@@ -10,7 +10,7 @@ function Header() {
         <div
           onClick={(e) => {
             e.preventDefault();
-            navigate("/detail-page");
+            navigate("/main");
           }}
           className="text-[32px] text-[#8E98A8] font-semibold"
         >

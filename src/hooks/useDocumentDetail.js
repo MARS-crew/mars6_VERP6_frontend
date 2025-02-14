@@ -18,14 +18,25 @@ function useDocumentDetail(docId) {
       });
 
       if (response.data.result) {
-        const statusCounts = {};
+        const statusCounts = {
+          PENDING: 0,
+          CHECKED: 0,
+          REJECTED: 0,
+          APPROVED: 0,
+          IN_PROGRESS: 0,
+          COMPLETED: 0
+        };
+        
         response.data.result.forEach(item => {
-          const status = item.status;
-          statusCounts[status] = (statusCounts[status] || 0) + 1;
+          if (item.status) {
+            statusCounts[item.status] = (statusCounts[item.status] || 0) + 1;
+          }
         });
         
-        console.log('Status 별 개수:', statusCounts);
-        console.log('Status 종류:', Object.keys(statusCounts));
+        // console.log('[Status 별 개수]', statusCounts);
+        // console.log('[Status 종류]', Object.keys(statusCounts).filter(key => statusCounts[key] > 0));
+        
+        response.data.statusCounts = statusCounts;
       }
 
       return response;

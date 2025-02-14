@@ -16,6 +16,7 @@ import StateButton from "../../stateButton/StateButton";
 import { useRecoilValue } from "recoil";
 import { authState } from "../../../recoil/auth/auth";
 import { createPortal } from "react-dom";
+import useDocumentDetail from "../../../hooks/useDocumentDetail";
 
 function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -40,6 +41,16 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   // console.log(alert)
   console.log("check :", data);
   const navigate = useNavigate();
+
+  const { data: docDetailData } = useDocumentDetail(item.docId);
+  const statusCounts = docDetailData?.data?.statusCounts || {
+    PENDING: 0,
+    CHECKED: 0,
+    REJECTED: 0,
+    APPROVED: 0,
+    IN_PROGRESS: 0,
+    COMPLETED: 0
+  };
 
   const handleUpdateClick = () => {
     setIsEditing(true);
@@ -221,10 +232,10 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
               <div className="flex gap-10 items-center">
                 {isTeamLeader ? (
                   <>
-                    <StateButton state="PENDING" count={item.pendingRequestStep || 0} />
-                    <StateButton state="CHECKED" count={item.checkedRequestStep || 0} />
-                    <StateButton state="REJECTED" count={item.rejectedRequestStep || 0} />
-                    <StateButton state="APPROVED" count={item.approvedRequestStep || 0} />
+                    <StateButton state="APPROVED" count={statusCounts.APPROVED} />
+                    <StateButton state="CHECKED" count={statusCounts.CHECKED} />
+                    <StateButton state="PENDING" count={statusCounts.PENDING} />
+                    <StateButton state="REJECTED" count={statusCounts.REJECTED} />
                   </>
                 ) : (
                   <>

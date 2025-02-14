@@ -1,8 +1,12 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../recoil/auth/auth";
 
 function Header() {
   const navigate = useNavigate();
+  const auth = useRecoilValue(authState);
+  const name = auth.user.username
 
   return (
     <div className="w-full border-b h-[80px] flex justify-center bg-white">
@@ -16,7 +20,7 @@ function Header() {
         >
           VER6
         </div>
-        <div className="font-light text-[16px]">chhari0708</div>
+        <div className="font-light text-[16px]">{name}</div>
       </div>
     </div>
   );

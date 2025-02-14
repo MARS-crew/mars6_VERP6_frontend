@@ -16,6 +16,7 @@ function DetailPage({ data, docTitle, docId }) {
   const [addRequest, setAddRequest] = useState(false);
   const [filterState, setFilterState] = useState(null); // 상태 필터 추가
   const [filteredRequests, setFilteredRequests] = useState([]);
+  const [isReversed, setIsReversed] = useState(true);
 
   const [filter, setFilter] = useState();
   const position = "leader";
@@ -24,15 +25,16 @@ function DetailPage({ data, docTitle, docId }) {
     requestData || {}; // 데이터 없을 때 기본값 설정
 
   useEffect(() => {
-    if (!filterState) {
-      setFilteredRequests(request); // 필터가 없으면 전체 리스트 반환
-    } else {
-      const newFilteredRequests = request?.filter(
-        (item) => item.status === filterState
-      );
-      setFilteredRequests(newFilteredRequests || []);
+    if (!request) return;
+    let sortedRequests = [...request]; 
+    if (filterState) {
+      sortedRequests = sortedRequests.filter((item) => item.status === filterState);
     }
-  }, [filterState, request]); // filterState나 request 변경 시 실행
+    if (isReversed) {
+      sortedRequests.reverse();
+    }
+    setFilteredRequests(sortedRequests);
+  }, [filterState, request,isReversed]); // filterState나 request 변경 시 실행
 
   const addModalState = () => {
     setAddModal(!addModal);
@@ -43,7 +45,7 @@ function DetailPage({ data, docTitle, docId }) {
   };
 
   const handleRequestSuccess = () => {
-    setAddRequest(false); //요청 성공 시 모달 닫기
+    setAddRequest(false); // 요청 성공 후 모달 닫기
   };
 
   return (
@@ -117,35 +119,28 @@ function DetailPage({ data, docTitle, docId }) {
           <RequestListHeader
             filterState={filterState}
             setFilterState={setFilterState}
+            isReversed={isReversed} 
+            setIsReversed={setIsReversed} 
           />
           {addRequest ? (
             <AddRequest
-              onAddRequest={createRequestMutation.mutate}
-              onSuccess={handleRequestSuccess}
-            />
+            onAddRequest={(requestData) => {
+              createRequestMutation.mutate(requestData, {
+                onSuccess: () => {
+                  handleRequestSuccess(); // ✅ 요청 성공 후 모달 닫기
+                },
+              });
+            }}
+          />
           ) : null}
           {filteredRequests
-            ? filteredRequests?.map((item, index) => (
+            ?  filteredRequests.map((item, index) => (
                 <RequestList
                   key={index}
                   no={index} // 항목의 번호
                   retitle={item.title} // 파일 이름
                   date={item.createdAt} // 날짜
                   worker={item.assignee} // 작업자
-                  content={item.content} // 내용
-                  state={item.status} // 상태
-                  reqId={item.reqId}
-                />
-              ))
-            : null}
-          {filteredRequests
-            ? filteredRequests?.map((item, index) => (
-                <RequestList
-                  key={index}
-                  no={index} // 항목의 번호
-                  filename={item.fileName} // 파일 이름
-                  date={item.createdAt} // 날짜
-                  writer={item.name} // 작성자
                   content={item.content} // 내용
                   state={item.status} // 상태
                   reqId={item.reqId}

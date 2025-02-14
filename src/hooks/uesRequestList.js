@@ -1,6 +1,6 @@
 
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery,useQueryClient  } from '@tanstack/react-query';
 import axiosInstance from '../api/axios';
 import { useRecoilValue,useSetRecoilState } from 'recoil';
 import { authState } from '../recoil/auth/auth';
@@ -8,6 +8,7 @@ import { requestListstate } from '../recoil/request';
 
 
 export function useRequest(docId){
+  const queryClient = useQueryClient();
     const auth = useRecoilValue(authState);
     const setRequestList = useSetRecoilState(requestListstate(docId));
 
@@ -65,15 +66,12 @@ export function useRequest(docId){
           }
       },
       onSuccess:(newRequest)=>{
-          console.log('[요청 생성 성공]', newRequest);
-          setRequestList(prev => ({
-              request: [...prev.request, newRequest]
-          }));
-          if (typeof handleRequestSuccess === "function") {
-            handleRequestSuccess(); // 요청 성공 후 모달 닫기
-          }
-          window.location.reload();
-          
+        console.log("[요청 생성 성공]", newRequest);
+        setRequestList((prev) => ({
+          ...prev, // 기존 리스트 유지
+          request: [...prev.request, newRequest], // 새 요청 추가
+        }));
+        queryClient.invalidateQueries(["requestStatus", docId]); // RequestList 새로고침
       },
       error : (error)=>{
           console.log('요청 생성 실패 :',error)

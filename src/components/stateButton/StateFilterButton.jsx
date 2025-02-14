@@ -4,7 +4,7 @@ function StateFilterButton({ state, onClick }) {
   const config = {
     ALL : {text:"전체",bgColor:"bg-[#a032a8]"},
     IN_PROGRESS: { text: "진행중", bgColor: "bg-[#75A8E7]" },
-    PENDING: { text: "대기기", bgColor: "bg-[#5A5A5A]" },
+    PENDING: { text: "대기", bgColor: "bg-[#B3B3B3]" },
     COMPLETED: { text: "완료", bgColor: "bg-[#14AE5C]" },
   };
   const { text, bgColor } = config[state] || {

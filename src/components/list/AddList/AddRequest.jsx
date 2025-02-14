@@ -7,14 +7,13 @@ function AddRequest({onAddRequest}) {
   const [content, setContent] = useState("");
 
 
-  const handleRegister = ()=>{
-
+  const handleRegister = () => {
     onAddRequest({
       worker,
       requestTilte,
       content,
     });
-  }
+  };
 
   return (
     <div className="w-[582px] h-[400px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">

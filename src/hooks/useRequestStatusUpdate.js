@@ -25,8 +25,13 @@ export function useRequestStatus({reqId}){
             return response;
         },
         onSuccess(response){
-            console.log('[요청 상태 변경 서공] :', response);
-            window.location.reload();
+            console.log('[요청 상태 변경 성공] :', response);
+            setRequestList(prev => ({
+                ...prev,
+                request: prev.request.map(req =>
+                    req.reqId === reqId ? { ...req, status: response.data.result.status } : req
+                )
+            }));
         },
         onError(error){
             console.log("변경 실패 :",error );

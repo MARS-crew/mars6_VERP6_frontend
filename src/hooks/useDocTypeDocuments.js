@@ -9,6 +9,7 @@ function useDocTypeDocuments(docTypeId) {
       
       try {
         const response = await axiosInstance.get(`/docs/${docTypeId}`);
+        // console.log('[문서 목록 조회 응답]', response.data.result);
         return response.data;
       } catch (error) {
         console.error('[문서 목록 조회 에러]', {

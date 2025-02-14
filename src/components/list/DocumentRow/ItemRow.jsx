@@ -14,7 +14,7 @@ import DocumentListInput from "../../Input/DocumentListInput";
 import { useAlert } from "../../../hooks/usealertIcon";
 import StateButton from "../../stateButton/StateButton";
 
-function ItemRow({ item, isLast, docTypeId, onRemove }) {
+function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(item.name);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -23,7 +23,10 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   const isempty = item.state;
 
   const docId = item.docId;
-  const {check} = useAlert(docId);
+  const {data} = useAlert(docId);
+  const alert = data ? data.result : false;
+  // console.log(alert)
+  console.log("check :",data);
   const navigate = useNavigate();
 
   const handleUpdateClick = () => {
@@ -127,6 +130,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   return (
     <>
       <div
+        onClick={onClick}
         className={`mb-6 mt-[19px] pb-6 ${
           !isLast && "border-b border-[#B4B4B4]"
         } last:mb-0 mr-[20px]`}
@@ -199,12 +203,12 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                 ) : (
                   <>
                     {item.name}
-                    {isempty && (
+                    {alert ? (
                       <img
                         className="ml-[10px] mt-[5px] h-[16px]"
                         src={BellIcon}
                       />
-                    )}
+                    ) :null}
                   </>
                 )}
               </div>

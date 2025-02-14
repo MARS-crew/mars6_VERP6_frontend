@@ -10,6 +10,11 @@ export function useAlert(docId){
         queryKey: ['dcheck',docId],
         queryFn: async () => {
           try {
+            console.log("docId :",docId)
+            if (!docId) {
+              console.log("docId가 없음. API 요청 생략");
+              return false;
+            }
             const response = await axiosInstance.get(`/docs/${docId}/has-unread`, {
               headers: {
                 Authorization: `Bearer ${auth.token}`,

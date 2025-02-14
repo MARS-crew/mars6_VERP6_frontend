@@ -9,6 +9,7 @@ import useDocument from "../../hooks/useDocument";
 import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
 import useDocTypeDelete from "../../hooks/useDocTypeDelete";
 import { useQueryClient } from "@tanstack/react-query";
+// 이거 import { useAlert } from "../../hooks/usealertIcon";
 
 // const INITIAL_ITEMS = (inputValue) => ({
 //   name: inputValue,
@@ -30,6 +31,7 @@ function DocumentList({ id, initialTitle, isNew }) {
     showValidator: false,
   });
   const [showInput, setShowInput] = useState(false);
+  // 이거 const { readDoc } = useAlert();
 
   const {
     document,
@@ -120,6 +122,11 @@ function DocumentList({ id, initialTitle, isNew }) {
     });
   };
 
+  //이거
+  // const handleReadDocument = (docId) =>{
+  //   readDoc.mutate(docId);
+  // }
+
   const handleDocumentCreated = async (createdDoc) => {
     try {
       await queryClient.invalidateQueries({
@@ -204,6 +211,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                   }}
                   isLast={idx === documents.length - 1}
                   docTypeId={id}
+                  // 이거 onClick={() => handleReadDocument(doc.docId)}
                   onRemove={handleRemoveDocument}
                 />
               ))}

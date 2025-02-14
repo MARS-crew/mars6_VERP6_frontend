@@ -1,6 +1,6 @@
 import React from "react";
 
-function StateButton({ state, onClick }) {
+function StateButton({ state, onClick, count }) {
   const config = {
     PENDING: { text: "대기", bgColor: "bg-[#B3B3B3]" },
     CHECKED: { text: "검토", bgColor: "bg-[#5A5A5A]" },
@@ -15,11 +15,16 @@ function StateButton({ state, onClick }) {
   };
 
   return (
-    <div
-      onClick={onClick}
-      className={`z-50 w-[72px] h-6 rounded-[5px] ${bgColor}`}
-    >
-      <p className="text-[15px] font-bold text-white text-center">{text}</p>
+    <div className="flex items-center">
+      <div
+        onClick={onClick}
+        className={`z-50 w-[72px] h-[24px] flex items-center justify-center ${bgColor} rounded-[5px]`}
+      >
+        <span className="text-[12px] font-medium text-white">{text}</span>
+      </div>
+      {count !== undefined && (
+        <span className="text-[17px] text-[#5A5A5A] gap-1"> ┃{count}건</span>
+      )}
     </div>
   );
 }

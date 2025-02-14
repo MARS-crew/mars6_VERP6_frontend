@@ -203,6 +203,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                     fileLink: `${doc.title}.ppt`,
                     completedRequestStep: doc.completedRequestStep || 0,
                     inProgressRequestStep: doc.inProgressRequestStep || 0,
+                    pendingRequestStep: doc.pendingRequestStep || 0,
                     canceledRequestStep: doc.canceledRequestStep || 0,
                     totalRequestStep: doc.totalRequestStep|| 0,
                     updated: doc.timeAgo || "방금 전",

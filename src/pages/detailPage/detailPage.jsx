@@ -19,7 +19,7 @@ function DetailPage({ data, docTitle, docId }) {
 
   const [filter, setFilter] = useState();
   const position = "leader";
-  const requestData = useRequest(2); // 항상 호출됨
+  const requestData = useRequest(docId); // 항상 호출됨
   const { request, isLoading, error, createRequestMutation } =
     requestData || {}; // 데이터 없을 때 기본값 설정
 
@@ -132,20 +132,6 @@ function DetailPage({ data, docTitle, docId }) {
                   retitle={item.title} // 파일 이름
                   date={item.createdAt} // 날짜
                   worker={item.assignee} // 작업자
-                  content={item.content} // 내용
-                  state={item.status} // 상태
-                  reqId={item.reqId}
-                />
-              ))
-            : null}
-          {filteredRequests
-            ? filteredRequests?.map((item, index) => (
-                <RequestList
-                  key={index}
-                  no={index} // 항목의 번호
-                  filename={item.fileName} // 파일 이름
-                  date={item.createdAt} // 날짜
-                  writer={item.name} // 작성자
                   content={item.content} // 내용
                   state={item.status} // 상태
                   reqId={item.reqId}

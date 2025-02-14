@@ -28,12 +28,12 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const auth = useRecoilValue(authState);
   const isTeamLeader = auth.user?.role === "TEAM_LEADER";
 
-  console.log('[Auth 상태 확인]', {
-    auth,
-    user: auth.user,
-    role: auth.user?.role,
-    isTeamLeader
-  });
+  // console.log('[Auth 상태 확인]', {
+  //   auth,
+  //   user: auth.user,
+  //   role: auth.user?.role,
+  //   isTeamLeader
+  // });
 
   const docId = item.docId;
   const { data } = useAlert(docId);

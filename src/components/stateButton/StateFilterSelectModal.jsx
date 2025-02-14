@@ -1,9 +1,9 @@
 import React from "react";
 import StateFilterButton from "./StateFilterButton";
 
-const config = ["ALL","PENDING", "IN_PROGRESS", "COMPLETED"];
-function StateFilterSelectModal({ onStateChange }) {
+const config = ["ALL", "PENDING", "IN_PROGRESS", "COMPLETED"];
 
+function StateFilterSelectModal({ onStateChange }) {
   const handleClick = (item) => {
     onStateChange(item === "ALL" ? null : item);
   };
@@ -13,7 +13,6 @@ function StateFilterSelectModal({ onStateChange }) {
       {config.map((item) => (
         <StateFilterButton key={item} state={item} onClick={() => handleClick(item)} />
       ))}
-      
     </div>
   );
 }

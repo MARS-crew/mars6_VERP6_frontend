@@ -46,7 +46,7 @@ function useAuth() {
         
         saveUserToCookie(user);
         
-        console.log('[Auth 상태 업데이트]', authData);
+        // console.log('[Auth 상태 업데이트]', authData);
         setAuth(authData);
         navigate('/main');
       } else {

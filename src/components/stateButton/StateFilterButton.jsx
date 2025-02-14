@@ -14,7 +14,7 @@ function StateFilterButton({ state, onClick }) {
 
   return (
     <div onClick={onClick} className={`w-[72px] h-6 rounded-[5px] ${bgColor}`}>
-      <p className="text-[15px] font-bold text-white text-center">{text}</p>
+      <p className="text-[12px] font-medium text-white text-center">{text}</p>
     </div>
   );
 }

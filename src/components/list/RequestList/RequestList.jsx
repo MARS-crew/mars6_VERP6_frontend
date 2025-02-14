@@ -47,7 +47,7 @@ function RequestList({ no, retitle, state:initialState, date, worker,content,req
         </div>
         <div className="text-center mr-[10px]">{date}</div>
         <div className="mr-[50px]">
-          <StateButton onClick={handleSelectStateModal} state={state} />
+          <StateButton onClick={handleSelectStateModal} state={state} showAll={true} />
           {selectModal ? (
             <StateSelectModal onStateChange={handleStateChange} />
           ) : null}

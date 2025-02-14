@@ -53,7 +53,6 @@ function VersionList({ position, item, index, onClick }) {
           ) : (
             <a href={`${downloadUrl}`}>{item.fileName}</a>
           )}
-          {item.fileName}
         </div>
         <div className="w-[75px] text-center mr-[30px]">
           {formatDate(item.createdAt, "short")}

@@ -29,6 +29,9 @@ function DetailPage({ data, docTitle, docId }) {
   const { request, isLoading, error, createRequestMutation } =
     requestData || {}; // 데이터 없을 때 기본값 설정
 
+  
+  console.log(isTeamLeader)
+
   useEffect(() => {
     if (!request) return;
     let sortedRequests = [...request]; 
@@ -112,7 +115,7 @@ function DetailPage({ data, docTitle, docId }) {
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
             <p className="font-bold text-xl">작업 요청</p>
-            {isTeamLeader == "TEAM_LEADER" ? (
+            {isTeamLeader? (
               <p
                 onClick={addRequestModal}
                 className="font-normal text-sm my-auto text-[#7C838A]"

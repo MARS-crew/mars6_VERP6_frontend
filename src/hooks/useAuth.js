@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios';
-import { authState } from '../recoil/auth/auth';
+import { authState, saveUserToCookie } from '../recoil/auth/auth';
 import { setCookie, removeCookie } from '../utils/cookies';
 
 function useAuth() {
@@ -33,15 +33,19 @@ function useAuth() {
         }
         
         setCookie('auth_token', token);
+        const user = {
+          username,
+          name,
+          role
+        };
         const authData = {
           isAuthenticated: true,
           token: token,
-          user: {
-            username,
-            name,
-            role
-          }
+          user
         };
+        
+        saveUserToCookie(user);
+        
         console.log('[Auth 상태 업데이트]', authData);
         setAuth(authData);
         navigate('/main');
@@ -52,6 +56,7 @@ function useAuth() {
     onError: (error) => {
       console.error('[로그인 실패]', error);
       removeCookie('auth_token');
+      saveUserToCookie(null);
       setAuth({
         isAuthenticated: false,
         token: null,
@@ -62,6 +67,7 @@ function useAuth() {
 
   const logout = () => {
     removeCookie('auth_token');
+    saveUserToCookie(null);
     setAuth({
       isAuthenticated: false,
       token: null,

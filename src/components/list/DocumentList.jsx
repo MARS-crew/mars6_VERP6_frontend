@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../recoil/auth/auth";
 import moreIcon from "../../assets/images/more-icon.png";
 import DocModifyModal from "../Modal/DocModifyModal";
 import DocumentTypeInput from "../Input/DocumentTypeInput";
@@ -9,6 +11,7 @@ import useDocument from "../../hooks/useDocument";
 import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
 import useDocTypeDelete from "../../hooks/useDocTypeDelete";
 import { useQueryClient } from "@tanstack/react-query";
+import StateButton from "../stateButton/StateButton";
 // 이거 import { useAlert } from "../../hooks/usealertIcon";
 
 // const INITIAL_ITEMS = (inputValue) => ({
@@ -24,6 +27,8 @@ import { useQueryClient } from "@tanstack/react-query";
 //handleclick으로 여기서 알림 읽기 호출하는게 좋을거 같다? 라고 생각 하고 있는중 
 
 function DocumentList({ id, initialTitle, isNew }) {
+  const auth = useRecoilValue(authState);
+  const isTeamLeader = auth.user?.role === "TEAM_LEADER";
   const [isDeleted, setIsDeleted] = useState(false);
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [currentInput, setCurrentInput] = useState({
@@ -31,6 +36,14 @@ function DocumentList({ id, initialTitle, isNew }) {
     showValidator: false,
   });
   const [showInput, setShowInput] = useState(false);
+  const [statusCounts, setStatusCounts] = useState({
+    PENDING: 0,
+    CHECKED: 0,
+    REJECTED: 0,
+    APPROVED: 0,
+    IN_PROGRESS: 0,
+    COMPLETED: 0,
+  });
   // 이거 const { readDoc } = useAlert();
 
   const {
@@ -84,6 +97,39 @@ function DocumentList({ id, initialTitle, isNew }) {
       refetchDocuments();
     }
   }, [currentDocTypeId, refetchDocuments]);
+
+  useEffect(() => {
+    if (Array.isArray(documents)) {
+      console.log('[문서 목록 업데이트]', documents);
+      const counts = documents.reduce((acc, doc) => {
+        // 각 문서의 요청 단계별 개수를 합산
+        acc.PENDING += doc.pendingRequestStep || 0;
+        acc.CHECKED += doc.checkedRequestStep || 0;
+        acc.REJECTED += doc.rejectedRequestStep || 0;
+        acc.APPROVED += doc.approvedRequestStep || 0;
+        acc.IN_PROGRESS += doc.inProgressRequestStep || 0;
+        acc.COMPLETED += doc.completedRequestStep || 0;
+        console.log('[문서 상태 카운트]', doc.title, {
+          pending: doc.pendingRequestStep,
+          checked: doc.checkedRequestStep,
+          rejected: doc.rejectedRequestStep,
+          approved: doc.approvedRequestStep,
+          inProgress: doc.inProgressRequestStep,
+          completed: doc.completedRequestStep
+        });
+        return acc;
+      }, {
+        PENDING: 0,
+        CHECKED: 0,
+        REJECTED: 0,
+        APPROVED: 0,
+        IN_PROGRESS: 0,
+        COMPLETED: 0,
+      });
+      console.log('[최종 상태 카운트]', counts);
+      setStatusCounts(counts);
+    }
+  }, [documents]);
 
   const handleMoreClick = () => setShowModifyModal((prev) => !prev);
   const handleCloseModal = () => setShowModifyModal(false);
@@ -190,49 +236,66 @@ function DocumentList({ id, initialTitle, isNew }) {
         </div>
       )}
       <div>
-        <DocumentTypeInput documentId={id} isNew={isNew} />
+        <DocumentTypeInput 
+          documentId={id} 
+          isNew={isNew} 
+          onCancel={() => {
+            if (isNew) {
+              setIsDeleted(true);
+            }
+            setDocument(prev => ({
+              ...prev,
+              isEditing: false
+            }));
+          }}
+        />
         {document?.title && !document?.isEditing && (
-          <div className="mt-4">
-            <div className="pl-[20px] space-y-4">
-              {Array.isArray(documents) && documents.map((doc, idx) => (
-                <ItemRow
-                  key={doc.docId}
-                  item={{
-                    docId: doc.docId,
-                    name: doc.title,
-                    fileLink: `${doc.title}.ppt`,
-                    completedRequestStep: doc.completedRequestStep || 0,
-                    inProgressRequestStep: doc.inProgressRequestStep || 0,
-                    pendingRequestStep: doc.pendingRequestStep || 0,
-                    canceledRequestStep: doc.canceledRequestStep || 0,
-                    totalRequestStep: doc.totalRequestStep|| 0,
-                    updated: doc.timeAgo || "방금 전",
-                    state: true,
-                  }}
-                  isLast={idx === documents.length - 1}
-                  docTypeId={id}
-                  // 이거 onClick={() => handleReadDocument(doc.docId)}
-                  onRemove={handleRemoveDocument}
-                />
-              ))}
-            </div>
-            {showInput && (
-              <div className="pl-[20px] mb-4">
-                <DocumentListInput
-                  value={currentInput.value}
-                  onChange={handleListInputChange}
-                  onKeyDown={handlelistKeyDown}
-                  docTypeId={currentDocTypeId}
-                  onDocumentCreated={handleDocumentCreated}
-                />
-                {currentInput.showValidator && (
-                  <div className="mt-2">
-                    <DocTypeValidator />
-                  </div>
-                )}
+          <>
+            <div className="mt-4">
+              <div className="pl-[20px] space-y-4">
+                {Array.isArray(documents) && documents.map((doc, idx) => (
+                  <ItemRow
+                    key={doc.docId}
+                    item={{
+                      docId: doc.docId,
+                      name: doc.title,
+                      fileLink: `${doc.title}.ppt`,
+                      completedRequestStep: doc.completedRequestStep || 0,
+                      inProgressRequestStep: doc.inProgressRequestStep || 0,
+                      pendingRequestStep: doc.pendingRequestStep || 0,
+                      checkedRequestStep: doc.checkedRequestStep || 0,
+                      rejectedRequestStep: doc.rejectedRequestStep || 0,
+                      approvedRequestStep: doc.approvedRequestStep || 0,
+                      canceledRequestStep: doc.canceledRequestStep || 0,
+                      totalRequestStep: doc.totalRequestStep|| 0,
+                      updated: doc.timeAgo || "방금 전",
+                      state: true,
+                    }}
+                    isLast={idx === documents.length - 1}
+                    docTypeId={id}
+                    onRemove={handleRemoveDocument}
+                  />
+                ))}
               </div>
-            )}
-          </div>
+              {showInput && (
+                <div className="pl-[20px] mb-4">
+                  <DocumentListInput
+                    value={currentInput.value}
+                    onChange={handleListInputChange}
+                    onKeyDown={handlelistKeyDown}
+                    docTypeId={currentDocTypeId}
+                    onDocumentCreated={handleDocumentCreated}
+                    onCancel={() => setShowInput(false)}
+                  />
+                  {currentInput.showValidator && (
+                    <div className="mt-2">
+                      <DocTypeValidator />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
       {document?.title && !document?.isEditing && (

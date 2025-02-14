@@ -5,7 +5,7 @@ import axiosInstance from '../../api/axios';
 import { authState } from '../../recoil/auth/auth';
 import ListValidator from '../Validator/ListValidator';
 
-function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCreated }) {
+function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCreated, onCancel }) {
   const auth = useRecoilValue(authState);
   const queryClient = useQueryClient();
   const [showValidator, setShowValidator] = useState(false);
@@ -63,12 +63,24 @@ function DocumentListInput({ value, onChange, onKeyDown, docTypeId, onDocumentCr
   };
 
   const handleBlur = async () => {
+    if (!value.trim()) {
+      setShowValidator(false);
+      onChange({ target: { value: '' } });
+      if (onCancel) {
+        onCancel();
+      }
+      return;
+    }
+
     const isInvalid = validateInput(value);
     setShowValidator(isInvalid);
 
     if (!isInvalid && value.trim()) {
       try {
         await createDocumentMutation.mutateAsync(value);
+        if (onCancel) {
+          onCancel();
+        }
       } catch (error) {
         console.error('[문서 생성 에러]', error);
       }

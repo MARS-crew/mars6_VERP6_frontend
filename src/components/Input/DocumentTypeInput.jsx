@@ -4,7 +4,7 @@ import DocTypeValidator from '../Validator/DocTypeValidator';
 import DocValidator from '../Validator/DocValidator';
 import { useQueryClient } from '@tanstack/react-query';
 
-function DocumentTypeInput({ documentId, isNew }) {
+function DocumentTypeInput({ documentId, isNew, onCancel }) {
   const { createDocument, updateDocument, resetDocument, isLoading, error, document, setDocument } = useDocument(documentId);
   const [title, setTitle] = useState('');
   const queryClient = useQueryClient();
@@ -42,6 +42,10 @@ function DocumentTypeInput({ documentId, isNew }) {
           ...old,
           result: old?.result?.filter(doc => doc.id) || []
         }));
+        resetDocument();
+        if (onCancel) {
+          onCancel();
+        }
       }
       return;
     }
@@ -49,9 +53,15 @@ function DocumentTypeInput({ documentId, isNew }) {
     const isValid = validateInput(title);
     if (isValid) {
       if (document.id) {
-        updateDocument(title);
+        await updateDocument(title);
+        if (onCancel) {
+          onCancel();
+        }
       } else {
-        createDocument(title);
+        await createDocument(title);
+        if (onCancel) {
+          onCancel();
+        }
       }
     }
   };

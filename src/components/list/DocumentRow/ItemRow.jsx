@@ -13,6 +13,10 @@ import ListDeleteModal from "../../Modal/ListDeleteModal";
 import DocumentListInput from "../../Input/DocumentListInput";
 import { useAlert } from "../../../hooks/usealertIcon";
 import StateButton from "../../stateButton/StateButton";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../../recoil/auth/auth";
+import { createPortal } from "react-dom";
+import useDocumentDetail from "../../../hooks/useDocumentDetail";
 
 function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,13 +25,32 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const { updateDocument, isLoading: isUpdating } = useDocumentUpdate();
   const { deleteDocument, isLoading: isDeleting } = useDocumentDelete();
   const isempty = item.state;
+  const auth = useRecoilValue(authState);
+  const isTeamLeader = auth.user?.role === "TEAM_LEADER";
+
+  // console.log('[Auth 상태 확인]', {
+  //   auth,
+  //   user: auth.user,
+  //   role: auth.user?.role,
+  //   isTeamLeader
+  // });
 
   const docId = item.docId;
   const { data } = useAlert(docId);
   const alert = data ? data.result : false;
   // console.log(alert)
-  console.log("check :", data);
+  // console.log("check :", data);
   const navigate = useNavigate();
+
+  const { data: docDetailData } = useDocumentDetail(item.docId);
+  const statusCounts = docDetailData?.data?.statusCounts || {
+    PENDING: 0,
+    CHECKED: 0,
+    REJECTED: 0,
+    APPROVED: 0,
+    IN_PROGRESS: 0,
+    COMPLETED: 0
+  };
 
   const handleUpdateClick = () => {
     setIsEditing(true);
@@ -138,23 +161,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
         {!item.state ? (
           <div className="flex items-center text-sm text-gray-500">
             <div className="w-[200px] font-medium text-gray-700 text-[17px]">
-              {isEditing ? (
-                <div className="w-[333px] relative">
-                  <input
-                    type="text"
-                    value={editValue}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    onKeyDown={handleKeyDown}
-                    className="w-[333px] h-[32px] text-[17px] pl-[6px] focus:outline-none"
-                    autoFocus
-                    disabled={isUpdating}
-                  />
-                  <div className="border-b border-[#D9D9D9]" />
-                </div>
-              ) : (
-                <div className="truncate">{item.name}</div>
-              )}
+              <div className="truncate">{item.name}</div>
             </div>
             <div className="flex-1 flex justify-center">
               <div onClick={handleClick} className="text-[#9CA2B3] text-[17px]">
@@ -222,16 +229,21 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
                 <span>{item.fileLink}</span>
               </div>
               <span className="text-[20px]">{item.updated}</span>
-              <div className="flex gap-20 items-center">
-                <StateButton state="PENDING" count={item.pendingRequestStep} />
-                <StateButton
-                  state="IN_PROGRESS"
-                  count={item.inProgressRequestStep}
-                />
-                <StateButton
-                  state="COMPLETED"
-                  count={item.completedRequestStep}
-                />
+              <div className="flex gap-10 items-center">
+                {isTeamLeader ? (
+                  <>
+                    <StateButton state="APPROVED" count={statusCounts.APPROVED} />
+                    <StateButton state="CHECKED" count={statusCounts.CHECKED} />
+                    <StateButton state="PENDING" count={statusCounts.PENDING} />
+                    <StateButton state="REJECTED" count={statusCounts.REJECTED} />
+                  </>
+                ) : (
+                  <>
+                    <StateButton state="PENDING" count={item.pendingRequestStep || 0} />
+                    <StateButton state="IN_PROGRESS" count={item.inProgressRequestStep || 0} />
+                    <StateButton state="COMPLETED" count={item.completedRequestStep || 0} />
+                  </>
+                )}
               </div>
               <div className="flex items-center gap-10 mr-[70px] text-[20px]">
                 <button
@@ -257,12 +269,14 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
           </>
         )}
       </div>
-      {showDeleteModal && (
-        <ListDeleteModal
-          onDelete={handleDeleteConfirm}
-          onCancel={handleDeleteCancel}
-        />
-      )}
+      {showDeleteModal &&
+        createPortal(
+          <ListDeleteModal
+            onDelete={handleDeleteConfirm}
+            onCancel={handleDeleteCancel}
+          />,
+          document.body
+        )}
     </>
   );
 }

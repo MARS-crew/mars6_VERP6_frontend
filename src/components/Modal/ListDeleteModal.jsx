@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import DeleteButton from '../Button/DeleteButton';
 import warningIcon from '../../assets/warning-icon.svg';
 
@@ -9,11 +10,10 @@ function ListDeleteModal({ onDelete, onCancel }) {
     }
   }, [onCancel]);
 
-
-  return (
-    <>
-      <div className = "fixed inset-0 bg-black/50 z-[100]" onClick = {handleOverlayClick} />
-      <div className = "fixed inset-0 flex items-center justify-center z-[101]" onClick = {handleOverlayClick}>
+  const modalContent = (
+    <div className = "fixed inset-0 z-[9999] isolate">
+      <div className = "absolute inset-0 bg-black/50" onClick={handleOverlayClick} />
+      <div className = "absolute inset-0 flex items-center justify-center">
         <div className = "bg-white w-[500px] h-[250px] rounded-[10px] flex flex-col items-center pt-[19px] shadow-[0_0_2px_2px_rgba(0,0,0,0.5)]">
           <img 
             src = {warningIcon} 
@@ -44,8 +44,10 @@ function ListDeleteModal({ onDelete, onCancel }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
 
-export default ListDeleteModal; 
+export default ListDeleteModal;

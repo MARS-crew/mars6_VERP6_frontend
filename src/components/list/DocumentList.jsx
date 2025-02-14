@@ -236,7 +236,19 @@ function DocumentList({ id, initialTitle, isNew }) {
         </div>
       )}
       <div>
-        <DocumentTypeInput documentId={id} isNew={isNew} />
+        <DocumentTypeInput 
+          documentId={id} 
+          isNew={isNew} 
+          onCancel={() => {
+            if (isNew) {
+              setIsDeleted(true);
+            }
+            setDocument(prev => ({
+              ...prev,
+              isEditing: false
+            }));
+          }}
+        />
         {document?.title && !document?.isEditing && (
           <>
             <div className="mt-4">
@@ -273,6 +285,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                     onKeyDown={handlelistKeyDown}
                     docTypeId={currentDocTypeId}
                     onDocumentCreated={handleDocumentCreated}
+                    onCancel={() => setShowInput(false)}
                   />
                   {currentInput.showValidator && (
                     <div className="mt-2">

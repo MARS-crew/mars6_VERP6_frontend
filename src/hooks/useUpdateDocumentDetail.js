@@ -1,10 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { authState } from "../recoil/auth/auth";
 
 function useUpdateDocumentDetail() {
   const auth = useRecoilValue(authState);
+  const queryClient = useQueryClient();
 
   const updateDetailMutation = useMutation({
     mutationFn: async ({ docDetailId, status }) => {
@@ -12,7 +13,6 @@ function useUpdateDocumentDetail() {
         const response = await axios.put(
           `/api/docs-detail/${docDetailId}`,
           {
-            docDetailId: docDetailId,
             status: status,
           },
           {
@@ -30,6 +30,7 @@ function useUpdateDocumentDetail() {
     },
     onSuccess: (res) => {
       console.log("상태 변경 성공");
+      queryClient.invalidateQueries(["getDocumentDetail"]);
     },
   });
   return {

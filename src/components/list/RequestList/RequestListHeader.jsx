@@ -45,7 +45,7 @@ function RequestListHeader({ filterState, setFilterState, isReversed, setIsRever
           />
         </div>
         <div className="relative">
-          <button onClick={toggleFilter} className="flex items-center">
+          <button onClick={toggleFilter} className="flex items-center w-[70px]">
             <img src={filterIcon} className="mr-1" />
             {/* <p>{filterState || "상태"}</p> */}
             <p>{filterState ? statusMap[filterState] || "전체" : "전체"}</p>

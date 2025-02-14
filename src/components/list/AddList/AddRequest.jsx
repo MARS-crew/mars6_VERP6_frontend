@@ -1,101 +1,46 @@
 import React, { useEffect, useState } from "react";
 
+
 function AddRequest({onAddRequest}) {
-  const [file, setFile] = useState("");
-  const [kind, setKind] = useState("file");
-  const [url, setUrl] = useState("");
+  const [worker, setWoker] = useState("");
+  const [requestTilte, setrequestTilte] = useState("");
   const [content, setContent] = useState("");
 
-  const changeFile = (e) => {
-    setFile(e.target.files[0].name);
-  };
-
-  const changeKind = (e) => {
-    setKind(e.target.value);
-  };
-
-  useEffect(() => {}, [file]);
 
   const handleRegister = ()=>{
+
     onAddRequest({
-      filename: kind === "file" ? file : null,
-      url: kind === "url" ? url : null,
+      worker,
+      requestTilte,
       content,
     });
-    if (onSuccess) {
-      onSuccess(); //요청 성공 후 모달 닫기
-    }
   }
 
   return (
     <div className="w-[582px] h-[400px] rounded-lg shadow-lg bg-white mb-[2px] pt-[15px] pl-[27px]">
       <div className="text-xl font-semibold">요청하기</div>
       <div className="mt-[18px] flex text-sm font-semibold">
-        <div className="text-sm font-semibold mr-[43px]">
-          업로드할 서류 양식
+        <div className="text-sm font-semibold mr-[43px] w-[140px]">
+          담당자 이름
         </div>
-        <label className="mr-[62px]">
-          <input
-            className="mr-1"
-            type="radio"
-            name="kind"
-            value="file"
-            onChange={changeKind}
-          />
-          파일 업로드
-        </label>
-        <label>
-          <input
-            className="mr-1"
-            type="radio"
-            name="kind"
-            value="url"
-            onChange={changeKind}
-          />
-          주소 업로드
-        </label>
+        <input 
+          className="w-[132px] border-2 border-b-gray-200 border-t-white border-l-white border-r-white" 
+          placeholder="이름 입력" 
+          onChange={(e) => setWoker(e.target.value)}
+        />
       </div>
-      {kind == "file" ? (
-        <div className="mt-[18px] flex">
-          {/* <div className="text-sm font-semibold mr-[83px]">파일 업로드</div> */}
-          <div class="flex">
-            {/* <div className="w-[235px] h-[21px] border border-[#d9d9d9] text-xs flex items-center pl-1">
-              {file}
-            </div>
-            <label
-              className="w-[71px] h-[21px] bg-[#d9d9d9] text-xs text-center flex items-center justify-center"
-              for="file"
-            >
-              파일등록
-            </label>
-            <input
-              className="absolute hidden"
-              type="file"
-              id="file"
-              onChange={changeFile}
-            /> */}
-            <div className="mt-[18px] flex">
-                  <div className="text-sm font-semibold mr-[83px]">파일 업로드</div>
-                  <div className="flex">
-                      <input type="file" onChange={changeFile} />
-                  </div>
-            </div>
-          </div>
+      <div className="mt-[18px] flex text-sm font-semibold">
+        <div className="text-sm font-semibold mr-[43px] w-[140px]">
+          요청 제목
         </div>
-      ) : (
-        <div className="mt-[18px] flex">
-          <div className="text-sm font-semibold mr-[83px]">주소 업로드</div>
-          <input
-            className="w-[336px] h-[21px] border-b border-[#d9d9d9] text-xs"
-            placeholder="버전 입력"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-        </div>
-      )}
-
+        <input 
+          className="w-[266px] border-2 border-b-gray-200 border-t-white border-l-white border-r-white" 
+          placeholder="요청 제목을 입력해 주세요"  
+          onChange={(e) => setrequestTilte(e.target.value)}
+        />
+      </div>
       <div className="mt-[18px]">
-        <div className="text-sm font-semibold mb-[10px]">작업 내역</div>
+        <div className="text-sm font-semibold mb-[10px]">요청 사항</div>
         <textarea className="w-[527px] h-[151px] border-[#d9d9d9] rounded-lg border resize-none p-4" 
           value={content}
           onChange={(e) => setContent(e.target.value)}

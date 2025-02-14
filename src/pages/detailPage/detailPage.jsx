@@ -16,21 +16,14 @@ function DetailPage({ data, docTitle, docId }) {
   const [addRequest, setAddRequest] = useState(false);
   const [filterState, setFilterState] = useState(null); // 상태 필터 추가
   const [filteredRequests, setFilteredRequests] = useState([]);
-  const [selectedDocId, setSelectedDocId] = useState(null); // 선택된 docId 상태 추가
-  const [requestTitle, setRequestTilte] = useState("");
 
   const [filter, setFilter] = useState();
   const [selectDoc, setSelectDoc] = useState(null);
   const position = "leader";
-  const requestData = useRequest(selectedDocId); // 항상 호출됨
+  const docId = 32;
+  const requestData = useRequest(2); // 항상 호출됨
   const { request, isLoading, error, createRequestMutation } =
     requestData || {}; // 데이터 없을 때 기본값 설정
-
-  // const { request, isLoading, error, createRequestMutation } = selectedDocId
-  // ? useRequest(selectedDocId)
-  // : { request: null};
-
-  // console.log("docId",selectedDocId);
 
   useEffect(() => {
     if (!filterState) {
@@ -53,12 +46,6 @@ function DetailPage({ data, docTitle, docId }) {
 
   const handleRequestSuccess = () => {
     setAddRequest(false); //요청 성공 시 모달 닫기
-  };
-
-  const handleVersionClick = (docId) => {
-    console.log("handleVersionClick 실행됨, 선택된 docId:", docId.docId);
-    setSelectedDocId(docId.docId);
-    setRequestTilte(docId.fileName);
   };
 
   return (
@@ -102,7 +89,6 @@ function DetailPage({ data, docTitle, docId }) {
                     item={item}
                     position={position}
                     index={data.data.result.length - 1 - index}
-                    onClick={() => handleVersionClick(item.docId)}
                     setSelectDoc={setSelectDoc}
                   />
                 ))
@@ -115,24 +101,20 @@ function DetailPage({ data, docTitle, docId }) {
                     item={item}
                     position={position}
                     index={index}
-                    onClick={() => handleVersionClick(item)}
                   />
                 ))}
         </div>
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
-            <p
-              className="font-bold text-xl truncate"
-              style={{ width: "500px", maxWidth: "500px" }}
-            >
-              작업 요청
-            </p>
-            <p
-              onClick={addRequestModal}
-              className="font-normal text-sm my-auto text-[#7C838A]"
-            >
-              요청하기
-            </p>
+            <p className="font-bold text-xl">작업 요청</p>
+            {position == "leader" ? (
+              <p
+                onClick={addRequestModal}
+                className="font-normal text-sm my-auto text-[#7C838A]"
+              >
+                요청하기
+              </p>
+            ) : null}
           </div>
           <RequestListHeader
             filterState={filterState}
@@ -144,6 +126,20 @@ function DetailPage({ data, docTitle, docId }) {
               onSuccess={handleRequestSuccess}
             />
           ) : null}
+          {filteredRequests
+            ? filteredRequests?.map((item, index) => (
+                <RequestList
+                  key={index}
+                  no={index} // 항목의 번호
+                  retitle={item.title} // 파일 이름
+                  date={item.createdAt} // 날짜
+                  worker={item.assignee} // 작업자
+                  content={item.content} // 내용
+                  state={item.status} // 상태
+                  reqId={item.reqId}
+                />
+              ))
+            : null}
           {filteredRequests
             ? filteredRequests?.map((item, index) => (
                 <RequestList

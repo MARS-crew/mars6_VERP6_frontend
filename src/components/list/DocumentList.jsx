@@ -9,6 +9,7 @@ import useDocument from "../../hooks/useDocument";
 import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
 import useDocTypeDelete from "../../hooks/useDocTypeDelete";
 import { useQueryClient } from "@tanstack/react-query";
+// 이거 import { useAlert } from "../../hooks/usealertIcon";
 
 // const INITIAL_ITEMS = (inputValue) => ({
 //   name: inputValue,
@@ -19,6 +20,9 @@ import { useQueryClient } from "@tanstack/react-query";
 //   state: true,
 //   docId: null
 // });
+
+//handleclick으로 여기서 알림 읽기 호출하는게 좋을거 같다? 라고 생각 하고 있는중 
+
 function DocumentList({ id, initialTitle, isNew }) {
   const [isDeleted, setIsDeleted] = useState(false);
   const [showModifyModal, setShowModifyModal] = useState(false);
@@ -27,6 +31,7 @@ function DocumentList({ id, initialTitle, isNew }) {
     showValidator: false,
   });
   const [showInput, setShowInput] = useState(false);
+  // 이거 const { readDoc } = useAlert();
 
   const {
     document,
@@ -117,6 +122,11 @@ function DocumentList({ id, initialTitle, isNew }) {
     });
   };
 
+  //이거
+  // const handleReadDocument = (docId) =>{
+  //   readDoc.mutate(docId);
+  // }
+
   const handleDocumentCreated = async (createdDoc) => {
     try {
       await queryClient.invalidateQueries({
@@ -200,6 +210,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                   }}
                   isLast={idx === documents.length - 1}
                   docTypeId={id}
+                  // 이거 onClick={() => handleReadDocument(doc.docId)}
                   onRemove={handleRemoveDocument}
                 />
               ))}

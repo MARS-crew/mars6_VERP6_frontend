@@ -35,34 +35,17 @@ export function useRequest(docId){
     const createRequestMutation  = useMutation({
       mutationFn : async (mRequest) =>{
           try{
-            let fileUrl = null;
-
-            if (mRequest.file) {
-              // MinIO에서 Presigned URL 요청
-              const { presignedUrl, generatedFileName } = await getPresignedUrl();
-              
-              // Presigned URL을 통해 MinIO에 파일 업로드
-              await uploadFileToPresignedUrl(presignedUrl, mRequest.file);
-
-              fileUrl = generatedFileName; // MinIO에 업로드된 파일 URL 저장
-            }
-
             const params = new URLSearchParams();
             params.append("docId", Number(docId)); // 숫자로 변환
-            if (mRequest.filename) {
-              params.append("originalFileName", mRequest.filename);
-            }
-            if (fileUrl) {
-              params.append("externalUrl", fileUrl); // MinIO 파일 URL 추가
-            }
-            if (mRequest.url) {
-              params.append("externalUrl", mRequest.url);
-            }
             console.log("현재 토큰", auth.token);
             console.log("params: ",params.toString())
               const response = await axiosInstance.post(
-                `/doc-request/create?${params.toString()}`,
-                  {content: mRequest.content},
+                `/doc-request/${docId}`,
+                  {
+                    title: mRequest.requestTilte,
+                    content: mRequest.content,
+                    assignee : mRequest.worker
+                  },
                   {
                     headers: {
                       //Authorization: `Bearer ${auth.token}`,

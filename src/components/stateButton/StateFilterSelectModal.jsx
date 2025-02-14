@@ -1,7 +1,7 @@
 import React from "react";
 import StateFilterButton from "./StateFilterButton";
 
-const config = ["ALL","REQUESTED", "IN_PROGRESS", "COMPLETED", "CANCELED"];
+const config = ["ALL","PENDING", "IN_PROGRESS", "COMPLETED"];
 function StateFilterSelectModal({ onStateChange }) {
 
   const handleClick = (item) => {

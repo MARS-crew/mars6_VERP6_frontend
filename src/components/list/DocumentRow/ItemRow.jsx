@@ -13,13 +13,13 @@ import ListDeleteModal from "../../Modal/ListDeleteModal";
 import DocumentListInput from "../../Input/DocumentListInput";
 import { useAlert } from "../../../hooks/usealertIcon";
 
-function ItemRow({ item, isLast, docTypeId, onRemove }) {
+function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(item.name);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { updateDocument, isLoading: isUpdating } = useDocumentUpdate();
   const { deleteDocument, isLoading: isDeleting } = useDocumentDelete();
-  const isempty = item.state;
+
   const inrequtes = Number(item.inProgressRequestStep);
   const completrequest = Number(item.inProgressRequestStep);
   const cancelrequest = Number(item.canceledRequestStep);
@@ -30,7 +30,10 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
     ((completrequest + cancelrequest + inrequtes) / totalrequest) * 100;
 
   const docId = item.docId;
-  const { check } = useAlert(docId);
+  const { data } = useAlert(docId);
+  const alert = data ? data.result : false;
+  // console.log(alert)
+  console.log("check :", data);
   const navigate = useNavigate();
 
   const handleUpdateClick = () => {
@@ -134,6 +137,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
   return (
     <>
       <div
+        onClick={onClick}
         className={`mb-6 mt-[19px] pb-6 ${
           !isLast && "border-b border-[#B4B4B4]"
         } last:mb-0 mr-[20px]`}
@@ -206,12 +210,12 @@ function ItemRow({ item, isLast, docTypeId, onRemove }) {
                 ) : (
                   <>
                     {item.name}
-                    {isempty && (
+                    {alert ? (
                       <img
                         className="ml-[10px] mt-[5px] h-[16px]"
                         src={BellIcon}
                       />
-                    )}
+                    ) : null}
                   </>
                 )}
               </div>

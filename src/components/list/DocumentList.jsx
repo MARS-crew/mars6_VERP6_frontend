@@ -12,6 +12,7 @@ import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
 import useDocTypeDelete from "../../hooks/useDocTypeDelete";
 import { useQueryClient } from "@tanstack/react-query";
 import StateButton from "../stateButton/StateButton";
+import { useAlert } from "../../hooks/usealertIcon";
 
 // const INITIAL_ITEMS = (inputValue) => ({
 //   name: inputValue,

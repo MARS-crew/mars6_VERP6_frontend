@@ -10,6 +10,8 @@ import AddVersion from "../../components/list/AddList/AddVersion";
 import AddRequest from "../../components/list/AddList/AddRequest";
 import { useRequest } from "../../hooks/uesRequestList";
 import { useSearchParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../recoil/auth/auth";
 
 function DetailPage({ data, docTitle, docId }) {
   const [addModal, setAddModal] = useState(false);
@@ -21,6 +23,9 @@ function DetailPage({ data, docTitle, docId }) {
   const [filter, setFilter] = useState();
   const position = "leader";
   const requestData = useRequest(docId); // 항상 호출됨
+
+  const auth = useRecoilValue(authState);
+  const isTeamLeader = auth.user?.role === "TEAM_LEADER";
   const { request, isLoading, error, createRequestMutation } =
     requestData || {}; // 데이터 없을 때 기본값 설정
 
@@ -107,7 +112,7 @@ function DetailPage({ data, docTitle, docId }) {
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
             <p className="font-bold text-xl">작업 요청</p>
-            {position == "leader" ? (
+            {isTeamLeader == "TEAM_LEADER" ? (
               <p
                 onClick={addRequestModal}
                 className="font-normal text-sm my-auto text-[#7C838A]"

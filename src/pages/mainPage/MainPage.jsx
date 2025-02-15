@@ -20,9 +20,7 @@ function MainPage() {
   }, []);
 
   const handleAddDocument = () => {
-    if (documents.length === 0) {
-      setDocuments([Date.now()]);
-    }
+    setDocuments([Date.now()]);
   };
 
   const handleRemoveDocument = (id) => {

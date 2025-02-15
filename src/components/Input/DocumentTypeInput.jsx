@@ -35,6 +35,13 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
     return isValidLength && isValidChar;
   };
 
+  const handleCancel = () => {
+    resetDocument();
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
   const handleBlur = async () => {
     if (!title.trim()) {
       if (isNew) {
@@ -42,10 +49,7 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
           ...old,
           result: old?.result?.filter(doc => doc.id) || []
         }));
-        resetDocument();
-        if (onCancel) {
-          onCancel();
-        }
+        handleCancel();
       }
       return;
     }
@@ -71,6 +75,8 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
       e.preventDefault();
       validateInput(title);
       e.target.blur();
+    } else if (e.key === 'Escape') {
+      handleCancel();
     }
   };
 

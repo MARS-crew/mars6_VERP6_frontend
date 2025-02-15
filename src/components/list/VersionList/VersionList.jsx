@@ -7,11 +7,13 @@ import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
 import CopyIcon from "../../../assets/svg/Copy.svg";
 import StateButton from "../../stateButton/StateButton";
 import { formatDate } from "../../../utils/formatDate";
+import VersionStatus from "../../stateButton/versionStatus";
 
 function VersionList({ position, item, index, onClick }) {
   const [modalState, setModalState] = useState(false);
   const { getDownloadUrl } = useGetDownloadFile();
   const [downloadUrl, setDownloadUrl] = useState();
+  const [statusModal, setStatusModal] = useState(false);
 
   useEffect(() => {
     fetchDownloadUrl();
@@ -31,6 +33,10 @@ function VersionList({ position, item, index, onClick }) {
 
   const handleModal = () => {
     setModalState(!modalState);
+  };
+
+  const handleStatusModal = () => {
+    setStatusModal(!statusModal);
   };
 
   return (
@@ -57,7 +63,14 @@ function VersionList({ position, item, index, onClick }) {
         <div className="w-[75px] text-center mr-[30px]">
           {formatDate(item.createdAt, "short")}
         </div>
-        <StateButton state={item.status} />
+        <StateButton onClick={handleStatusModal} state={item.status} />
+        {statusModal ? (
+          <VersionStatus
+            docDetailId={item.docDetailId}
+            setStatusModal={setStatusModal}
+            statusModal={statusModal}
+          />
+        ) : null}
       </div>
       {modalState ? (
         <div className="mx-[21px] mt-[21px]">

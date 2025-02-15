@@ -30,13 +30,4 @@ function StateButton({ state, onClick, count }) {
   );
 }
 
-/*
-PENDING - 대기
-IN_PROGRESS - 진행
-COMPLETED - 완료
-APPROVED - 승인
-CHECKED - 검토
-REJECTED - 거절
-*/
-
 export default StateButton;

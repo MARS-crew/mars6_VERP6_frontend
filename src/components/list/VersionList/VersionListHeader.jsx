@@ -2,7 +2,7 @@ import React from "react";
 import AlignDownIcon from "../../../assets/svg/AlignDown.svg";
 import AlignUpIcon from "../../../assets/svg/FilterUp.svg";
 
-function VersionListHeader({ position, filter, setFilter }) {
+function VersionListHeader({ filter, setFilter }) {
   const filterState = () => {
     setFilter(!filter);
   };

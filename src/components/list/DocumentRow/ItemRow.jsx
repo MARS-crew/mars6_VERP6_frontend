@@ -250,6 +250,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
                   className="hover:text-gray-700"
                   onClick={handleUpdateClick}
                   disabled={isUpdating}
+                  title="문서 수정하기"
                 >
                   <span>
                     <img className="h-[20px] w-[20px]" src={UpdateIcon} />
@@ -259,6 +260,7 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
                   className="hover:text-gray-700"
                   onClick={handleDeleteClick}
                   disabled={isDeleting}
+                  title="문서 삭제하기"
                 >
                   <span>
                     <img className="h-[20px] w-[20px]" src={DeletIcon} />

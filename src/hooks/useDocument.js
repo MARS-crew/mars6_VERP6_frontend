@@ -55,6 +55,10 @@ function useDocument(documentId) {
         queryClient.invalidateQueries(['docTypeDocuments', newDocId]);
       }
 
+      window.dispatchEvent(new CustomEvent('showToast', {
+        detail: { message: '문서 타입이 생성되었습니다.' }
+      }));
+
       window.dispatchEvent(new CustomEvent('docTypeCreated', {
         detail: { id: documentId }
       }));

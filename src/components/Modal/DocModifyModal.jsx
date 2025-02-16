@@ -5,8 +5,8 @@ import useDocTypeDelete from '../../hooks/useDocTypeDelete';
 function ModifyButton({ onClick, children }) {
   return (
     <button
-      onClick = {onClick}
-      className = "w-[72px] h-[68px] text-[20px] font-medium text-black"
+      onClick={onClick}
+      className="w-[72px] h-[68px] text-[20px] font-medium text-black"
     >
       {children}
     </button>
@@ -17,6 +17,19 @@ function DocModifyModal({ onClose, onDelete, onModify, docTypeId }) {
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { deleteDocType, isLoading } = useDocTypeDelete();
+
+  const showToastMessage = () => {
+    const event = new CustomEvent('showToast', {
+      detail: { message: '문서 타입이 삭제되었습니다.' }
+    });
+    window.dispatchEvent(event);
+
+    setTimeout(() => {
+      onDelete();
+      setShowDeleteModal(false);
+      onClose();
+    }, 3000);
+  };
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget && !showDeleteModal) {
@@ -49,10 +62,7 @@ function DocModifyModal({ onClose, onDelete, onModify, docTypeId }) {
       const result = await deleteDocType(docTypeId);
       
       if (result.isSuccess) {
-        alert('문서 타입이 성공적으로 삭제되었습니다.');
-        onDelete();
-        setShowDeleteModal(false);
-        onClose();
+        showToastMessage();
       }
     } catch (error) {
       console.error('[문서 타입 삭제 에러]', error);

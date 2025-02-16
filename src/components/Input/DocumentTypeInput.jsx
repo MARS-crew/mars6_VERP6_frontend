@@ -4,7 +4,7 @@ import DocTypeValidator from '../Validator/DocTypeValidator';
 import DocValidator from '../Validator/DocValidator';
 import { useQueryClient } from '@tanstack/react-query';
 
-function DocumentTypeInput({ documentId, isNew, onCancel }) {
+function DocumentTypeInput({ documentId, isNew, onCancel, onCreated }) {
   const { createDocument, updateDocument, resetDocument, isLoading, error, document, setDocument } = useDocument(documentId);
   const [title, setTitle] = useState('');
   const queryClient = useQueryClient();
@@ -35,6 +35,13 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
     return isValidLength && isValidChar;
   };
 
+  const handleCancel = () => {
+    resetDocument();
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
   const handleBlur = async () => {
     if (!title.trim()) {
       if (isNew) {
@@ -42,10 +49,7 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
           ...old,
           result: old?.result?.filter(doc => doc.id) || []
         }));
-        resetDocument();
-        if (onCancel) {
-          onCancel();
-        }
+        handleCancel();
       }
       return;
     }
@@ -59,6 +63,9 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
         }
       } else {
         await createDocument(title);
+        if (onCreated) {
+          onCreated();
+        }
         if (onCancel) {
           onCancel();
         }
@@ -71,6 +78,8 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
       e.preventDefault();
       validateInput(title);
       e.target.blur();
+    } else if (e.key === 'Escape') {
+      handleCancel();
     }
   };
 
@@ -101,7 +110,7 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
           )}
         </>
       ) : (
-        <div className="text-[28px]">{document.title}</div>
+        <div className="text-[28px] font-medium">{document.title}</div>
       )}
     </div>
   );

@@ -52,7 +52,8 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
     COMPLETED: 0
   };
 
-  const handleUpdateClick = () => {
+  const handleUpdateClick = (e) => {
+    e.stopPropagation();
     setIsEditing(true);
   };
 
@@ -60,7 +61,8 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
     setEditValue(e.target.value);
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
     setShowDeleteModal(true);
   };
 

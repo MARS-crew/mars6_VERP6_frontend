@@ -222,11 +222,11 @@ function ItemRow({ item, isLast, docTypeId, onRemove, onClick }) {
             </div>
             <div className="flex items-center justify-between text-sm text-gray-500">
               <div
-                className="w-[150px] flex items-center text-black text-[20px] font-medium truncate"
+                className="w-[150px] flex items-center text-black text-[20px] font-medium overflow-hidden"
                 title={item.fileLink}
                 onClick={handleClick}
               >
-                <span>{item.fileLink}</span>
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap w-full">{item.fileLink}</span>
               </div>
               <span className="text-[20px]">{item.updated}</span>
               <div className="flex gap-10 items-center">

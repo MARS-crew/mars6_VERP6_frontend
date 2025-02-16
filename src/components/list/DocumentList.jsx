@@ -13,6 +13,7 @@ import useDocTypeDelete from "../../hooks/useDocTypeDelete";
 import { useQueryClient } from "@tanstack/react-query";
 import StateButton from "../stateButton/StateButton";
 import { useAlert } from "../../hooks/usealertIcon";
+import { createPortal } from "react-dom";
 
 // const INITIAL_ITEMS = (inputValue) => ({
 //   name: inputValue,
@@ -43,6 +44,8 @@ function DocumentList({ id, initialTitle, isNew }) {
     IN_PROGRESS: 0,
     COMPLETED: 0,
   });
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const {
     document,
@@ -181,6 +184,7 @@ function DocumentList({ id, initialTitle, isNew }) {
       
       setCurrentInput({ value: '', showValidator: false });
       setShowInput(false);
+      showToastMessage("문서 타입이 생성되었습니다.");
     } catch (error) {
       console.error('[문서 목록 갱신 실패]', {
         error,
@@ -202,6 +206,20 @@ function DocumentList({ id, initialTitle, isNew }) {
     queryClient.invalidateQueries(["docTypeDocuments", id]);
   };
 
+  const showToastMessage = (message) => {
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      `<div id="toast-message" class="fixed top-10 right-10 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50">${message}</div>`
+    );
+
+    setTimeout(() => {
+      const toast = document.getElementById('toast-message');
+      if (toast) {
+        toast.remove();
+      }
+    }, 3000);
+  };
+
   if (isDocLoading || isDocsLoading) {
     return <div>로딩 중...</div>;
   }
@@ -211,102 +229,106 @@ function DocumentList({ id, initialTitle, isNew }) {
   }
 
   return (
-    <div className="w-[1194px] bg-white rounded-[8px] shadow-[0_0_2px_2px_rgba(0,0,0,0.10)] relative min-h-[230px] pb-[60px]">
-      {!isNew && (
-        <div className="absolute top-[32px] right-[6px]">
-          <img
-            src={moreIcon}
-            alt="more"
-            className="cursor-pointer w-[32px] h-[32px]"
-            onClick={handleMoreClick}
-          />
-          {showModifyModal && (
-            <div className="absolute top-[40px] right-[20px] z-[100]">
-              <DocModifyModal
-                onClose={handleCloseModal}
-                onDelete={handleDelete}
-                onModify={handleModify}
-                docTypeId={document.id}
+    <>
+      {!isDeleted && (
+        <div className="w-[1194px] bg-white rounded-[8px] shadow-[0_0_2px_2px_rgba(0,0,0,0.10)] relative min-h-[230px] pb-[60px]">
+          {!isNew && (
+            <div className="absolute top-[32px] right-[6px]">
+              <img
+                src={moreIcon}
+                alt="more"
+                className="cursor-pointer w-[32px] h-[32px]"
+                onClick={handleMoreClick}
               />
+              {showModifyModal && (
+                <div className="absolute top-[40px] right-[20px] z-[100]">
+                  <DocModifyModal
+                    onClose={handleCloseModal}
+                    onDelete={handleDelete}
+                    onModify={handleModify}
+                    docTypeId={document.id}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+          <div>
+            <DocumentTypeInput 
+              documentId={id} 
+              isNew={isNew} 
+              onCancel={() => {
+                if (isNew) {
+                  setIsDeleted(true);
+                }
+                setDocument(prev => ({
+                  ...prev,
+                  isEditing: false
+                }));
+              }}
+            />
+            {document?.title && !document?.isEditing && (
+              <>
+                <div className="mt-4">
+                  <div className="pl-[20px] space-y-4">
+                    {Array.isArray(documents) && documents.map((doc, idx) => (
+                      <ItemRow
+                        key={doc.docId}
+                        item={{
+                          docId: doc.docId,
+                          name: doc.title,
+                          fileLink: `${doc.title}.ppt`,
+                          completedRequestStep: doc.completedRequestStep || 0,
+                          inProgressRequestStep: doc.inProgressRequestStep || 0,
+                          pendingRequestStep: doc.pendingRequestStep || 0,
+                          checkedRequestStep: doc.checkedRequestStep || 0,
+                          rejectedRequestStep: doc.rejectedRequestStep || 0,
+                          approvedRequestStep: doc.approvedRequestStep || 0,
+                          canceledRequestStep: doc.canceledRequestStep || 0,
+                          totalRequestStep: doc.totalRequestStep|| 0,
+                          updated: doc.timeAgo || "방금 전",
+                          state: true,
+                        }}
+                        isLast={idx === documents.length - 1}
+                        docTypeId={id}
+                        onClick={() => handleReadDocument(doc.docId)}
+                        onRemove={handleRemoveDocument}
+                      />
+                    ))}
+                  </div>
+                  {showInput && (
+                    <div className="pl-[20px] mb-4">
+                      <DocumentListInput
+                        value={currentInput.value}
+                        onChange={handleListInputChange}
+                        onKeyDown={handlelistKeyDown}
+                        docTypeId={currentDocTypeId}
+                        onDocumentCreated={handleDocumentCreated}
+                        onCancel={() => setShowInput(false)}
+                      />
+                      {currentInput.showValidator && (
+                        <div className="mt-2">
+                          <DocTypeValidator />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+          {document?.title && !document?.isEditing && (
+            <div className="absolute bottom-[18px] left-0 w-full flex justify-center">
+              <span
+                className="text-[30px] text-[#8E98A8] leading-[30px] cursor-pointer"
+                onClick={handleAddList}
+              >
+                +
+              </span>
             </div>
           )}
         </div>
       )}
-      <div>
-        <DocumentTypeInput 
-          documentId={id} 
-          isNew={isNew} 
-          onCancel={() => {
-            if (isNew) {
-              setIsDeleted(true);
-            }
-            setDocument(prev => ({
-              ...prev,
-              isEditing: false
-            }));
-          }}
-        />
-        {document?.title && !document?.isEditing && (
-          <>
-            <div className="mt-4">
-              <div className="pl-[20px] space-y-4">
-                {Array.isArray(documents) && documents.map((doc, idx) => (
-                  <ItemRow
-                    key={doc.docId}
-                    item={{
-                      docId: doc.docId,
-                      name: doc.title,
-                      fileLink: `${doc.title}.ppt`,
-                      completedRequestStep: doc.completedRequestStep || 0,
-                      inProgressRequestStep: doc.inProgressRequestStep || 0,
-                      pendingRequestStep: doc.pendingRequestStep || 0,
-                      checkedRequestStep: doc.checkedRequestStep || 0,
-                      rejectedRequestStep: doc.rejectedRequestStep || 0,
-                      approvedRequestStep: doc.approvedRequestStep || 0,
-                      canceledRequestStep: doc.canceledRequestStep || 0,
-                      totalRequestStep: doc.totalRequestStep|| 0,
-                      updated: doc.timeAgo || "방금 전",
-                      state: true,
-                    }}
-                    isLast={idx === documents.length - 1}
-                    docTypeId={id}
-                    onClick={() => handleReadDocument(doc.docId)}
-                    onRemove={handleRemoveDocument}
-                  />
-                ))}
-              </div>
-              {showInput && (
-                <div className="pl-[20px] mb-4">
-                  <DocumentListInput
-                    value={currentInput.value}
-                    onChange={handleListInputChange}
-                    onKeyDown={handlelistKeyDown}
-                    docTypeId={currentDocTypeId}
-                    onDocumentCreated={handleDocumentCreated}
-                    onCancel={() => setShowInput(false)}
-                  />
-                  {currentInput.showValidator && (
-                    <div className="mt-2">
-                      <DocTypeValidator />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-      {document?.title && !document?.isEditing && (
-        <div className="absolute bottom-[18px] left-0 w-full flex justify-center">
-          <span
-            className="text-[30px] text-[#8E98A8] leading-[30px] cursor-pointer"
-            onClick={handleAddList}
-          >
-            +
-          </span>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 

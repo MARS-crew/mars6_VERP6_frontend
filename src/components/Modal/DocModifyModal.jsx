@@ -5,8 +5,8 @@ import useDocTypeDelete from '../../hooks/useDocTypeDelete';
 function ModifyButton({ onClick, children }) {
   return (
     <button
-      onClick = {onClick}
-      className = "w-[72px] h-[68px] text-[20px] font-medium text-black"
+      onClick={onClick}
+      className="w-[72px] h-[68px] text-[20px] font-medium text-black"
     >
       {children}
     </button>
@@ -16,7 +16,27 @@ function ModifyButton({ onClick, children }) {
 function DocModifyModal({ onClose, onDelete, onModify, docTypeId }) {
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const { deleteDocType, isLoading } = useDocTypeDelete();
+
+  const showToastMessage = () => {
+    setShowToast(true);
+
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<div id="toast-message" class="fixed top-10 right-10 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50">문서 타입이 삭제되었습니다.</div>'
+    );
+
+    setTimeout(() => {
+      const toast = document.getElementById('toast-message');
+      if (toast) {
+        toast.remove();
+      }
+      onDelete();
+      setShowDeleteModal(false);
+      onClose();
+    }, 3000);
+  };
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget && !showDeleteModal) {
@@ -49,10 +69,7 @@ function DocModifyModal({ onClose, onDelete, onModify, docTypeId }) {
       const result = await deleteDocType(docTypeId);
       
       if (result.isSuccess) {
-        alert('문서 타입이 성공적으로 삭제되었습니다.');
-        onDelete();
-        setShowDeleteModal(false);
-        onClose();
+        showToastMessage();
       }
     } catch (error) {
       console.error('[문서 타입 삭제 에러]', error);

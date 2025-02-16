@@ -107,7 +107,7 @@ function DocumentTypeInput({ documentId, isNew, onCancel }) {
           )}
         </>
       ) : (
-        <div className="text-[28px]">{document.title}</div>
+        <div className="text-[28px] font-medium">{document.title}</div>
       )}
     </div>
   );

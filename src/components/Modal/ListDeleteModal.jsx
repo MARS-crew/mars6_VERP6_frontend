@@ -1,9 +1,23 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import DeleteButton from '../Button/DeleteButton';
 import warningIcon from '../../assets/warning-icon.svg';
 
 function ListDeleteModal({ onDelete, onCancel }) {
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = `-${scrollY}px`;
+    
+    return () => {
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
   const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget) {
       onCancel();

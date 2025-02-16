@@ -63,7 +63,9 @@ function VersionList({ position, item, index, onClick }) {
         <div className="w-[75px] text-center mr-[30px]">
           {formatDate(item.createdAt, "short")}
         </div>
+        <div title="상태 변경하기">
         <StateButton onClick={handleStatusModal} state={item.status} />
+        </div>
         {statusModal ? (
           <VersionStatus
             docDetailId={item.docDetailId}

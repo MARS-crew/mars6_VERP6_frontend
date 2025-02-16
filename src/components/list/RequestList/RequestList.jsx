@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DownloadIcon from "../../../assets/svg/Download.svg";
 import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
@@ -13,6 +13,8 @@ function RequestList({ no, retitle, state:initialState, date, worker,content,req
   const [selectModal, setSelectModal] = useState(false);
   const [state, setState] = useState(initialState); // 상태 관리 추가
   const { updateStatus } = useRequestStatus({ reqId }); // useRequestStatus 추가
+
+  const modalRef = useRef(null);
 
   useEffect(() => {
     setState(initialState);
@@ -33,6 +35,20 @@ function RequestList({ no, retitle, state:initialState, date, worker,content,req
     await updateStatus.mutateAsync(newState); //상태 업데이트
   };
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setSelectModal(false);
+      }
+    }
+    if (selectModal) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [selectModal]);
+
   return (
     <div className="w-[582px] bg-white rounded-lg items-center justify-center pt-[22px] drop-shadow-lg mb-[2px]">
       <div className="h-6 flex place-content-between items-center ml-[20px] mr-[25px] text-[15px] ">
@@ -46,7 +62,7 @@ function RequestList({ no, retitle, state:initialState, date, worker,content,req
           { retitle }
         </div>
         <div className="text-center mr-[10px]">{date}</div>
-        <div className="mr-[50px]">
+        <div className="mr-[50px]" title="상태 변경하기" ref={modalRef}>
           <StateButton onClick={handleSelectStateModal} state={state} showAll={true} />
           {selectModal ? (
             <StateSelectModal onStateChange={handleStateChange} />

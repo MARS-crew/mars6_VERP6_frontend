@@ -20,6 +20,8 @@ function DetailPage({ data, docTitle, docId }) {
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [isReversed, setIsReversed] = useState(true);
 
+  const [showAlert, setShowAlert] = useState(false);
+
   const [filter, setFilter] = useState();
   const position = "leader";
   const requestData = useRequest(docId); // 항상 호출됨
@@ -30,6 +32,13 @@ function DetailPage({ data, docTitle, docId }) {
     requestData || {}; // 데이터 없을 때 기본값 설정
 
   console.log(isTeamLeader);
+
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => setShowAlert(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showAlert]);
 
   useEffect(() => {
     if (!request) return;
@@ -55,6 +64,7 @@ function DetailPage({ data, docTitle, docId }) {
 
   const handleRequestSuccess = () => {
     setAddRequest(false); // 요청 성공 후 모달 닫기
+    setShowAlert(true);
   };
 
   return (
@@ -153,7 +163,14 @@ function DetailPage({ data, docTitle, docId }) {
             : null}
         </div>
       </div>
+      {showAlert && (
+        <div className="fixed top-10 right-10 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg left-[50%] right-[35%]">
+          요청이 성공적으로 생성되었습니다!
+        </div>
+      )}
     </div>
+
+    
   );
 }
 

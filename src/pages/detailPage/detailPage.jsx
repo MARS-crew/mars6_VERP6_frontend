@@ -168,7 +168,7 @@ function DetailPage({ data, docTitle, docId }) {
         </div>
       </div>
       {showAlert && (
-        <div className="fixed top-10 right-10 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg">
+        <div className="fixed top-10 right-10 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg left-[50%] right-[35%]">
           요청이 성공적으로 생성되었습니다!
         </div>
       )}

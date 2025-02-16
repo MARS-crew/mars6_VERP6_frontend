@@ -16,22 +16,15 @@ function ModifyButton({ onClick, children }) {
 function DocModifyModal({ onClose, onDelete, onModify, docTypeId }) {
   const [selectedButton, setSelectedButton] = useState('수정');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showToast, setShowToast] = useState(false);
   const { deleteDocType, isLoading } = useDocTypeDelete();
 
   const showToastMessage = () => {
-    setShowToast(true);
-
-    document.body.insertAdjacentHTML(
-      'beforeend',
-      '<div id="toast-message" class="fixed top-10 right-10 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50">문서 타입이 삭제되었습니다.</div>'
-    );
+    const event = new CustomEvent('showToast', {
+      detail: { message: '문서 타입이 삭제되었습니다.' }
+    });
+    window.dispatchEvent(event);
 
     setTimeout(() => {
-      const toast = document.getElementById('toast-message');
-      if (toast) {
-        toast.remove();
-      }
       onDelete();
       setShowDeleteModal(false);
       onClose();

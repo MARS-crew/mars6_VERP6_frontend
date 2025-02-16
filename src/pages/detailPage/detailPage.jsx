@@ -29,20 +29,21 @@ function DetailPage({ data, docTitle, docId }) {
   const { request, isLoading, error, createRequestMutation } =
     requestData || {}; // 데이터 없을 때 기본값 설정
 
-  
-  console.log(isTeamLeader)
+  console.log(isTeamLeader);
 
   useEffect(() => {
     if (!request) return;
-    let sortedRequests = [...request]; 
+    let sortedRequests = [...request];
     if (filterState) {
-      sortedRequests = sortedRequests.filter((item) => item.status === filterState);
+      sortedRequests = sortedRequests.filter(
+        (item) => item.status === filterState
+      );
     }
     if (isReversed) {
       sortedRequests.reverse();
     }
     setFilteredRequests(sortedRequests);
-  }, [filterState, request,isReversed]); // filterState나 request 변경 시 실행
+  }, [filterState, request, isReversed]); // filterState나 request 변경 시 실행
 
   const addModalState = () => {
     setAddModal(!addModal);
@@ -74,11 +75,7 @@ function DetailPage({ data, docTitle, docId }) {
               </div>
             ) : null}
           </div>
-          <VersionListHeader
-            position={position}
-            filter={filter}
-            setFilter={setFilter}
-          />
+          <VersionListHeader filter={filter} setFilter={setFilter} />
           {addModal ? (
             <AddVersion
               setAddModal={setAddModal}
@@ -97,7 +94,6 @@ function DetailPage({ data, docTitle, docId }) {
                     item={item}
                     position={position}
                     index={data.data.result.length - 1 - index}
-                    setSelectDoc={setSelectDoc}
                   />
                 ))
             : data &&
@@ -115,7 +111,7 @@ function DetailPage({ data, docTitle, docId }) {
         <div className="mt-[30px]">
           <div className="flex place-content-between mb-[30px]">
             <p className="font-bold text-xl">작업 요청</p>
-            {isTeamLeader? (
+            {isTeamLeader ? (
               <p
                 onClick={addRequestModal}
                 className="font-normal text-sm my-auto text-[#7C838A]"
@@ -127,22 +123,22 @@ function DetailPage({ data, docTitle, docId }) {
           <RequestListHeader
             filterState={filterState}
             setFilterState={setFilterState}
-            isReversed={isReversed} 
-            setIsReversed={setIsReversed} 
+            isReversed={isReversed}
+            setIsReversed={setIsReversed}
           />
           {addRequest ? (
             <AddRequest
-            onAddRequest={(requestData) => {
-              createRequestMutation.mutate(requestData, {
-                onSuccess: () => {
-                  handleRequestSuccess(); // ✅ 요청 성공 후 모달 닫기
-                },
-              });
-            }}
-          />
+              onAddRequest={(requestData) => {
+                createRequestMutation.mutate(requestData, {
+                  onSuccess: () => {
+                    handleRequestSuccess(); // ✅ 요청 성공 후 모달 닫기
+                  },
+                });
+              }}
+            />
           ) : null}
           {filteredRequests
-            ?  filteredRequests.map((item, index) => (
+            ? filteredRequests.map((item, index) => (
                 <RequestList
                   key={index}
                   no={index} // 항목의 번호

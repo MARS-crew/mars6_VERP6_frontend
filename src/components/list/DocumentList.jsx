@@ -173,26 +173,14 @@ function DocumentList({ id, initialTitle, isNew }) {
     readDoc.mutate(docId);
   }
 
-  const handleDocumentCreated = async (createdDoc) => {
-    try {
-      await queryClient.invalidateQueries({
-        queryKey: ['docTypeDocuments', currentDocTypeId],
-        exact: true
-      });
-      
-      const result = await refetchDocuments();
-      
-      setCurrentInput({ value: '', showValidator: false });
-      setShowInput(false);
-      showToastMessage("문서 타입이 생성되었습니다.");
-    } catch (error) {
-      console.error('[문서 목록 갱신 실패]', {
-        error,
-        currentDocTypeId,
-        documentId: document?.id
-      });
-      alert('문서가 생성되었지만 목록을 갱신하는데 실패했습니다.');
+  const handleDocTypeCreated = () => {
+    if (isNew) {
+      setIsDeleted(true);
     }
+    setDocument(prev => ({
+      ...prev,
+      isEditing: false
+    }));
   };
 
   const handlelistKeyDown = (e) => {
@@ -204,20 +192,6 @@ function DocumentList({ id, initialTitle, isNew }) {
 
   const handleRemoveDocument = (docId) => {
     queryClient.invalidateQueries(["docTypeDocuments", id]);
-  };
-
-  const showToastMessage = (message) => {
-    document.body.insertAdjacentHTML(
-      'beforeend',
-      `<div id="toast-message" class="fixed top-10 right-10 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50">${message}</div>`
-    );
-
-    setTimeout(() => {
-      const toast = document.getElementById('toast-message');
-      if (toast) {
-        toast.remove();
-      }
-    }, 3000);
   };
 
   if (isDocLoading || isDocsLoading) {
@@ -265,6 +239,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                   isEditing: false
                 }));
               }}
+              onCreated={handleDocTypeCreated}
             />
             {document?.title && !document?.isEditing && (
               <>
@@ -302,7 +277,7 @@ function DocumentList({ id, initialTitle, isNew }) {
                         onChange={handleListInputChange}
                         onKeyDown={handlelistKeyDown}
                         docTypeId={currentDocTypeId}
-                        onDocumentCreated={handleDocumentCreated}
+                        onDocumentCreated={handleDocTypeCreated}
                         onCancel={() => setShowInput(false)}
                       />
                       {currentInput.showValidator && (

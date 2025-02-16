@@ -81,6 +81,16 @@ function VersionList({ position, item, index, onClick }) {
           <div className="w-[527px] h-[151px] border border-[#8E98A8] rounded-lg p-4">
             {item.content}
           </div>
+          <div className="mt-[20px]">
+            <input
+              className="w-[486px] h-[32px] border-b placeholder-[#d9d9d9] text-[14px] focus:outline-none mr-[11px]"
+              placeholder="해당 상태에 대한 사유를 추가해주세요."
+            />
+            <button className="w-8 h-8 bg-[#8E98A8] text-white rounded-lg">
+              +
+            </button>
+          </div>
+
           <img
             onClick={handleModal}
             className="m-auto mt-[13px]"

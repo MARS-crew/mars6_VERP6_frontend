@@ -10,6 +10,7 @@ import ItemRow from "./DocumentRow/ItemRow";
 import useDocument from "../../hooks/useDocument";
 import useDocTypeDocuments from "../../hooks/useDocTypeDocuments";
 import useDocTypeDelete from "../../hooks/useDocTypeDelete";
+import useDocumentDetail from "../../hooks/useDocumentDetail";
 import { useQueryClient } from "@tanstack/react-query";
 import StateButton from "../stateButton/StateButton";
 import { useAlert } from "../../hooks/usealertIcon";
@@ -46,6 +47,7 @@ function DocumentList({ id, initialTitle, isNew }) {
   });
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [documentDetails, setDocumentDetails] = useState({});
 
   const {
     document,
@@ -132,6 +134,24 @@ function DocumentList({ id, initialTitle, isNew }) {
     }
   }, [documents]);
 
+  useEffect(() => {
+    const fetchDocumentDetails = async () => {
+      if (Array.isArray(documents)) {
+        const details = {};
+        for (const doc of documents) {
+          const { data } = await useDocumentDetail(doc.docId).data;
+          if (data?.result && data.result.length > 0) {
+            const latestDetail = data.result[data.result.length - 1];
+            details[doc.docId] = latestDetail;
+          }
+        }
+        setDocumentDetails(details);
+      }
+    };
+    
+    fetchDocumentDetails();
+  }, [documents]);
+
   const handleMoreClick = () => setShowModifyModal((prev) => !prev);
   const handleCloseModal = () => setShowModifyModal(false);
 
@@ -194,6 +214,36 @@ function DocumentList({ id, initialTitle, isNew }) {
     queryClient.invalidateQueries(["docTypeDocuments", id]);
   };
 
+  const DocumentItem = React.memo(({ doc, isLast }) => {
+    const { data: detailData } = useDocumentDetail(doc.docId);
+    const latestDetail = detailData?.data?.result?.[detailData?.data?.result?.length - 1];
+    
+    return (
+      <ItemRow
+        key={doc.docId}
+        item={{
+          docId: doc.docId,
+          name: doc.title,
+          fileLink: latestDetail?.fileName || latestDetail?.externalUrl || doc.title,
+          completedRequestStep: doc.completedRequestStep || 0,
+          inProgressRequestStep: doc.inProgressRequestStep || 0,
+          pendingRequestStep: doc.pendingRequestStep || 0,
+          checkedRequestStep: doc.checkedRequestStep || 0,
+          rejectedRequestStep: doc.rejectedRequestStep || 0,
+          approvedRequestStep: doc.approvedRequestStep || 0,
+          canceledRequestStep: doc.canceledRequestStep || 0,
+          totalRequestStep: doc.totalRequestStep|| 0,
+          updated: doc.timeAgo || "방금 전",
+          state: true,
+        }}
+        isLast={isLast}
+        docTypeId={id}
+        onClick={() => handleReadDocument(doc.docId)}
+        onRemove={handleRemoveDocument}
+      />
+    );
+  });
+
   if (isDocLoading || isDocsLoading) {
     return <div>로딩 중...</div>;
   }
@@ -246,27 +296,10 @@ function DocumentList({ id, initialTitle, isNew }) {
                 <div className="mt-4">
                   <div className="pl-[20px] space-y-4">
                     {Array.isArray(documents) && documents.map((doc, idx) => (
-                      <ItemRow
+                      <DocumentItem
                         key={doc.docId}
-                        item={{
-                          docId: doc.docId,
-                          name: doc.title,
-                          fileLink: `${doc.title}.ppt`,
-                          completedRequestStep: doc.completedRequestStep || 0,
-                          inProgressRequestStep: doc.inProgressRequestStep || 0,
-                          pendingRequestStep: doc.pendingRequestStep || 0,
-                          checkedRequestStep: doc.checkedRequestStep || 0,
-                          rejectedRequestStep: doc.rejectedRequestStep || 0,
-                          approvedRequestStep: doc.approvedRequestStep || 0,
-                          canceledRequestStep: doc.canceledRequestStep || 0,
-                          totalRequestStep: doc.totalRequestStep|| 0,
-                          updated: doc.timeAgo || "방금 전",
-                          state: true,
-                        }}
+                        doc={doc}
                         isLast={idx === documents.length - 1}
-                        docTypeId={id}
-                        onClick={() => handleReadDocument(doc.docId)}
-                        onRemove={handleRemoveDocument}
                       />
                     ))}
                   </div>

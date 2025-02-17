@@ -169,8 +169,6 @@ function DetailPage({ data, docTitle, docId }) {
         </div>
       )}
     </div>
-
-    
   );
 }
 

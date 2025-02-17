@@ -45,6 +45,10 @@ function VersionList({ item, index, onClick }) {
   };
 
   const onSubmitReason = async () => {
+    if (reason == null) {
+      alert("사유가 입력되지 않았습니다.");
+      return;
+    }
     try {
       createReason.mutate({
         docDetailId: item.docDetailId,

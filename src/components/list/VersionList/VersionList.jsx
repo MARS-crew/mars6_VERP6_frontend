@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import DownloadIcon from "../../../assets/svg/Download.svg";
 import ArrowDownIcon from "../../../assets/svg/ArrowDown.svg";
 import ArrowUpIcon from "../../../assets/svg/ArrowUp.svg";
 import DescriptionIcon from "../../../assets/svg/Description.svg";
 import useGetDownloadFile from "../../../hooks/File/useGetDownloadFile";
-import CopyIcon from "../../../assets/svg/Copy.svg";
 import StateButton from "../../stateButton/StateButton";
 import { formatDate } from "../../../utils/formatDate";
 import VersionStatus from "../../stateButton/versionStatus";
+import useCreateReason from "../../../hooks/useCreateReason";
 
-function VersionList({ position, item, index, onClick }) {
+function VersionList({ item, index, onClick }) {
   const [modalState, setModalState] = useState(false);
   const { getDownloadUrl } = useGetDownloadFile();
   const [downloadUrl, setDownloadUrl] = useState();
   const [statusModal, setStatusModal] = useState(false);
+  const [reason, setReason] = useState();
+  const createReason = useCreateReason(null);
 
   useEffect(() => {
     fetchDownloadUrl();
@@ -37,6 +38,23 @@ function VersionList({ position, item, index, onClick }) {
 
   const handleStatusModal = () => {
     setStatusModal(!statusModal);
+  };
+
+  const onChangeReason = (e) => {
+    setReason(e.target.value);
+  };
+
+  const onSubmitReason = async () => {
+    try {
+      createReason.mutate({
+        docDetailId: item.docDetailId,
+        reason: reason,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+    setReason(null);
   };
 
   return (
@@ -64,7 +82,7 @@ function VersionList({ position, item, index, onClick }) {
           {formatDate(item.createdAt, "short")}
         </div>
         <div title="상태 변경하기">
-        <StateButton onClick={handleStatusModal} state={item.status} />
+          <StateButton onClick={handleStatusModal} state={item.status} />
         </div>
         {statusModal ? (
           <VersionStatus
@@ -83,12 +101,29 @@ function VersionList({ position, item, index, onClick }) {
           <div className="w-[527px] h-[151px] border border-[#8E98A8] rounded-lg p-4">
             {item.content}
           </div>
+          {!Array.isArray(item.rejectReasons) ? null : (
+            <div>
+              <div className="flex mt-[36px]">
+                <img src={DescriptionIcon} alt="Description" />
+                <div className="ml-2 font-normal text-[15px]">작업 피드백</div>
+              </div>
+              {item.rejectReasons.map((item) => (
+                <div className="w-[527px] border border-[#8E98A8] rounded-lg p-4 mb-1">
+                  {item.reason}
+                </div>
+              ))}
+            </div>
+          )}
           <div className="mt-[20px]">
             <input
               className="w-[486px] h-[32px] border-b placeholder-[#d9d9d9] text-[14px] focus:outline-none mr-[11px]"
               placeholder="해당 상태에 대한 사유를 추가해주세요."
+              onChange={onChangeReason}
             />
-            <button className="w-8 h-8 bg-[#8E98A8] text-white rounded-lg">
+            <button
+              onClick={onSubmitReason}
+              className="w-8 h-8 bg-[#8E98A8] text-white rounded-lg"
+            >
               +
             </button>
           </div>

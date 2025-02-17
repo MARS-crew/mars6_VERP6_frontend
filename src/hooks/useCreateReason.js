@@ -8,10 +8,10 @@ function useCreateReason() {
   const queryClient = useQueryClient();
 
   const createReason = useMutation({
-    mutationFn: async ({ docDetailId }) => {
+    mutationFn: async ({ docDetailId, reason }) => {
       const response = await axios.post(
         `/api/docs-detail/${docDetailId}/reject-reason`,
-        reason,
+        { reason: reason },
         {
           headers: {
             Authorization: `Bearer ${auth.token}`,

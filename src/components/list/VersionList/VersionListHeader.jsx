@@ -15,7 +15,7 @@ function VersionListHeader({ filter, setFilter }) {
 
         <div className=" text-center font-medium mr-[123px]">버전</div>
         <div className="text-center mr-[111px]">작업물</div>
-        <div className="text-center flex justify-end mr-[56px]">
+        <div className="text-center flex justify-end mr-[64px]">
           <p>날짜</p>
           <img
             onClick={filterState}

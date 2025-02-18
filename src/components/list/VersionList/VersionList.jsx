@@ -72,7 +72,7 @@ function VersionList({ item, index, onClick }) {
         <div className="w-[20px] text-[#8E98A8] font-medium text-center mr-[26px]">
           {index + 1}
         </div>
-        <div className="w-[60px] text-center font-medium mr-[46px]">
+        <div className="w-[50px] text-center font-medium mr-[46px]">
           V{item.version}
         </div>
         <div className="w-[170px] text-center truncate mr-[30px]">

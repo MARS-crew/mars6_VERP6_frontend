@@ -58,7 +58,7 @@ function VersionList({ item, index, onClick }) {
       console.log(error);
     }
 
-    setReason(null);
+    setReason("");
   };
 
   return (
@@ -107,7 +107,7 @@ function VersionList({ item, index, onClick }) {
           </div>
           {!Array.isArray(item.rejectReasons) ? null : (
             <div>
-              <div className="flex mt-[36px]">
+              <div className="flex mt-[36px] mb-[9px]">
                 <img src={DescriptionIcon} alt="Description" />
                 <div className="ml-2 font-normal text-[15px]">작업 피드백</div>
               </div>
@@ -122,6 +122,7 @@ function VersionList({ item, index, onClick }) {
             <input
               className="w-[486px] h-[32px] border-b placeholder-[#d9d9d9] text-[14px] focus:outline-none mr-[11px]"
               placeholder="해당 상태에 대한 사유를 추가해주세요."
+              value={reason}
               onChange={onChangeReason}
             />
             <button

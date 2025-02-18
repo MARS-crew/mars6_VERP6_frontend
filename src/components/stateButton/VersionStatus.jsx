@@ -11,7 +11,7 @@ function VersionStatus({ docDetailId, setStatusModal, statusModal }) {
     setStatusModal(!statusModal);
   };
   return (
-    <div className="z-50 w-[102px] h-[155px] shadow-lg bg-white rounded-lg p-[15px] flex flex-col gap-2 place-content-between absolute mt-1">
+    <div className="z-50 w-[102px] h-[155px] shadow-lg bg-white rounded-lg p-[15px] flex flex-col drop-shadow-lg gap-2 place-content-between absolute mt-1 top-12 left-[470px]">
       {config.map((item) => (
         <StateButton
           key={item}
